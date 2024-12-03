@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import GridLayout from "react-grid-layout";
-import { useReservations } from "../reservationContext";
+import { useReservations } from "../../../reservationContext";
 
 export function GravelLayout() {
     const { reservedTables, setReservedTables } = useReservations();

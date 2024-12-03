@@ -1,6 +1,6 @@
 import React from "react";
 import GridLayout from "react-grid-layout";
-import { useReservations } from "../reservationContext";
+import { useReservations } from "../../../reservationContext";
 
 export function HerbeLayout() {
   const { reservedTables, setReservedTables } = useReservations();

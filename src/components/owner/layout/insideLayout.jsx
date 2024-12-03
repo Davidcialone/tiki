@@ -1,8 +1,8 @@
 import React from "react";
 import GridLayout from "react-grid-layout";
-import { useReservations } from "../reservationContext";
+import { useReservations } from "../../../reservationContext";
 
-export function TerraceLayout() {
+export function InsideLayout() {
   const { reservedTables, setReservedTables } = useReservations();
 
   const layout = [
@@ -92,8 +92,8 @@ export function TerraceLayout() {
       isDraggable={false}
     >
        {layout.map(({ i }) => (
-          <div key={i} style={itemStyle(i)}>Table {i.replace("table", "")}</div>
-           ))}
+        <div key={i} style={itemStyle(i)}>Table {i.replace("table", "")}</div>
+        ))}
     </GridLayout>
   );
 }  

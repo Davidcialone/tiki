@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import GridLayout from "react-grid-layout";
-import { useReservations } from "../reservationContext";
+import { useReservations } from "../../reservationContext";
 
 export function CustomerView() {
     const [selectedZones, setSelectedZones] = useState([]);
@@ -22,20 +22,21 @@ export function CustomerView() {
         const isOpen = zonesOpened[zoneKey];
 
         return {
-            padding: "10px",
-            border: isSelected ? "4px solid #000" : "2px solid #000",
-            height: "100%",
-            boxSizing: "border-box",
-            backgroundColor: isSelected
-                ? isOpen
-                    ? "#FFC700"
-                    : "#FF2400"
-                : isOpen
-                    ? "#B6E4B6"
-                    : "#1A1A1A",
-            opacity: isSelected ? 1 : isOpen ? 0.9 : 0.4,
-            filter: isSelected ? "brightness(1.2)" : "none",
-            transition: "background-color 0.3s ease, opacity 0.3s ease, filter 0.3s ease",
+          padding: "10px",
+          border: isSelected ? "4px solid #000" : "2px solid #000", // Noir (#000) pour la bordure
+          height: "100%",
+          boxSizing: "border-box",
+          backgroundColor: isSelected
+              ? isOpen
+                  ? "#FFC700" // Jaune lumineux (sélectionnée et ouverte)
+                  : "#FF2400" // Rouge écarlate (sélectionnée mais fermée)
+              : isOpen
+                  ? "#B6E4B6" // Vert vif (ouverte et non sélectionnée)
+                  : "#1A1A1A", // Gris-noir très sombre (fermée et non sélectionnée)
+          opacity: isSelected ? 1 : isOpen ? 0.9 : 0.4, // Opacité plus faible pour les zones non sélectionnées
+          filter: isSelected ? "brightness(1.2)" : "none", // Augmente la luminosité si sélectionnée
+          transition: "background-color 0.3s ease, opacity 0.3s ease, filter 0.3s ease",
+          
         };
     };
 

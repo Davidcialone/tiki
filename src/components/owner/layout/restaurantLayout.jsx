@@ -61,14 +61,14 @@ export function RestaurantLayout() {
     fontWeight: selectedZones.includes(zoneKey) ? "bold" : "normal",
   });
 
-  // Fonction pour basculer la sélection d'une zone
-  const toggleZoneSelected = (zoneKey) => {
-    setSelectedZones((prevSelected) =>
-      prevSelected.includes(zoneKey)
-        ? prevSelected.filter((z) => z !== zoneKey)
-        : [...prevSelected, zoneKey]
-    );
-  };
+  // // Fonction pour basculer la sélection d'une zone
+  // const toggleZoneSelected = (zoneKey) => {
+  //   setSelectedZones((prevSelected) =>
+  //     prevSelected.includes(zoneKey)
+  //       ? prevSelected.filter((z) => z !== zoneKey)
+  //       : [...prevSelected, zoneKey]
+  //   );
+  // };
 
   // Fonction pour changer l'état ouvert/fermé d'une zone
   const toggleZoneOpen = (zoneKey) => {
@@ -80,16 +80,16 @@ export function RestaurantLayout() {
 
   return (
     <div style={{ width: "100%", textAlign: "center" }}>
-      <h1>Plan du Restaurant</h1>
+      <h1>Zones du Restaurant</h1>
       <div>
         <div>
-          <button>Réserver une table</button>
-          <h2>Choisir les zones :</h2>
+         
+          <h2>Gérer les zones :</h2>
           {Object.keys(zonesOpened).map((zoneKey) => (
             <div key={zoneKey}>
               <button
                 style={buttonStyle(zoneKey)}
-                onClick={() => toggleZoneSelected(zoneKey)}
+                // onClick={() => toggleZoneSelected(zoneKey)}
               >
                 {zoneKey.charAt(0).toUpperCase() + zoneKey.slice(1)}
               </button>
