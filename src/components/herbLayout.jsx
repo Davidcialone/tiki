@@ -1,7 +1,10 @@
 import React from "react";
 import GridLayout from "react-grid-layout";
+import { useReservations } from "../reservationContext";
 
 export function HerbeLayout() {
+  const { reservedTables, setReservedTables } = useReservations();
+
   // Configuration des tables et arbres pour la zone Herbe
   const layout = [
     { i: "table1", x: 0, y: 0, w: 1, h: 1 }, // Table 1
@@ -16,67 +19,77 @@ export function HerbeLayout() {
     { i: "tree4", x: 9, y: 0, w: 1, h: 1 },  // Arbre 4
   ];
 
+  const reserveTables = (numGuests) => {
+    const tableIds = layout
+      .filter((item) => item.i.startsWith("table")) // Ne considérer que les tables
+      .map((item) => item.i);
 
-  const itemStyle = {
+    const availableTables = tableIds.filter((table) => !reservedTables.includes(table));
+    const tablesToReserve = availableTables.slice(0, numGuests);
+
+    if (tablesToReserve.length < numGuests) {
+      alert("Pas assez de tables disponibles.");
+      return;
+    }
+
+    setReservedTables((prev) => [...prev, ...tablesToReserve]);
+    alert(`Tables réservées : ${tablesToReserve.join(", ")}`);
+  };
+
+  const itemStyle = (id) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    border: "1px solid #999",
-    borderRadius: "4px",
-    background: "#e0e0e0",
-    fontSize: "14px",
+    border: reservedTables.includes(id) ? "4px solid #FF0000" : "2px solid black",
+    borderRadius: "6px",
+    background: reservedTables.includes(id) ? "#f77" : "#e0e0e0",
+    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+    fontSize: "0.8rem",
     fontWeight: "bold",
     textAlign: "center",
-  };
+    color: "black",
+    height: "100%",
+    width: "100%",
+    boxSizing: "border-box",
+    zIndex: 2,
+  });
 
   const treeStyle = {
-    ...itemStyle,
     background: "#072A16", // Couleur sombre pour les arbres
     color: "white",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "0.8rem",
+    fontWeight: "bold",
+    borderRadius: "50%",
+    height: "100%",
+    width: "100%",
+    boxSizing: "border-box",
   };
 
   return (
-    <div >
+    <div>
       <GridLayout
         className="layout"
         layout={layout}
-        cols={10} // Nombre de colonnes
-        rowHeight={50} // Hauteur de chaque rangée
-        width={500} // Largeur totale de la grille
-        isResizable={false} // Pas de redimensionnement
-        isDraggable={true} // Pas de déplacement
+        cols={10}
+        rowHeight={50}
+        width={500}
+        isResizable={false}
+        isDraggable={false}
       >
-        {/* Tables */}
-        <div key="table1" style={itemStyle}>Table 1</div>
-        <div key="table2" style={itemStyle}>
-          Table 2
-        </div>
-        <div key="table3" style={itemStyle}>
-          Table 3
-        </div>
-        <div key="table4" style={itemStyle}>
-          Table 4
-        </div>
-        <div key="table5" style={itemStyle}>
-          Table 5
-        </div>
-        <div key="table6" style={itemStyle}>
-          Table 6
-        </div>
-
-        {/* Arbres */}
-        <div key="tree1" style={treeStyle}>
-          Arbre 1
-        </div>
-        <div key="tree2" style={treeStyle}>
-          Arbre 2
-        </div>
-        <div key="tree3" style={treeStyle}>
-          Arbre 3
-        </div>
-        <div key="tree4" style={treeStyle}>
-          Arbre 4
-        </div>
+        {layout.map(({ i }) =>
+          i.startsWith("table") ? (
+            <div key={i} style={itemStyle(i)}>
+              {i.replace("table", "Table ")}
+            </div>
+          ) : (
+            <div key={i} style={treeStyle}>
+              🌳
+            </div>
+          )
+        )}
       </GridLayout>
     </div>
   );

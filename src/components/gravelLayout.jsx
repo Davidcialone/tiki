@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import GridLayout from "react-grid-layout";
+import { useReservations } from "../reservationContext";
 
 export function GravelLayout() {
+    const { reservedTables, setReservedTables } = useReservations();
 
     const layout = [
         { i: "1", x: 0, y: 10, w: 1, h: 1 },
@@ -21,18 +23,51 @@ export function GravelLayout() {
         { i: "15", x: 4, y: 13, w: 1, h: 1 },
         { i: "16", x: 6, y: 13, w: 1, h: 1 },
     ];
+    const priorities = [
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [13, 14, 15, 16],
+          ];
 
-    const itemStyle = {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        border: "1px solid #999",
-        borderRadius: "4px",
-        background: "#e0e0e0",
-        fontSize: "14px",
-        fontWeight: "bold",
-        textAlign: "center",
-      };
+          const reserveTables = (numGuests) => {
+            let tablesToReserve = [];
+        
+            for (let priority of priorities) {
+              const availableTables = priority.filter((table) => !reservedTables.includes(table));
+        
+              while (availableTables.length > 0 && tablesToReserve.length < numGuests) {
+                tablesToReserve.push(availableTables.shift());
+              }
+        
+              if (tablesToReserve.length >= numGuests) break;
+            }
+        
+            if (tablesToReserve.length < numGuests) {
+              alert("Pas assez de tables disponibles.");
+              return;
+            }
+        
+            setReservedTables((prev) => [...prev, ...tablesToReserve]);
+            alert(`Tables réservées : ${tablesToReserve.join(", ")}`);
+          };
+          const itemStyle = (table) => ({
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            border: reservedTables.includes(table) ? "4px solid #FF0000" : "2px solid black", // Couleurs vives pour contraste
+            borderRadius: "6px",
+            background: reservedTables.includes(table) ? "#f77" : "#e0e0e0",
+            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+            fontSize: "0.8rem",
+            fontWeight: "bold",
+            textAlign: "center",
+            color: "black",
+            height: "100%",
+            width: "100%",
+            boxSizing: "border-box",
+            zIndex: 2,
+          });
 
     return (
         <div >
@@ -45,23 +80,10 @@ export function GravelLayout() {
                 isResizable={false} // Pas de redimensionnement
                 isDraggable={false} // Pas de déplacement
             >
-                {/* Tables */}
-                <div key="1" style={itemStyle}>Table 1</div>
-                <div key="2" style={itemStyle}>Table 2</div>
-                <div key="3" style={itemStyle}>Table 3</div>
-                <div key="4" style={itemStyle}>Table 4</div>
-                <div key="5" style={itemStyle}>Table 5</div>
-                <div key="6" style={itemStyle}>Table 6</div>
-                <div key="7" style={itemStyle}>Table 7</div>
-                <div key="8" style={itemStyle}>Table 8</div>
-                <div key="9" style={itemStyle}>Table 9</div>
-                <div key="10" style={itemStyle}>Table 10</div>
-                <div key="11" style={itemStyle}>Table 11</div>
-                <div key="12" style={itemStyle}>Table 12</div>
-                <div key="13" style={itemStyle}>Table 13</div>
-                <div key="14" style={itemStyle}>Table 14</div>
-                <div key="15" style={itemStyle}>Table 15</div>
-                <div key="16" style={itemStyle}>Table 16</div>
+              {layout.map(({ i }) => (
+                <div key={i} style={itemStyle(i)}>Table {i.replace("table", "")}</div>
+                ))}
+
             </GridLayout>
         </div>
     );
