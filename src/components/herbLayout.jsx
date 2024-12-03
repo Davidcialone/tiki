@@ -16,13 +16,6 @@ export function HerbeLayout() {
     { i: "tree4", x: 9, y: 0, w: 1, h: 1 },  // Arbre 4
   ];
 
-  // Styles généraux
-  const layoutStyle = {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#8FBC8F", // Couleur herbe
-    border: "1px solid #ccc",
-  };
 
   const itemStyle = {
     display: "flex",
@@ -43,7 +36,7 @@ export function HerbeLayout() {
   };
 
   return (
-    <div style={layoutStyle}>
+    <div >
       <GridLayout
         className="layout"
         layout={layout}
@@ -51,7 +44,7 @@ export function HerbeLayout() {
         rowHeight={50} // Hauteur de chaque rangée
         width={500} // Largeur totale de la grille
         isResizable={false} // Pas de redimensionnement
-        isDraggable={false} // Pas de déplacement
+        isDraggable={true} // Pas de déplacement
       >
         {/* Tables */}
         <div key="table1" style={itemStyle}>Table 1</div>

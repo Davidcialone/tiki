@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import './App.css'
+import { ReservationProvider } from './reservationContext'
 import {RestaurantLayout} from './components/restaurantLayout'
 
 function App() {
 
   return (
-    <RestaurantLayout/>
+    <ReservationProvider>
+        <RestaurantLayout/>
+    </ReservationProvider>
   )
 
 }
