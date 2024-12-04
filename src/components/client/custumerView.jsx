@@ -2,10 +2,19 @@ import React, { useState } from "react";
 import GridLayout from "react-grid-layout";
 import { useReservations } from "../../reservationContext";
 
+
 export function CustomerView() {
     const [selectedZones, setSelectedZones] = useState([]);
-    const [zonesOpened, setZonesOpened] = useState({});
     const { reservedTables, setReservedTables } = useReservations();
+    const [zonesOpened, setZonesOpened] = useState({
+        water: false,
+        herb: true,
+        way: false,
+        welcome: false,
+        terrace: true,
+        inside: true,
+        gravel: true,
+    });
 
     const layout = [
         { i: "water", x: 0, y: 0, w: 6, h: 2 },
@@ -22,43 +31,49 @@ export function CustomerView() {
         const isOpen = zonesOpened[zoneKey];
 
         return {
-          padding: "10px",
-          border: isSelected ? "4px solid #000" : "2px solid #000", // Noir (#000) pour la bordure
-          height: "100%",
-          boxSizing: "border-box",
-          backgroundColor: isSelected
-              ? isOpen
-                  ? "#FFC700" // Jaune lumineux (sélectionnée et ouverte)
-                  : "#FF2400" // Rouge écarlate (sélectionnée mais fermée)
-              : isOpen
-                  ? "#B6E4B6" // Vert vif (ouverte et non sélectionnée)
-                  : "#1A1A1A", // Gris-noir très sombre (fermée et non sélectionnée)
-          opacity: isSelected ? 1 : isOpen ? 0.9 : 0.4, // Opacité plus faible pour les zones non sélectionnées
-          filter: isSelected ? "brightness(1.2)" : "none", // Augmente la luminosité si sélectionnée
-          transition: "background-color 0.3s ease, opacity 0.3s ease, filter 0.3s ease",
-          
+            padding: "10px",
+            border: isSelected ? "4px solid #000" : "2px solid #000",
+            height: "100%",
+            boxSizing: "border-box",
+            backgroundColor: isSelected
+                ? isOpen
+                    ? "#FFC700"
+                    : "#FF2400"
+                : isOpen
+                ? "#B6E4B6"
+                : "#1A1A1A",
+            opacity: isSelected ? 1 : isOpen ? 0.9 : 0.4,
+            filter: isSelected ? "brightness(1.2)" : "none",
+            transition: "background-color 0.3s ease, opacity 0.3s ease, filter 0.3s ease",
         };
     };
 
-    // Style du bouton de sélection de zone
     const buttonStyle = (zoneKey) => ({
-      padding: "10px 20px",
-      margin: "5px",
-      border: "2px solid #000",
-      backgroundColor: selectedZones.includes(zoneKey) ? "#4CAF50" : "#f0f0f0",
-      color: selectedZones.includes(zoneKey) ? "#fff" : "#000",
-      cursor: "pointer",
-      borderRadius: "5px",
-      fontWeight: selectedZones.includes(zoneKey) ? "bold" : "normal",
+        padding: "10px 20px",
+        margin: "5px",
+        border: "2px solid #000",
+        backgroundColor: selectedZones.includes(zoneKey) ? "#4CAF50" : "#f0f0f0",
+        color: selectedZones.includes(zoneKey) ? "#fff" : "#000",
+        cursor: "pointer",
+        borderRadius: "5px",
+        fontWeight: selectedZones.includes(zoneKey) ? "bold" : "normal",
     });
 
-    // Fonction pour basculer la sélection d'une zone
     const toggleZoneSelected = (zoneKey) => {
+        if (!zonesOpened[zoneKey]) return; // Si la zone est fermée, on ne fait rien
         setSelectedZones((prevSelected) =>
             prevSelected.includes(zoneKey)
-                ? prevSelected.filter((z) => z !== zoneKey)
-                : [...prevSelected, zoneKey]
+                ? prevSelected.filter((z) => z !== zoneKey) // Désélectionner
+                : [...prevSelected, zoneKey] // Sélectionner
         );
+    };
+    
+
+    const toggleZoneOpen = (zoneKey) => {
+        setZonesOpened((prevZones) => ({
+            ...prevZones,
+            [zoneKey]: !prevZones[zoneKey],
+        }));
     };
 
     return (

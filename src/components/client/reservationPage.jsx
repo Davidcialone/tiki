@@ -1,7 +1,9 @@
 import React from "react";
 import { CustomerView } from "./custumerView";
+import { useState } from "react";
 
 export function ReservationPage() {
+    const [selectedZones, setSelectedZones] = useState([]);
     return (
         <div>
         <h1>Réservation</h1>
