@@ -69,12 +69,12 @@ export function CustomerView() {
     };
     
 
-    const toggleZoneOpen = (zoneKey) => {
-        setZonesOpened((prevZones) => ({
-            ...prevZones,
-            [zoneKey]: !prevZones[zoneKey],
-        }));
-    };
+    // const toggleZoneOpen = (zoneKey) => {
+    //     setZonesOpened((prevZones) => ({
+    //         ...prevZones,
+    //         [zoneKey]: !prevZones[zoneKey],
+    //     }));
+    // };
 
     return (
         <div>

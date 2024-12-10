@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { RestaurantLayout } from "../restaurantLayout";
+
 
 export function TablesDashBoard() {
     return (
@@ -14,8 +14,6 @@ export function TablesDashBoard() {
         <button className="m-2 "><Link>Réservations</Link></button>
         <button className="m-2 "><Link>Statistiques</Link></button>
         
-        <RestaurantLayout/>
-
         </div>
     );
     }

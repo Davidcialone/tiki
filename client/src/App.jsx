@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {RestaurantLayout} from './components/owner/layout/restaurantLayout'
 import {NavBar}  from './components/interface/navBar'
 import { HomePage } from './components/interface/homePage';
-import { ReservationPage } from './components/client/reservationPage';
+import { ReservationPage } from './components/customer/reservationPage';
 import { DashBoard } from './components/owner/layout/dashBoard/dashBoard';
 
 

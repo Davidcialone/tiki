@@ -4,10 +4,9 @@ import { HerbeLayout } from "./herbLayout";
 import { TerraceLayout } from "./teraceLayout";
 import { InsideLayout } from "./insideLayout";
 import { GravelLayout } from "./gravelLayout";
+// import { ZoneProvider } from "../../../zoneContext";
 
 export function RestaurantLayout() {
-  // Etat des zones et zones sélectionnées
-  const [selectedZones, setSelectedZones] = useState([]);
   const [zonesOpened, setZonesOpened] = useState({
     terrace: true,
     herb: true,
@@ -15,7 +14,6 @@ export function RestaurantLayout() {
     gravel: true,
   });
 
-  // Disposition de la grille
   const layout = [
     { i: "water", x: 0, y: 0, w: 6, h: 2 },
     { i: "herb", x: 0, y: 2, w: 6, h: 2 },
@@ -26,51 +24,19 @@ export function RestaurantLayout() {
     { i: "gravel", x: 2, y: 5, w: 6, h: 4 },
   ];
 
-  // Style des zones (basé sur leur sélection et état ouvert/fermé)
   const zoneStyle = (zoneKey) => {
-    const isSelected = selectedZones.includes(zoneKey);
     const isOpen = zonesOpened[zoneKey];
-
     return {
       padding: "10px",
-      border: isSelected ? "4px solid #000" : "2px solid #000",
+      border: "2px solid #000",
       height: "100%",
       boxSizing: "border-box",
-      backgroundColor: isSelected
-        ? isOpen
-          ? "#FFC700"
-          : "#FF2400"
-        : isOpen
-        ? "#B6E4B6"
-        : "#1A1A1A",
-      opacity: isSelected ? 1 : isOpen ? 0.9 : 0.4,
-      filter: isSelected ? "brightness(1.2)" : "none",
-      transition: "background-color 0.3s ease, opacity 0.3s ease, filter 0.3s ease",
+      backgroundColor: isOpen ? "#B6E4B6" : "#1A1A1A",
+      opacity: isOpen ? 0.9 : 0.4,
+      transition: "background-color 0.3s ease, opacity 0.3s ease",
     };
   };
 
-  // Style du bouton de sélection de zone
-  const buttonStyle = (zoneKey) => ({
-    padding: "10px 20px",
-    margin: "5px",
-    border: "2px solid #000",
-    backgroundColor: selectedZones.includes(zoneKey) ? "#4CAF50" : "#f0f0f0",
-    color: selectedZones.includes(zoneKey) ? "#fff" : "#000",
-    cursor: "pointer",
-    borderRadius: "5px",
-    fontWeight: selectedZones.includes(zoneKey) ? "bold" : "normal",
-  });
-
-  // // Fonction pour basculer la sélection d'une zone
-  // const toggleZoneSelected = (zoneKey) => {
-  //   setSelectedZones((prevSelected) =>
-  //     prevSelected.includes(zoneKey)
-  //       ? prevSelected.filter((z) => z !== zoneKey)
-  //       : [...prevSelected, zoneKey]
-  //   );
-  // };
-
-  // Fonction pour changer l'état ouvert/fermé d'une zone
   const toggleZoneOpen = (zoneKey) => {
     setZonesOpened((prevZones) => ({
       ...prevZones,
@@ -78,29 +44,52 @@ export function RestaurantLayout() {
     }));
   };
 
+  console.log(zonesOpened);
   return (
+    // <ZoneProvider>
     <div style={{ width: "100%", textAlign: "center" }}>
       <h1>Zones du Restaurant</h1>
-      <div>
-        <div>
-         
-          <h2>Gérer les zones :</h2>
+
+      {/* Section des boutons et titres */}
+      <div
+        style={{
+          marginBottom: "20px",
+          padding: "10px",
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+        }}
+      >
+        <h2>Gérer les zones :</h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
           {Object.keys(zonesOpened).map((zoneKey) => (
-            <div key={zoneKey}>
-              <button
-                style={buttonStyle(zoneKey)}
-                // onClick={() => toggleZoneSelected(zoneKey)}
-              >
+            <div
+              key={zoneKey}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                border: "1px solid #ccc",
+                padding: "10px",
+                borderRadius: "5px",
+              }}
+            >
+              <p style={{ fontWeight: "bold", marginBottom: "10px" }}>
                 {zoneKey.charAt(0).toUpperCase() + zoneKey.slice(1)}
-              </button>
+              </p>
               <button
                 style={{
                   padding: "5px 10px",
-                  margin: "5px",
                   border: "1px solid #000",
                   cursor: "pointer",
                   backgroundColor: zonesOpened[zoneKey] ? "#4CAF50" : "#FF5733",
                   color: "#fff",
+                  borderRadius: "5px",
                 }}
                 onClick={() => toggleZoneOpen(zoneKey)}
               >
@@ -109,16 +98,34 @@ export function RestaurantLayout() {
             </div>
           ))}
         </div>
+      </div>
 
+      {/* Section du layout contenant GridLayout */}
+      <div
+        style={{
+          width: "100%",
+          height: " auto", // Fixer une hauteur ou utiliser un pourcentage
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+          marginTop: "20px",
+          padding: "10px",
+          boxSizing: "border-box",
+          overflow: "auto", // Pour éviter que le contenu dépasse
+        }}
+      >
         <GridLayout
           className="layout"
           layout={layout}
           cols={18}
           rowHeight={100}
           width={1600}
-          isResizable={false}
-          isDraggable={false}
+          isResizable={true} // Permet de redimensionner
+          isDraggable={false} // Permet de déplacer
           compactType={null}
+          style={{
+            width: "100%", // La grille prend toute la largeur du parent
+            height: "100%", // La grille prend toute la hauteur du parent
+          }}
         >
           <div key="water" style={{ ...zoneStyle("water"), backgroundColor: "blue" }}>
             <h2 style={{ textAlign: "center", color: "#fff" }}>Zone Eau</h2>
@@ -148,5 +155,6 @@ export function RestaurantLayout() {
         </GridLayout>
       </div>
     </div>
+  //  </ZoneProvider>
   );
 }
