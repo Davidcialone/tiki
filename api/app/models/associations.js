@@ -1,6 +1,6 @@
-import { User } from ".User.js";
-import { Role } from ".Role.js";
-import { Reservations } from ".Reservations.js";
+import { User } from "./User.js";
+import { Role } from "./Role.js";
+import { Reservations } from "./Reservations.js";
 import { sequelize } from "./sequelizeClient.js";
 
 User.belongsTo(Role, {

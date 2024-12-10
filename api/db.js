@@ -6,10 +6,7 @@ const sequelize = new Sequelize(process.env.PG_URL, {
   dialect: "postgres",
   logging: false, // Mettre true pour voir les requêtes SQL dans la console
   dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
+    ssl: false,
   },
   pool: {
     max: 5, // nombre maximum de connexions dans le pool
