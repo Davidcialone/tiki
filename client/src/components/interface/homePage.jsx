@@ -1,5 +1,6 @@
 import React from "react";
 import { NavBar } from "./navBar";
+import { Link } from "react-router-dom";
 
 
 export function HomePage() {
@@ -12,10 +13,15 @@ export function HomePage() {
        
         <p>  Nous sommes ouverts tout l'hiver . </p>
         <div className="flex items-center justify-center p-4">
-          <img src="2024-12-09 (3).jpg" alt="" />
+          <img src="2024-04-27.jpg" alt="" />
         </div>
         
+        <Link 
+        to="/reservation"
+        className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+        >
          <button>Réserver une table</button>
+         </Link>
 
     </div>
     );

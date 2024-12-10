@@ -1,23 +1,62 @@
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { fr } from "date-fns/locale"; // Import de la locale française
 
-export function ReservationModal({ isOpen, onClose, zones, onSubmit, availableDates, availableTimes }) {
+const lunchTimes = [
+ "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00"
+];
+
+const dinnerTimes = [
+   "19:00", "19:15", "19:30", "19:45", "20:00","20:15", "20:30", "20:45", "21:00"
+];
+
+export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
+  // Dates et horaires par défaut si non disponibles
+  const defaultAvailableDates = [new Date()]; // Par défaut, la date actuelle
+  const defaultAvailableTimes = ["11:45","12:00","12:15","12:30","12:45","13:00","13:15","13:30","13:45","14:00", "18:45","19:00","19:15","19:30","19:45","20:00","20:15","20:30","20:45","21:00"]; // Liste d'horaires par défaut
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     people: 1,
-    date: availableDates.length > 0 ? availableDates[0] : "", // Par défaut, première date disponible
-    time: availableTimes.length > 0 ? availableTimes[0] : "", // Par défaut, premier horaire disponible
+    date: defaultAvailableDates[0], // Par défaut, la première date disponible
+    time: lunchTimes[0], // Par défaut, on commence avec un horaire de midi
     zone: zones.length > 0 ? zones[0] : "", // Par défaut, première zone
   });
 
-  
   // Gestion des changements de formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  // Gestion du changement de date
+  const handleDateChange = (date) => {
+    setFormData((prev) => ({
+      ...prev,
+      date: date,
+    }));
+  };
+
+    // Fonction pour gérer la sélection de l'heure
+    const handleTimeClick = (time) => {
+      setFormData((prev) => ({
+        ...prev,
+        time: time,
+      }));
+    };
+
+  // Fonction pour basculer entre les horaires du midi et du soir
+  const toggleTimePeriod = () => {
+    setFormData((prev) => ({
+      ...prev,
+      isLunch: !prev.isLunch,
+      time: prev.isLunch ? dinnerTimes[0] : lunchTimes[0], // Met à jour l'heure par défaut quand on change de période
     }));
   };
 
@@ -120,15 +159,41 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit, availableDa
             />
           </div>
 
-          {/* Nombre de personnes */}
+
           <div style={{ marginBottom: "15px" }}>
             <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Nombre de personnes</label>
-            <input
-              type="number"
+            <select
               name="people"
               value={formData.people}
               onChange={handleChange}
-              min="1"
+              required
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
+
+
+
+
+          {/* Date */}
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Date</label>
+            <DatePicker
+              selected={formData.date}
+              onChange={handleDateChange}
+              dateFormat="dd/MM/yyyy"
+              locale={fr} // Application de la locale française
+              placeholderText="Sélectionnez une date"
               required
               style={{
                 width: "100%",
@@ -139,54 +204,61 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit, availableDa
             />
           </div>
 
-          {/* Date */}
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Date</label>
-            <select
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
+          {/* Choix du Midi ou du Soir */}
+          <div style={{ marginBottom: "15px", textAlign: "center" }}>
+            <button
+              type="button"
+              onClick={toggleTimePeriod}
               style={{
-                width: "100%",
-                padding: "10px",
+                padding: "10px 20px",
+                backgroundColor: "#4CAF50",
+                color: "#fff",
+                border: "none",
                 borderRadius: "5px",
-                border: "1px solid #ccc",
+                cursor: "pointer",
+                marginBottom: "10px",
               }}
             >
-              {availableDates.map((date) => (
-                <option key={date} value={date}>
-                  {date}
-                </option>
-              ))}
-            </select>
+              {formData.isLunch ? "Passer au Soir" : "Passer au Midi"}
+            </button>
           </div>
 
-          {/* Heure */}
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Horaire</label>
-            <select
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              required
+         {/* Liste des horaires */}
+         <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "5px", color: "black" }}>
+              Horaire
+            </label>
+            <div
               style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "10px",
+                marginBottom: "20px",
               }}
             >
-              {availableTimes.map((time) => (
-                <option key={time} value={time}>
+              {(formData.isLunch ? lunchTimes : dinnerTimes).map((time) => (
+                <button
+                  key={time}
+                  type="button"
+                  onClick={() => handleTimeClick(time)}
+                  style={{
+                    padding: "10px",
+                    backgroundColor: formData.time === time ? "#4CAF50" : "#fff",
+                    color: formData.time === time ? "#fff" : "#000",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    transition: "background-color 0.3s",
+                  }}
+                >
                   {time}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           {/* Zone */}
-          <div style={{ marginBottom: "15px" }}>
+          {/* <div style={{ marginBottom: "15px" }}>
             <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Zone</label>
             <select
               name="zone"
@@ -206,7 +278,7 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit, availableDa
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Boutons */}
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>

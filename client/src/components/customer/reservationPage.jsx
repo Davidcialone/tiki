@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ReservationModal } from "../modales/reservationModal";
 
+
 export function ReservationPage() {
   const [zonesOpened, setZonesOpened] = useState({
     herb: true,
@@ -8,7 +9,7 @@ export function ReservationPage() {
     inside: true,
     gravel: true,
   }); // Exemple de zones ouvertes
-  const [isModalOpen, setIsModalOpen] = useState(false); // Contrôle de la modale
+  const [isModalOpen, setIsModalOpen] = useState(true); // Contrôle de la modale
   const [availableDates, setAvailableDates] = useState([]); // Exemple de dates disponibles
   const [availableTimes, setAvailableTimes] = useState([]); // Exemple d'horaires disponibles
   // Filtrer les zones ouvertes
@@ -42,8 +43,8 @@ export function ReservationPage() {
 
       {/* Afficher la modale */}
       <ReservationModal 
-          isOpen={true}
-          onClose={() => console.log("Closed")}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
           onSubmit={(data) => console.log("Submitted", data)}
           zones={openZones}
           availableDates={[availableDates]}
