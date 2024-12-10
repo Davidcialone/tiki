@@ -5,11 +5,15 @@ import { NavBar } from "./navBar";
 export function HomePage() {
   return (
 
-    <div>
-        <h1>Accueil</h1>
-        <p>Bienvenue au TIKI , un restaurant de cuisine hawaïenne situé à Meyzieu. </p>
-        <p> Nous proposons une variété de plats hawaïens, y compris des poke bowls, des plats de riz et des plats de viande.</p>
-        <p>  Nous sommes ouverts pour le déjeuner et le dîner tous les jours de la semaine. </p>
+    <div className="font-aquatico text-2xl">
+        <h1><strong>TIKI</strong> <p>au bord de l'eau</p></h1>
+       
+        <p>Spot idéal pour apprécier les plus beaux couchers de soleil , à seulement 20 minutes du centre de Lyon. </p>
+       
+        <p>  Nous sommes ouverts tout l'hiver . </p>
+        <div className="flex items-center justify-center p-4">
+          <img src="2024-12-09 (3).jpg" alt="" />
+        </div>
         
          <button>Réserver une table</button>
 

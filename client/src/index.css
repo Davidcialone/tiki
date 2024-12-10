@@ -70,3 +70,11 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@font-face {
+  font-family: 'Aquatico';
+  src: url('./assets/fonts/Aquatico-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
