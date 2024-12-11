@@ -2,6 +2,16 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 dotenv.config();
 
+// let hstore;
+// try {
+//   hstore = require("pg-hstore")({ sanitize: true });
+//   console.log("pg-hstore loaded successfully.");
+// } catch (error) {
+//   console.warn(
+//     "pg-hstore could not be loaded. Ensure it is installed if required."
+//   );
+// }
+
 const sequelize = new Sequelize(process.env.PG_URL, {
   dialect: "postgres",
   logging: false, // Mettre true pour voir les requêtes SQL dans la console

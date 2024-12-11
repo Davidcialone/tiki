@@ -3,26 +3,26 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale"; // Import de la locale française
 
+
+
 const lunchTimes = [
- "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00"
+ "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00","14:15", "14:30"
 ];
 
 const dinnerTimes = [
-   "19:00", "19:15", "19:30", "19:45", "20:00","20:15", "20:30", "20:45", "21:00"
+   "19:00", "19:15", "19:30", "19:45", "20:00","20:15", "20:30", "20:45", "21:00", "21:15", "21:30", "21:45", "22:00", "22:15", "22:30"
 ];
 
 export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
-  // Dates et horaires par défaut si non disponibles
-  const defaultAvailableDates = [new Date()]; // Par défaut, la date actuelle
-  const defaultAvailableTimes = ["11:45","12:00","12:15","12:30","12:45","13:00","13:15","13:30","13:45","14:00", "18:45","19:00","19:15","19:30","19:45","20:00","20:15","20:30","20:45","21:00"]; // Liste d'horaires par défaut
 
-  const [formData, setFormData] = useState({
+   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     people: 1,
-    date: defaultAvailableDates[0], // Par défaut, la première date disponible
+    date: new Date().now,
     time: lunchTimes[0], // Par défaut, on commence avec un horaire de midi
+    isLunch: true, // Par défaut, on commence avec le midi
     zone: zones.length > 0 ? zones[0] : "", // Par défaut, première zone
   });
 
@@ -43,13 +43,63 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
     }));
   };
 
-    // Fonction pour gérer la sélection de l'heure
-    const handleTimeClick = (time) => {
-      setFormData((prev) => ({
-        ...prev,
-        time: time,
-      }));
-    };
+const handleTimeClick = (time) => {
+  if (!isValidDate(formData.date)) {
+    alert("Veuillez sélectionner une date valide avant de choisir un horaire.");
+    return;
+  }
+  if (!isValidTimeForDate(time, formData.date)) {
+    alert("L'horaire sélectionné n'est pas disponible pour la date choisie.");
+    return;
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    time: time,
+  }));
+};
+  
+
+// Valider que la date sélectionnée est valide selon les jours d'ouverture
+const isValidDate = (date) => {
+  if (!date) return false;
+  const day = date.getDay(); // 0: Dimanche, 1: Lundi, ..., 6: Samedi
+
+  // Règles pour les jours spécifiques
+  switch (day) {
+    case 1: // Lundi fermé
+      return false;
+    case 2: // Mardi ouvert uniquement le midi
+    case 3: // Mercredi ouvert uniquement le midi
+      return formData.isLunch;
+    case 4: // Jeudi ouvert midi et soir
+    case 5: // Vendredi ouvert midi et soir
+    case 6: // Samedi ouvert midi et soir
+      return true;
+    case 0: // Dimanche ouvert uniquement le midi
+      return formData.isLunch;
+    default:
+      return false;
+  }
+};
+
+// Filtrer les dates invalides dans le sélecteur
+const filterDate = (date) => {
+  const day = date.getDay();
+  // Lundi (1) est exclu, et dimanche soir (0) est exclu
+  return day !== 1;
+};
+
+const isValidTimeForDate = (time, date) => {
+  const day = date.getDay();
+  // Conditions personnalisées selon le jour
+  if ((day === 2 || day === 3 || day === 0) && !formData.isLunch) {
+    return false; // Mardi, mercredi, et dimanche : pas de dîner
+  }
+  return true; // Tous les autres horaires sont valides pour les jours restants
+};
+
+
 
   // Fonction pour basculer entre les horaires du midi et du soir
   const toggleTimePeriod = () => {
@@ -63,6 +113,11 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
   // Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Vérifier si la date est valide
+    if (!isValidDate(formData.date)) {
+      alert("Veuillez sélectionner une date valide.");
+      return;
+    }
     onSubmit(formData);
     onClose(); // Fermer la modale après soumission
   };
@@ -194,6 +249,7 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
               dateFormat="dd/MM/yyyy"
               locale={fr} // Application de la locale française
               placeholderText="Sélectionnez une date"
+              filterDate={filterDate} // Filtrer les dates invalides
               required
               style={{
                 width: "100%",
@@ -231,28 +287,36 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateColumns: "repeat(4, 1fr)",
                 gap: "10px",
                 marginBottom: "20px",
               }}
             >
               {(formData.isLunch ? lunchTimes : dinnerTimes).map((time) => (
                 <button
-                  key={time}
-                  type="button"
-                  onClick={() => handleTimeClick(time)}
-                  style={{
-                    padding: "10px",
-                    backgroundColor: formData.time === time ? "#4CAF50" : "#fff",
-                    color: formData.time === time ? "#fff" : "#000",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s",
-                  }}
-                >
-                  {time}
-                </button>
+                key={time}
+                type="button"
+                onClick={() => {
+                  // Alerte si l'horaire est grisé
+                  if (!isValidTimeForDate(time, formData.date)) {
+                    alert("L'horaire sélectionné n'est pas disponible pour la date choisie.");
+                  } else {
+                    handleTimeClick(time); // Si valide, on sélectionne l'horaire
+                  }
+                }}
+                // disabled={!isValidDate(formData.date) || (formData.date && !isValidTimeForDate(time, formData.date))}
+                style={{
+                  padding: "10px",
+                  backgroundColor: formData.time === time ? "#4CAF50" : "#fff",
+                  color: formData.time === time ? "#fff" : "#000",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  opacity: !isValidDate(formData.date) || (formData.date && !isValidTimeForDate(time, formData.date)) ? 0.5 : 1,
+                }}
+              >
+                {time}
+              </button>
+              
               ))}
             </div>
           </div>
