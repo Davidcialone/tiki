@@ -21,6 +21,7 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     people: 1,
     date: today,
     time: lunchTimes[0], // Par défaut, on commence avec un horaire de midi
@@ -216,6 +217,23 @@ const isValidTimeForDate = (time, date) => {
             />
           </div>
 
+          {/* Phone */}
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Téléphone</label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
+            />
+          </div>
 
           <div style={{ marginBottom: "15px" }}>
             <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Nombre de personnes</label>
