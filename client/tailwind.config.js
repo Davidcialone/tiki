@@ -2,7 +2,11 @@
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customRed: "#8B1C1C",
+      },
+    },
   },
   plugins: [],
 };

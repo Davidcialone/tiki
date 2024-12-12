@@ -15,12 +15,14 @@ const dinnerTimes = [
 
 export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
 
+  const today = new Date(); // Date actuelle
+
    const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     people: 1,
-    date: new Date().now,
+    date: today,
     time: lunchTimes[0], // Par défaut, on commence avec un horaire de midi
     isLunch: true, // Par défaut, on commence avec le midi
     zone: zones.length > 0 ? zones[0] : "", // Par défaut, première zone
@@ -160,6 +162,24 @@ const isValidTimeForDate = (time, date) => {
           Réservation
         </h2>
         <form onSubmit={handleSubmit}>
+             {/* Nom */}
+             <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Nom</label>
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
+            />
+          </div>
+
           {/* Prénom */}
           <div style={{ marginBottom: "15px" }}>
             <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Prénom</label>
@@ -177,25 +197,7 @@ const isValidTimeForDate = (time, date) => {
               }}
             />
           </div>
-
-          {/* Nom */}
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Nom</label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
-            />
-          </div>
-
+    
           {/* Email */}
           <div style={{ marginBottom: "15px" }}>
             <label style={{ display: "block", marginBottom: "5px", color: "black" }}>Email</label>
@@ -248,6 +250,7 @@ const isValidTimeForDate = (time, date) => {
               onChange={handleDateChange}
               dateFormat="dd/MM/yyyy"
               locale={fr} // Application de la locale française
+              minDate={today}
               placeholderText="Sélectionnez une date"
               filterDate={filterDate} // Filtrer les dates invalides
               required

@@ -1,9 +1,10 @@
-import { Model, DataTypes } from "sequelize";
-import { sequelize } from "./sequelizeClient.js";
+import pkg from "sequelize";
+const { Model, DataTypes } = pkg;
+import sequelize from "../../db.js";
 
-export class User extends Model {}
+export class Users extends Model {}
 
-User.init(
+Users.init(
   {
     email: {
       type: DataTypes.STRING,
@@ -41,6 +42,6 @@ User.init(
   },
   {
     sequelize,
-    tableName: "user",
+    tableName: "users",
   }
 );
