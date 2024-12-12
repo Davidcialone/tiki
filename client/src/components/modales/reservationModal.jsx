@@ -337,8 +337,7 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
                     cursor: "pointer",
                   }}
                 >
-                  Confirmer la réservation
-                </button>
+                  Confirmer                 </button>
               </div>
             </form>
           </div>
