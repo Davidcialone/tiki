@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { router as reservationsRouter } from "./reservations.js";
 
 export const router = Router();
 
-// Préfixer les routes
-// router.use("/users", userRouter);
+router.use("/reservations", reservationsRouter);
 
 // Middleware 404 (API)
 router.use((req, res) => {

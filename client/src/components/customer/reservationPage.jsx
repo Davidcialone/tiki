@@ -8,7 +8,8 @@ export function ReservationPage() {
     terrace: false,
     inside: true,
     gravel: true,
-  }); // Exemple de zones ouvertes
+  }); 
+  // Exemple de zones ouvertes
   const [isModalOpen, setIsModalOpen] = useState(true); // Contrôle de la modale
   const [availableDates, setAvailableDates] = useState([]); // Exemple de dates disponibles
   const [availableTimes, setAvailableTimes] = useState([]); // Exemple d'horaires disponibles

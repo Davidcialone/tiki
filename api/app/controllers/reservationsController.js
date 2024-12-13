@@ -1,184 +1,91 @@
-import { Reservations } from "../models/index.js";
+import { Users } from "../models/Users.js";
+import { Reservations } from "../models/Reservations.js ";
 
-export async function getReservations(req, res) {
-  const reservationDate = req.params.reservation_date;
-
-  // Vérifier que la date est bien fournie et au bon format
-  if (!reservationDate || isNaN(Date.parse(reservationDate))) {
-    return res
-      .status(400)
-      .json({ error: "La date fournie est invalide ou manquante." });
-  }
-
+export const createReservation = async (req, res) => {
   try {
-    // Recherche des réservations pour la date spécifiée
-    const dayReservations = await Reservations.findAll({
-      where: {
-        date: reservationDate, // Si vous avez besoin d'un format spécifique, vous pouvez le formater ici.
-      },
-    });
-
-    // Si aucune réservation n'est trouvée, on renvoie un message approprié
-    if (dayReservations.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Aucune réservation trouvée pour cette date." });
-    }
-
-    // Si des réservations sont trouvées, on les renvoie
-    res.json(dayReservations);
-  } catch (error) {
-    // Gestion des erreurs de la base de données
-    console.error(error);
-    res.status(500).json({
-      error:
-        "Une erreur s'est produite lors de la récupération des réservations.",
-    });
-  }
-}
-
-export async function getReservation(req, res) {
-  const reservationId = req.params.id;
-
-  // Vérifier que l'ID de la réservation est fourni
-  if (!reservationId) {
-    return res
-      .status(400)
-      .json({ error: "Veuillez fournir l'ID de la réservation à récupérer." });
-  }
-
-  try {
-    // Recherche de la réservation par ID
-    const reservation = await Reservations.findByPk(reservationId);
-
-    // Vérifier si la réservation existe
-    if (!reservation) {
-      return res
-        .status(404)
-        .json({ message: "La réservation demandée n'a pas été trouvée." });
-    }
-
-    // Renvoyer la réservation
-    res.json(reservation);
-  } catch (error) {
-    // Gestion des erreurs de la base de données
-    console.error(error);
-    res.status(500).json({
-      error:
-        "Une erreur s'est produite lors de la récupération de la réservation.",
-    });
-  }
-}
-
-export async function createReservation(req, res) {
-  const { firstName, lastName, email, people, date, time } = req.body;
-
-  // Vérifier que toutes les données nécessaires sont fournies
-  if (!firstName || !lastName || !email || !people || !date || !time) {
-    return res
-      .status(400)
-      .json({ error: "Veuillez fournir toutes les informations nécessaires." });
-  }
-
-  try {
-    // Créer une nouvelle réservation
-    const newReservation = await Reservations.create({
+    const {
+      email,
       firstName,
       lastName,
+      phone,
+      reservation_date,
+      reservation_time,
+      number_of_people,
+      note,
+    } = req.body;
+
+    console.log(
+      "Requête reçue pour créer une réservation avec les données suivantes:"
+    );
+    console.log({
       email,
-      people,
-      date,
-      time,
+      firstName,
+      lastName,
+      phone,
+      reservation_date,
+      reservation_time,
+      number_of_people,
+      note,
     });
 
-    // Renvoyer la nouvelle réservation
-    res.status(201).json(newReservation);
-  } catch (error) {
-    // Gestion des erreurs de la base de données
-    console.error(error);
-    res.status(500).json({
-      error: "Une erreur s'est produite lors de la création de la réservation.",
-    });
-  }
-}
+    // Vérifier si l'utilisateur existe déjà avec l'email
+    console.log(`Recherche d'un utilisateur avec l'email: ${email}`);
+    let user = await Users.findOne({ where: { email } });
 
-export async function updateReservation(req, res) {
-  const reservationId = req.params.id;
-  const { firstName, lastName, email, people, date, time } = req.body;
-
-  // Vérifier que l'ID de la réservation est fourni
-  if (!reservationId) {
-    return res.status(400).json({
-      error: "Veuillez fournir l'ID de la réservation à mettre à jour.",
-    });
-  }
-
-  try {
-    // Recherche de la réservation à mettre à jour
-    const reservation = await Reservations.findByPk(reservationId);
-
-    // Vérifier si la réservation existe
-    if (!reservation) {
-      return res.status(404).json({
-        message: "La réservation à mettre à jour n'a pas été trouvée.",
+    // Si l'utilisateur n'existe pas, créez-le
+    if (!user) {
+      console.log(
+        "Utilisateur non trouvé, création d'un nouvel utilisateur..."
+      );
+      user = await Users.create({
+        email,
+        firstname: firstName,
+        lastname: lastName,
+        phone,
+        role_id: 1, // Le rôle utilisateur par défaut, à ajuster selon vos besoins
       });
+      console.log("Nouvel utilisateur créé avec succès:", user);
+    } else {
+      console.log("Utilisateur existant trouvé:", user);
     }
 
-    // Mettre à jour les données de la réservation
-    reservation.firstName = firstName;
-    reservation.lastName = lastName;
-    reservation.email = email;
-    reservation.people = people;
-    reservation.date = date;
-    reservation.time = time;
+    // Calcul de places_used
+    const placesUsed = Math.ceil(number_of_people / 2) * 2; // Arrondir à la valeur supérieure si impair
+    console.log(
+      `Nombre de personnes: ${number_of_people}, Places utilisées calculées: ${placesUsed}`
+    );
 
-    // Sauvegarder les modifications
-    await reservation.save();
+    // Calcul de l'heure de fin (ajout de 1h30 à l'heure de réservation)
+    const reservationDateTime = new Date(
+      `${reservation_date} ${reservation_time}`
+    );
+    const endTime = new Date(reservationDateTime.getTime() + 90 * 60000); // Ajoute 1h30 (90 minutes)
+    console.log(
+      `Heure de réservation: ${reservationDateTime}, Heure de fin calculée: ${endTime}`
+    );
 
-    // Renvoyer la réservation mise à jour
-    res.json(reservation);
-  } catch (error) {
-    // Gestion des erreurs de la base de données
-    console.error(error);
-    res.status(500).json({
-      error:
-        "Une erreur s'est produite lors de la mise à jour de la réservation.",
+    // Créer la réservation avec l'utilisateur récupéré ou nouvellement créé
+    console.log("Création de la réservation...");
+    const reservation = await Reservations.create({
+      user_id: user.id, // Utilisation de l'ID de l'utilisateur existant ou créé
+      reservation_date,
+      reservation_time,
+      number_of_people,
+      places_used: placesUsed,
+      note,
+      date: new Date(), // Date de création de la réservation (actuelle)
+      end_time: endTime, // Heure de fin calculée
     });
-  }
-}
+    console.log("Réservation créée avec succès:", reservation);
 
-export async function deleteReservation(req, res) {
-  const reservationId = req.params.id;
-
-  // Vérifier que l'ID de la réservation est fourni
-  if (!reservationId) {
-    return res
-      .status(400)
-      .json({ error: "Veuillez fournir l'ID de la réservation à supprimer." });
-  }
-
-  try {
-    // Recherche de la réservation à supprimer
-    const reservation = await Reservations.findByPk(reservationId);
-
-    // Vérifier si la réservation existe
-    if (!reservation) {
-      return res
-        .status(404)
-        .json({ message: "La réservation à supprimer n'a pas été trouvée." });
-    }
-
-    // Supprimer la réservation
-    await reservation.destroy();
-
-    // Renvoyer un message de succès
-    res.json({ message: "La réservation a été supprimée avec succès." });
+    res.status(201).json(reservation);
   } catch (error) {
-    // Gestion des erreurs de la base de données
-    console.error(error);
-    res.status(500).json({
-      error:
-        "Une erreur s'est produite lors de la suppression de la réservation.",
-    });
+    console.error(
+      "Erreur lors de la création de la réservation:",
+      error.message
+    );
+    res
+      .status(500)
+      .json({ message: "Error creating reservation", error: error.message });
   }
-}
+};

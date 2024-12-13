@@ -5,20 +5,8 @@ export class Reservations extends Model {}
 
 Reservations.init(
   {
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "user",
-        key: "id",
-      },
-    },
     reservation_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     reservation_time: {
@@ -29,35 +17,60 @@ Reservations.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    places_used: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        isMultipleOfTwo(value) {
-          if (value % 2 !== 0) {
-            throw new Error("places_used must be a multiple of 2");
-          }
-        },
-      },
+    note: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     end_time: {
       type: DataTypes.TIME,
       allowNull: false,
-      validate: {
-        isAfter(value) {
-          if (value <= this.reservation_time) {
-            throw new Error("end_time must be after reservation_time");
-          }
-        },
+    },
+    zone_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "zones",
+        key: "id",
       },
     },
-    note: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "users",
+        key: "id",
+      },
     },
   },
   {
     sequelize,
     tableName: "reservations",
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+    hooks: {
+      beforeSave: (reservation) => {
+        if (reservation.reservation_time) {
+          // Décomposer `reservation_time` (HH:mm)
+          const [hours, minutes] = reservation.reservation_time
+            .split(":")
+            .map(Number);
+
+          // Créer un objet Date pour manipulation
+          const reservationDateTime = new Date();
+          reservationDateTime.setHours(hours);
+          reservationDateTime.setMinutes(minutes);
+
+          // Ajouter 90 minutes
+          reservationDateTime.setMinutes(reservationDateTime.getMinutes() + 90);
+
+          // Convertir en format TIME (HH:mm:ss)
+          const formattedEndTime = reservationDateTime
+            .toTimeString()
+            .split(" ")[0];
+          reservation.end_time = formattedEndTime;
+        }
+      },
+    },
   }
 );

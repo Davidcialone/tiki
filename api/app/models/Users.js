@@ -22,10 +22,6 @@ Users.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -33,7 +29,7 @@ Users.init(
     role_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: "customer",
+      defaultValue: 1,
       references: {
         model: "role",
         key: "id",
@@ -43,5 +39,8 @@ Users.init(
   {
     sequelize,
     tableName: "users",
+    timestamps: true,
+    createdAt: "created_at", // Map Sequelize `createdAt` to DB `created_at`
+    updatedAt: "updated_at", // Map Sequelize `updatedAt` to DB `updated_at`
   }
 );

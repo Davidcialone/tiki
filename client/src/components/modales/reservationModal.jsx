@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
 import PropTypes from "prop-types";
+import { createReservation } from "../../api/reservationApi";
 
 const lunchTimes = [
   "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30"
@@ -24,8 +25,8 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
     number_of_people: 1,
     reservation_date: today,
     reservation_time: lunchTimes[0],
-    isLunch: true,
-    zone_id: zones.length > 0 ? zones[0] : "",
+    // isLunch: true,
+    // zone_id: zones.length > 0 ? zones[0] : "",
   });
 
   const handleChange = (e) => {
@@ -71,6 +72,17 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
   const handleBackStep = () => {
     setStep(1); // Revenir à la première étape (Disponibilité)
   };
+
+  const handleSave = async () => {
+    try {
+      const response = await createReservation(formData);
+      console.log("Réservation créée avec succès:", response);
+      onClose();
+    } catch (error) {
+      console.error("Erreur lors de la création de la réservation:", error);
+    }
+  };
+
 
   if (!isOpen) return null;
 
@@ -328,6 +340,10 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
                 </button>
                 <button
                   type="submit"
+                  onClick={(e) => {
+                    e.preventDefault(); // Empêche le comportement par défaut
+                    handleSave(); // Appel de votre fonction de sauvegarde
+                  }}
                   style={{
                     padding: "10px 20px",
                     backgroundColor: "#007BFF",
