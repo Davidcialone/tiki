@@ -4,6 +4,7 @@ import cors from "cors";
 import sequelize from "./db.js";
 import { router as apiRouter } from "./app/routers/index.js";
 import dotenv from "dotenv";
+import { setupAssociations } from "../api/app/models/associations.js";
 
 // Chargement des variables d'environnement
 dotenv.config();
@@ -18,6 +19,17 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })
 );
+
+// Configuration de Sequelize et des associations
+sequelize
+  .sync({ alter: true })
+  .then(() => {
+    console.log("Models synchronized");
+    setupAssociations();
+  })
+  .catch((err) => {
+    console.error("Error syncing models:", err);
+  });
 
 // Middleware pour le parsing des JSON et des données encodées en URL
 app.use(express.json({ limit: "10mb" }));

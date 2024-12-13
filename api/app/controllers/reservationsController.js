@@ -1,5 +1,5 @@
+import { Reservations } from "../models/Reservations.js";
 import { Users } from "../models/Users.js";
-import { Reservations } from "../models/Reservations.js ";
 
 export const createReservation = async (req, res) => {
   try {
@@ -87,5 +87,64 @@ export const createReservation = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error creating reservation", error: error.message });
+  }
+};
+
+export const getReservations = async (req, res) => {
+  try {
+    console.log("Requête reçue pour récupérer toutes les réservations...");
+
+    // Récupérer toutes les réservations avec les détails de l'utilisateur associé
+    const reservations = await Reservations.findAll({
+      include: [
+        {
+          model: Users,
+          as: "user", // Si vous avez utilisé un alias
+        },
+      ],
+    });
+
+    res.status(200).json(reservations);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des réservations:",
+      error.message
+    );
+    res
+      .status(500)
+      .json({ message: "Error getting reservations", error: error.message });
+  }
+};
+
+export const getReservationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(`Requête reçue pour récupérer la réservation avec l'ID: ${id}`);
+
+    // Récupérer la réservation avec l'ID donné et les détails de l'utilisateur associé
+    const reservation = await Reservations.findByPk(id, {
+      include: {
+        model: Users,
+        attributes: ["email", "firstname", "lastname", "phone"],
+      },
+    });
+
+    if (!reservation) {
+      console.log("Réservation non trouvée.");
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    console.log("Réservation récupérée avec succès:", reservation);
+
+    res.json(reservation);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération de la réservation:",
+      error.message
+    );
+    res
+      .status(500)
+      .json({ message: "Error getting reservation", error: error.message });
   }
 };

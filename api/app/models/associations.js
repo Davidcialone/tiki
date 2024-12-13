@@ -1,19 +1,39 @@
-import { User } from "./User.js";
-import { Role } from "./Role.js";
+// Dans un fichier d'associations, par exemple associationsConfig.js
+import { Users } from "./Users.js";
 import { Reservations } from "./Reservations.js";
-import { sequelize } from "./sequelizeClient.js";
+import { Roles } from "./Roles.js";
+import { Zones } from "./Zones.js";
 
-User.belongsTo(Role, {
-  foreignKey: "role_id",
-});
-Role.hasMany(User, {
-  foreignKey: "role_id",
-});
-User.hasMany(Reservations, {
-  foreignKey: "user_id",
-});
-Reservations.belongsTo(User, {
-  foreignKey: "user_id",
-});
+// Définissez toutes vos associations ici
+export const setupAssociations = () => {
+  // Associations Users-Roles
+  Users.belongsTo(Roles, {
+    foreignKey: "role_id",
+    as: "role",
+  });
+  Roles.hasMany(Users, {
+    foreignKey: "role_id",
+  });
 
-export { User, Role, Reservations, sequelize };
+  // Associations Users-Reservations
+  Users.hasMany(Reservations, {
+    foreignKey: "user_id",
+    as: "reservations",
+  });
+  Reservations.belongsTo(Users, {
+    foreignKey: "user_id",
+    as: "user",
+  });
+
+  // Associations Reservations-Zones
+  Reservations.belongsTo(Zones, {
+    foreignKey: "zone_id",
+    as: "zone",
+  });
+  Zones.hasMany(Reservations, {
+    foreignKey: "zone_id",
+  });
+};
+
+// Appelez cette fonction après l'initialisation de Sequelize
+setupAssociations();

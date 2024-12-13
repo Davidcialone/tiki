@@ -19,7 +19,7 @@ function App() {
         <Routes> {/* Define the Routes */}
           <Route path="/" element={<HomePage />} /> {/* Home Page route */}
           <Route path="/restaurant" element={<RestaurantLayout />} /> {/* Restaurant Layout route */}
-          <Route path="/reservation" element={<ReservationPage />} /> {/* Reservation Page route */}
+          <Route path="/reservations" element={<ReservationPage />} /> {/* Reservation Page route */}
           <Route path="/gestion" element={<DashBoard/>} /> {/* Tableau de bord */}
           <Route path="/restaurantLayout" element={<RestaurantLayout />} /> {/* Restaurant Layout route */}
           <Route path="*" element={<h1>404 Not Found</h1>} /> {/* 404 Not Found route */}

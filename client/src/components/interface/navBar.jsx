@@ -47,7 +47,7 @@ export function NavBar() {
                 Accueil
               </Link>
               <Link
-                to="/reservation"
+                to="/reservations"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Réserver
@@ -80,7 +80,7 @@ export function NavBar() {
               Accueil
             </Link>
             <Link
-              to="/reservation"
+              to="/reservations"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Réserver

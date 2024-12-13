@@ -4,7 +4,7 @@ import * as reservationsController from "../controllers/reservationsController.j
 export const router = Router();
 
 // // GET /reservations
-// router.get("/", reservationsController.getReservations);
+router.get("/", reservationsController.getReservations);
 
 // POST /reservations
 router.post("/", reservationsController.createReservation);
@@ -13,7 +13,7 @@ router.post("/", reservationsController.createReservation);
 // router.get("/:reservation_date", reservationsController.getReservations);
 
 // // GET /reservations/:reservation_id
-// router.get("/:reservation_id", reservationsController.getReservation);
+// router.get("/:reservation_id", reservationsController.getReservationById);
 
 // // PUT /reservations/:reservation_id
 // router.put("/:reservation_id", reservationsController.updateReservation);
