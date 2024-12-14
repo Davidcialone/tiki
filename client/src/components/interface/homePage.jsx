@@ -18,7 +18,7 @@ export function HomePage() {
         </div>
         
         <Link 
-        to="/reservation"
+        to="/reservations"
         className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-normal"
         >
          <button className=" bg-customRed">Réserver une table</button>

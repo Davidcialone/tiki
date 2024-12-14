@@ -53,7 +53,7 @@ export function NavBar() {
                 Réserver
               </Link>
               <Link
-                to="/gestion"
+                to="/dashboard"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Gestion

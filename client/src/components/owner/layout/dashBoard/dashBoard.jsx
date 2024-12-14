@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {GestionReservations} from './reservationsDashboard'
 
 export function DashBoard() {
     return (
@@ -11,10 +10,14 @@ export function DashBoard() {
         {/* <button className="m-2 ">
       <Link to="/restaurantLayout">Zones Tables</Link>
     </button> */}
-        <button className="m-2 "><Link>Réservations</Link></button>
+        <button className="m-2 ">
+           <Link
+            to="/dashboard/reservations"
+            >Réservations
+          </Link></button>
         <button className="m-2 "><Link>Statistiques</Link></button>
         
-        <GestionReservations/>
+      
         </div>
     );
     }
