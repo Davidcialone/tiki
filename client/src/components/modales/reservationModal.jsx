@@ -28,6 +28,10 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
     // isLunch: true,
     // zone_id: zones.length > 0 ? zones[0] : "",
   });
+  const [reservationDetails, setReservationDetails] = useState(null);
+
+  console.log("Détails de la réservation :", reservationDetails);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,12 +80,21 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
   const handleSave = async () => {
     try {
       const response = await createReservation(formData);
-      console.log("Réservation créée avec succès:", response);
-      onClose();
+  
+      if (response) {
+        console.log("Réservation créée avec succès:", response);
+        onSubmit(formData); // Envoie les données au parent
+        onClose(); // Ferme la modale
+      } else {
+        console.error("Erreur lors de la création de la réservation:", response);
+        alert("Erreur lors de la création de la réservation");
+      }
     } catch (error) {
       console.error("Erreur lors de la création de la réservation:", error);
+      alert("Une erreur inattendue s'est produite.");
     }
   };
+  
 
 
   if (!isOpen) return null;
@@ -356,6 +369,17 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
                   Confirmer                 </button>
               </div>
             </form>
+            {reservationDetails && (
+              <div>
+                <h2>Récapitulatif de votre réservation</h2>
+                <p>Nom : {reservationDetails.lastName} {reservationDetails.firstName}</p>
+                <p>Email : {reservationDetails.email}</p>
+                <p>Date : {reservationDetails.reservation_date}</p>
+                <p>Heure : {reservationDetails.reservation_time}</p>
+                <p>Nombre de personnes : {reservationDetails.number_of_people}</p>
+              </div>
+            )}
+
           </div>
         )}
       </div>
