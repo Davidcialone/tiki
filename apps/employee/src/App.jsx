@@ -8,7 +8,7 @@ function App() {
     <Router>
       <NavBarEmployee />
       <Routes>
-        <Route path="/employee" element={<HomePageEmployee />} />
+        <Route path="/" element={<HomePageEmployee />} />
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
     </Router>
