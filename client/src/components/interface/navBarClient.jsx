@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Use Link from react-router-dom for routing
 
-export function NavBar() {
+export function NavBarClient() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -53,16 +53,16 @@ export function NavBar() {
                 Réserver
               </Link>
               <Link
-                to="/dashboard"
+                to="/menu"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Gestion
+                Menus
               </Link>
               <Link
-                to="/connexion"
+                to="/localisation"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Connexion
+                Localisation
               </Link>
             </div>
           </div>
@@ -86,16 +86,16 @@ export function NavBar() {
               Réserver
             </Link>
             <Link
-              to="/dashboard"
+              to="/menu"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
-              Gestion
+              Menu
             </Link>
             <Link
-              to="/connexion"
+              to="/localisation"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
-              Connexion
+              Localisation
             </Link>
           </div>
         </div>

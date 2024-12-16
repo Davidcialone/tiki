@@ -1,9 +1,9 @@
 import React from "react";
-import { NavBar } from "./navBar";
 import { Link } from "react-router-dom";
 
 
-export function HomePage() {
+
+export function HomePageClient() {
   return (
 
     <div className="font-Asap  text-2xl m-4">

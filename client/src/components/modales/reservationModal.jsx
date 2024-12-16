@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
 import PropTypes from "prop-types";
 import { createReservation } from "../../api/reservationApi";
+import emailjs from "emailjs-com";
 
 const lunchTimes = [
   "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30"
@@ -63,9 +64,10 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     onSubmit(formData);
+    await sendConfirmationEmail(formData);
     onClose();
   };
 
@@ -92,6 +94,34 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
     } catch (error) {
       console.error("Erreur lors de la création de la réservation:", error);
       alert("Une erreur inattendue s'est produite.");
+    }
+  };
+
+  const sendConfirmationEmail = async (data) => {
+    try {
+      const templateParams = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        reservation_date: formData.reservation_date.toLocaleDateString(),
+        reservation_time: formData.reservation_time,
+        number_of_people: formData.number_of_people,
+        zone: formData.zone,
+        restaurant_email: 'restaurant@example.com', // L'email du restaurant
+      };
+
+      // Remplacez "your_service_id" et "your_template_id" par vos identifiants EmailJS
+      const response = await emailjs.send(
+        "service_48evkpu", 
+        "template_0bebbu8", 
+        templateParams, 
+        "X4v7N02AAcE0oyXCm"
+      );
+
+      console.log("Email envoyé avec succès :", response);
+      alert("Votre réservation a été confirmée par email !");
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de l'email :", error);
+      alert("Une erreur est survenue lors de l'envoi de la confirmation.");
     }
   };
   

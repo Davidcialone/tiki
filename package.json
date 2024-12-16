@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "dev:client": "cd client && npm run dev:client",
+    "dev:employee": "cd employee && npm run dev:employee",
     "dev:api": "cd api && npm run dev:api",
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:api\"",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:employee\"  \"npm run dev:api\"",
     "build:client": "cd client && npm run build",
+    "build:employee": "cd employee && npm run build",
     "build:api": "cd api && npm run build",
     "build": "npm run build:client && npm run build:api",
     "start:client": "cd client && npm start",
+    "start:employee": "cd employee && npm start",
     "start:api": "cd api && npm start",
     "start": "concurrently \"npm run start:client\" \"npm run start:api\"",
     "install:all": "npm install && npm install --prefix client && npm install --prefix api"
