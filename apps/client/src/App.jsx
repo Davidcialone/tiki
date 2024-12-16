@@ -2,13 +2,14 @@ import { useState } from 'react'
 import './App.css'
 import { ReservationProvider } from './reservationContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import {RestaurantLayout} from './components/owner/layout/restaurantLayout'
 import { NavBarClient } from './components/interface/navBarClient';
 import { HomePageClient } from './components/interface/homePageClient';
 import { ReservationPage } from './components/customer/reservationPage';
-import { DashBoard } from './components/owner/layout/dashBoard/dashBoard';
-import { GestionReservations } from './components/owner/layout/dashBoard/reservationsDashboard';
-import { ClientFiche } from './components/owner/layout/dashBoard/clientFiche';
+import { MenuDisplay } from './components/interface/menuDisplay';
+import { Contact } from './components/interface/contact';
+import { Location } from './components/interface/localisation';
+import { OpeningView } from './components/interface/openingView';
+
 
 
 function App() {
@@ -20,12 +21,11 @@ function App() {
         <NavBarClient /> {/* Navigation Bar */}
         <Routes> {/* Define the Routes */}
           <Route path="/" element={<HomePageClient />} /> {/* Home Page route */}
-          <Route path="/restaurant" element={<RestaurantLayout />} /> {/* Restaurant Layout route */}
           <Route path="/reservations" element={<ReservationPage />} /> {/* Reservation Page route */}
-          <Route path="/dashboard" element={<DashBoard/>} /> {/* Tableau de bord */}
-          <Route path="/dashboard/reservations" element={<GestionReservations />} /> {/* Tableau de bord */}
-          <Route path="/clients/:clientId" element={<ClientFiche />} />
-          <Route path="/restaurantLayout" element={<RestaurantLayout />} /> {/* Restaurant Layout route */}
+          <Route path="/menus" element={<MenuDisplay />} /> {/* Restaurant Layout route */}
+          <Route path="/opening" element={<OpeningView />} /> {/* Opening route */}
+          <Route path="/location" element={<Location />} /> {/* Location route */}
+          <Route path="/contact" element={<Contact />} /> {/* Contact route */}
           <Route path="*" element={<h1>404 Not Found</h1>} /> {/* 404 Not Found route */}
         </Routes>
       </div>

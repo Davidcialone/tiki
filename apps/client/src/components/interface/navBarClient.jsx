@@ -53,17 +53,30 @@ export function NavBarClient() {
                 Réserver
               </Link>
               <Link
-                to="/menu"
+                to="/menus"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Menus
+                Carte
               </Link>
               <Link
-                to="/localisation"
+                to="/opening"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Ouverture
+              </Link>
+              <Link
+                to="/location"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Localisation
               </Link>
+              <Link
+                to="/contact"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Nous contacter
+              </Link>
+
             </div>
           </div>
         </div>
@@ -86,16 +99,28 @@ export function NavBarClient() {
               Réserver
             </Link>
             <Link
-              to="/menu"
+              to="/menus"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
-              Menu
+              Carte
             </Link>
             <Link
-              to="/localisation"
+              to="/opening"
+              className="text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Ouverture
+            </Link>
+            <Link
+              to="/location"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Localisation
+            </Link>
+            <Link
+              to="/contact"
+              className="text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Contact
             </Link>
           </div>
         </div>

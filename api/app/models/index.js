@@ -3,6 +3,8 @@ export {
   Roles,
   Users,
   Zones,
+  MenuItems,
+  Categories,
   sequelize,
 } from "../models/index.js";
 

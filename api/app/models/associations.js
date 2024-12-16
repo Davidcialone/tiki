@@ -3,6 +3,8 @@ import { Users } from "./Users.js";
 import { Reservations } from "./Reservations.js";
 import { Roles } from "./Roles.js";
 import { Zones } from "./Zones.js";
+import { MenuItems } from "./MenuItems.js";
+import { Categories } from "./Categories.js";
 
 // Définissez toutes vos associations ici
 export const setupAssociations = () => {
@@ -18,7 +20,6 @@ export const setupAssociations = () => {
   // Associations Users-Reservations
   Users.hasMany(Reservations, {
     foreignKey: "user_id",
-    as: "reservations",
   });
   Reservations.belongsTo(Users, {
     foreignKey: "user_id",
@@ -34,6 +35,15 @@ export const setupAssociations = () => {
     foreignKey: "zone_id",
   });
 };
+
+//Associations categories-menuItems
+MenuItems.belongsTo(Categories, {
+  foreignKey: "category_id",
+  as: "category",
+});
+Categories.hasMany(MenuItems, {
+  foreignKey: "category_id",
+});
 
 // Appelez cette fonction après l'initialisation de Sequelize
 setupAssociations();

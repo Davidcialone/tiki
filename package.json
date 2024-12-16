@@ -4,18 +4,18 @@
   "description": "A sample project",
   "main": "index.js",
   "scripts": {
-    "dev:client": "cd client && npm run dev:client",
-    "dev:employee": "cd employee && npm run dev:employee",
-    "dev:api": "cd api && npm run dev:api",
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:employee\"  \"npm run dev:api\"",
-    "build:client": "cd client && npm run build",
-    "build:employee": "cd employee && npm run build",
+    "dev:client": "cd apps/client && npm run dev",     
+    "dev:employee": "cd apps/employee && npm run dev",
+    "dev:api": "cd api && npm run dev:api",           
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:employee\" \"npm run dev:api\"", 
+    "build:client": "cd apps/client && npm run build",
+    "build:employee": "cd apps/employee && npm run build",
     "build:api": "cd api && npm run build",
-    "build": "npm run build:client && npm run build:api",
-    "start:client": "cd client && npm start",
-    "start:employee": "cd employee && npm start",
-    "start:api": "cd api && npm start",
-    "start": "concurrently \"npm run start:client\" \"npm run start:api\"",
-    "install:all": "npm install && npm install --prefix client && npm install --prefix api"
+    "build": "npm run build:client && npm run build:api", 
+    "start:client": "cd apps/client && npm start",
+    "start:employee": "cd apps/employee && npm start",
+    "start:api": "cd api && npm start", 
+    "start": "concurrently \"npm run start:client\" \"npm run start:api\"", 
+    "install:all": "npm install && npm install --prefix apps/client && npm install --prefix api"
   }
 }

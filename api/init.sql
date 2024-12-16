@@ -1,16 +1,3 @@
--- Table `Users`
-CREATE TABLE Users (
-    "id" SERIAL PRIMARY KEY,           -- Identifiant unique
-    "lastname" VARCHAR(100) NOT NULL,  -- Nom du client
-    "firstname" VARCHAR(100) NOT NULL, -- Prénom du client
-    "email" VARCHAR(150) UNIQUE,       -- Email du client (doit être unique)
-    "phone" VARCHAR(20),               -- Numéro de téléphone
-    "role_id" INT NOT NULL,            -- Identifiant du rôle
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
-    "updated_at" TIMESTAMPTZ,
-    CONSTRAINT phone_format CHECK (phone ~ '^\+?[0-9]*$') -- Vérification du format téléphone
-);
-
 -- Table `Roles`
 CREATE TABLE Roles (
     "id" SERIAL PRIMARY KEY,           -- Identifiant unique
@@ -23,10 +10,45 @@ CREATE TABLE Roles (
 CREATE TABLE Zones (
     "id" SERIAL PRIMARY KEY,           -- Identifiant unique
     "name" VARCHAR(100) NOT NULL UNIQUE, -- Nom de la zone
+    "capacity" INT NOT NULL,            -- Capacité de la zone
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
     "updated_at" TIMESTAMPTZ DEFAULT now()  -- Date de mise à jour
 );
 
+-- Table `Users`
+CREATE TABLE Users (
+    "id" SERIAL PRIMARY KEY,           -- Identifiant unique
+    "lastname" VARCHAR(100) NOT NULL,  -- Nom du client
+    "firstname" VARCHAR(100) NOT NULL, -- Prénom du client
+    "email" VARCHAR(150) UNIQUE,       -- Email du client (doit être unique)
+    "phone" VARCHAR(20),               -- Numéro de téléphone
+    "role_id" INT NOT NULL,            -- Identifiant du rôle
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+    "updated_at" TIMESTAMPTZ,
+    CONSTRAINT phone_format CHECK (phone ~ '^\+?[0-9]*$'), -- Vérification du format téléphone
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES Roles(id) ON DELETE CASCADE -- Clé étrangère vers la table Roles
+);
+
+-- Table `Categories` (pour catégoriser les éléments de menu)
+CREATE TABLE Categories (
+    "id" SERIAL PRIMARY KEY,            -- Identifiant unique
+    "name" VARCHAR(100) NOT NULL UNIQUE, -- Nom de la catégorie (Entrées, Plats, etc.)
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
+    "updated_at" TIMESTAMPTZ DEFAULT now() -- Date de mise à jour
+);
+
+-- Table `MenuItems` (éléments du menu comme plats, desserts, boissons, etc.)
+CREATE TABLE MenuItems (
+    "id" SERIAL PRIMARY KEY,            -- Identifiant unique
+    "name" VARCHAR(150) NOT NULL,       -- Nom de l'élément (e.g., Filet de bœuf)
+    "description" TEXT,                 -- Description de l'élément
+    "price" NUMERIC(10, 2) NOT NULL,    -- Prix
+    "category_id" INT NOT NULL,         -- Référence à une catégorie
+    "image_url" TEXT,                   -- URL d'une image du plat
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
+    "updated_at" TIMESTAMPTZ DEFAULT now(),          -- Date de mise à jour
+    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE CASCADE
+);
 
 -- Table `Reservations`
 CREATE TABLE Reservations (
@@ -51,12 +73,12 @@ CREATE TABLE Reservations (
 
 -- Fonction pour calculer `end_time`
 CREATE OR REPLACE FUNCTION calculate_end_time()
-RETURNS TRIGGER AS $$
-BEGIN
+RETURNS TRIGGER AS $$ 
+BEGIN 
     -- Calcul automatique de `end_time` (ajoute 1h30 à `reservation_time`)
-    NEW.end_time := NEW.reservation_time + INTERVAL '1 hour 30 minutes';
-    RETURN NEW;
-END;
+    NEW.end_time := NEW.reservation_time + INTERVAL '1 hour 30 minutes'; 
+    RETURN NEW; 
+END; 
 $$ LANGUAGE plpgsql;
 
 -- Trigger pour appliquer la fonction avant insertion ou mise à jour

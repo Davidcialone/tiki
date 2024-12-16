@@ -10,8 +10,7 @@ export function HomePageEmployee() {
         <h1><strong>TIKI employés</strong>  </h1>
         
         <p  className="text-lg p-4 mt-4 mb-4">Bienvenue sur l'interface de gestion des employés. </p>
-        
-     
+             
         <div className="flex items-center justify-center p-4">
           <img src="2024-04-27.jpg" alt="" />
         </div>
