@@ -27,7 +27,9 @@ export function Contact() {
         <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
             <h1>Contactez-nous</h1>
 
-           <p> au : 06 12 34 56 78</p>
+           <p> au : 04 78 49 02 39</p>
+
+           <p>ou par message</p>
             
             {success && <p style={{ color: "green" }}>Merci pour votre message. Nous reviendrons vers vous sous peu !</p>}
 

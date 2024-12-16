@@ -1,15 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Use Link from react-router-dom for routing
 
 export function NavBarClient() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Fonction pour gérer la fermeture du menu lors du défilement
+  useEffect(() => {
+    const handleScroll = () => {
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false); // Ferme le menu lorsque l'utilisateur défile
+      }
+    };
+
+    // Ajouter un écouteur d'événements pour le défilement
+    window.addEventListener("scroll", handleScroll);
+
+    // Nettoyage lors du démontage du composant
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [mobileMenuOpen]); // Se déclenche lorsque mobileMenuOpen change
 
   return (
     <nav className="bg-red-800 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            {/* Mobile menu button */}
+            {/* Bouton du menu mobile */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75"
@@ -76,13 +93,12 @@ export function NavBarClient() {
               >
                 Nous contacter
               </Link>
-
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu, toggle visibility based on mobileMenuOpen state */}
+      {/* Menu mobile, affichage conditionnel */}
       {mobileMenuOpen && (
         <div className="sm:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1">
