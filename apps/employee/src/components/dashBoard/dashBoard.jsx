@@ -12,7 +12,7 @@ export function DashBoard() {
     </button> */}
         <button className="m-2 ">
            <Link
-            to="/dashboard/reservations"
+            to="/reservations"
             >Réservations
           </Link></button>
         <button className="m-2 "><Link>Statistiques</Link></button>

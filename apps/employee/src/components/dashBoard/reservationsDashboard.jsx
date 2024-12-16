@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getReservations } from "../../../../api/reservationApi";
+import { getReservations } from "../../api/reservationApi";
 import { Card, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom"; // Import de Link pour la navigation
 
