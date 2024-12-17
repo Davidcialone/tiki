@@ -1,36 +1,35 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
+
 dotenv.config();
 
-// let hstore;
-// try {
-//   hstore = require("pg-hstore")({ sanitize: true });
-//   console.log("pg-hstore loaded successfully.");
-// } catch (error) {
-//   console.warn(
-//     "pg-hstore could not be loaded. Ensure it is installed if required."
-//   );
-// }
-
+// Configuration de la connexion Sequelize
 const sequelize = new Sequelize(process.env.PG_URL, {
   dialect: "postgres",
-  logging: false, // Mettre true pour voir les requêtes SQL dans la console
+  logging: process.env.NODE_ENV === "development", // Logs uniquement en développement
   dialectOptions: {
-    ssl: false,
+    ssl: process.env.NODE_ENV === "production" && {
+      require: true,
+      rejectUnauthorized: false, // Ajustez selon les besoins
+    },
   },
   pool: {
-    max: 5, // nombre maximum de connexions dans le pool
-    min: 0, // nombre minimum de connexions dans le pool
-    acquire: 30000, // temps maximum, en millisecondes, pour qu'une connexion soit établie
-    idle: 10000, // temps maximum, en millisecondes, qu'une connexion peut être inactive avant d'être libérée
+    max: 5, // Connexions maximum dans le pool
+    min: 0, // Connexions minimum
+    acquire: 30000, // Timeout pour l'acquisition
+    idle: 10000, // Timeout pour une connexion inactive
   },
 });
 
-try {
-  await sequelize.authenticate();
-  console.log("Connected to the database successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
+// Test de connexion
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connected to the database successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error.message);
+    process.exit(1); // Arrête l'application si la connexion échoue
+  }
+})();
 
 export default sequelize;

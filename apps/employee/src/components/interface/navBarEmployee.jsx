@@ -53,6 +53,12 @@ export function NavBarEmployee() {
                 Réservations
               </Link>
               <Link
+                to="/clients"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Clients
+              </Link>
+              <Link
                 to="/plannings"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
@@ -90,6 +96,12 @@ export function NavBarEmployee() {
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Réservations
+            </Link>
+            <Link
+              to="/clients"
+              className="text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Clients
             </Link>
             <Link
               to="/plannings"

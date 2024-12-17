@@ -152,7 +152,7 @@ export function GestionReservations() {
             <tr>
               {TABLE_HEAD.map((head) => (
                 <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                  <Typography variant="small" color="white" className="font-normal leading-none opacity-70">
                     {head}
                   </Typography>
                 </th>
@@ -168,28 +168,28 @@ export function GestionReservations() {
                 return (
                   <tr key={date + client + index}>
                     <td className={classes}>
-                      <Typography variant="small" color="blue-gray" className="font-normal">
+                      <Typography variant="small" color="white" className="font-normal">
                         {date}
                       </Typography>
                     </td>
                     <td className={classes}>
-                      <Typography variant="small" color="blue-gray" className="font-normal">
+                      <Typography variant="small" color="white" className="font-normal">
                         {time}
                       </Typography>
                     </td>
                     <td className={classes}>
-                      <Typography variant="small" color="blue-gray" className="font-normal">
+                      <Typography variant="small" color="white" className="font-normal">
                         {numberOfPeople}
                       </Typography>
                     </td>
                     <td className={classes}>
-                      <Typography variant="small" color="blue-gray" className="font-normal">
+                      <Typography variant="small" color="white" className="font-normal">
                         {note}
                       </Typography>
                     </td>
                     <td className={classes}>
                       {/* Lien sur le nom du client */}
-                      <Typography variant="small" color="blue-gray" className="font-normal">
+                      <Typography variant="small" color="white" className="font-normal">
                         {clientId ? (
                           <Link to={`/clients/${clientId}`} className="text-blue-500 hover:underline">
                             {client}
@@ -200,7 +200,7 @@ export function GestionReservations() {
                       </Typography>
                     </td>
                     <td className={classes}>
-                      <Typography variant="small" color="blue-gray" className="font-normal">
+                      <Typography variant="small" color="white" className="font-normal">
                         {placesUsed}
                       </Typography>
                     </td>
@@ -210,20 +210,20 @@ export function GestionReservations() {
             )}
             {/* Ligne des totaux */}
             <tr>
-              <td colSpan={2} className="p-4 border-t border-blue-gray-100">
-                <Typography variant="small" color="blue-gray" className="font-bold">
+              <td colSpan={2} className="p-4 border-t border-white-100">
+                <Typography variant="small" color="white" className="font-bold">
                   Totaux
                 </Typography>
               </td>
-              <td className="p-4 border-t border-blue-gray-100">
-                <Typography variant="small" color="blue-gray" className="font-bold">
+              <td className="p-4 border-t border-white-100">
+                <Typography variant="small" color="white" className="font-bold">
                   {totalClients}
                 </Typography>
               </td>
-              <td className="p-4 border-t border-blue-gray-100" />
-              <td className="p-4 border-t border-blue-gray-100" />
-              <td className="p-4 border-t border-blue-gray-100">
-                <Typography variant="small" color="blue-gray" className="font-bold">
+              <td className="p-4 border-t border-white-100" />
+              <td className="p-4 border-t border-white-100" />
+              <td className="p-4 border-t border-white-100">
+                <Typography variant="small" color="white" className="font-bold">
                   {totalTables}
                 </Typography>
               </td>
