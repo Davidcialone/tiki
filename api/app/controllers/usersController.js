@@ -37,29 +37,28 @@ export async function getClients(req, res) {
   }
 }
 
-// userController.js
-import { Users } from "../models/Users.js";
-
 // Fonction pour récupérer les détails du client par ID
-export async function getClientById(clientId) {
+export async function getClientById(req, res) {
+  const { clientId } = req.params; // Récupération du paramètre clientId
   try {
-    // Recherche du client dans la base de données par clientId
-    let user = await Users.findByPk(clientId);
-
-    // Si l'utilisateur n'existe pas, log et retour
-    if (!user) {
-      console.log("Utilisateur non trouvé.");
-      throw new Error("Client non trouvé.");
+    if (!clientId || isNaN(clientId)) {
+      // Vérification si l'ID est valide
+      return res.status(400).json({ message: "ID invalide." });
     }
 
-    // Convertir l'objet Sequelize en JSON
-    return user.toJSON(); // ou user.get({ plain: true }) selon la version
+    const user = await Users.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
+
+    if (!user) {
+      return res.status(404).json({ message: "Client non trouvé." });
+    }
+
+    return res.json(user);
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des détails du client:",
       error.message
     );
-    throw error; // Propagation de l'erreur
+    return res.status(500).json({ message: "Erreur interne du serveur." });
   }
 }
 
@@ -78,9 +77,14 @@ export async function createClient(clientData) {
 
 // Fonction pour mettre à jour les détails du client
 export async function updateClient(clientId, clientData) {
+  const { clientId } = req.params; // Récupération du paramètre clientId
   try {
-    // Recherche du client dans la base de données par clientId
-    let user = await Users.findByPk(clientId);
+    if (!clientId || isNaN(clientId)) {
+      // Vérification si l'ID est valide
+      return res.status(400).json({ message: "ID invalide." });
+    }
+
+    const user = await Users.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
 
     // Si l'utilisateur n'existe pas, log et retour
     if (!user) {
@@ -100,9 +104,14 @@ export async function updateClient(clientId, clientData) {
 
 // Fonction pour supprimer un client
 export async function deleteClient(clientId) {
+  const { clientId } = req.params; // Récupération du paramètre clientId
   try {
-    // Recherche du client dans la base de données par clientId
-    let user = await Users.findByPk(clientId);
+    if (!clientId || isNaN(clientId)) {
+      // Vérification si l'ID est valide
+      return res.status(400).json({ message: "ID invalide." });
+    }
+
+    const user = await Users.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
 
     // Si l'utilisateur n'existe pas, log et retour
     if (!user) {

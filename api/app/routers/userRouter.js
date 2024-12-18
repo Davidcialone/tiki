@@ -7,13 +7,13 @@ export const router = Router();
 router.get("/", usersController.getClients);
 
 // GET /clients/clientId
-router.get("/clientId", usersController.getClientById);
+router.get("/:clientId", usersController.getClientById);
 
 // POST /clients
 router.post("/", usersController.createClient);
 
 // PUT /clients/clientId
-router.put("/clientId", usersController.updateClient);
+router.put("/:clientId", usersController.updateClient);
 
 // DELETE /clients/clientId
-router.delete("/clientId", usersController.deleteClient);
+router.delete("/:clientId", usersController.deleteClient);
