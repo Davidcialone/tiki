@@ -5,12 +5,30 @@ import sequelize from "./db.js";
 import { router as apiRouter } from "./app/routers/index.js";
 import dotenv from "dotenv";
 
-// Chargement des variables d'environnement
-dotenv.config();
+// Charger le fichier .env approprié
+const envFile =
+  process.env.NODE_ENV === "production" ? ".env.production" : ".env";
+dotenv.config({ path: envFile });
+
+// Vérification des variables d'environnement nécessaires
+const requiredEnvVars = [
+  "FRONTEND_URL_CLIENT",
+  "FRONTEND_URL_EMPLOYEE",
+  "PG_URL",
+];
+requiredEnvVars.forEach((varName) => {
+  if (!process.env[varName]) {
+    console.error(
+      `Erreur : la variable d'environnement ${varName} est manquante.`
+    );
+    process.exit(1);
+  }
+});
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Configure CORS to allow requests from your frontend
+// Configuration de CORS
 app.use(
   cors({
     origin: [
@@ -18,25 +36,25 @@ app.use(
       "http://localhost:5174",
       "http://localhost:5175",
       "http://localhost:5176",
-    ], // Your frontend URLs
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allowed HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+      process.env.FRONTEND_URL_CLIENT,
+      process.env.FRONTEND_URL_EMPLOYEE,
+    ].filter(Boolean), // Supprime les valeurs non définies
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Définir les associations avant la synchronisation
-// setupAssociations();
-
-// Middleware pour le parsing des JSON et des données encodées en URL
+// Middleware pour parser les JSON et données encodées
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
+// Log des requêtes entrantes
 app.use((req, res, next) => {
-  console.log(`Requête reçue : ${req.method} ${req.url}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
-// Route de vérification de l'état du serveur
+// Route d'état du serveur
 app.get("/", (req, res) => {
   res.send("API est en cours d'exécution");
 });
@@ -44,23 +62,28 @@ app.get("/", (req, res) => {
 // Routes de l'API
 app.use("/api", apiRouter);
 
-// Servir les fichiers statiques du frontend en production
+// Servir les fichiers statiques en production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(process.cwd(), "client/dist")));
+  const clientPath = path.join(process.cwd(), "client/dist");
+  app.use(express.static(clientPath));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(process.cwd(), "client/dist", "index.html"));
+    res.sendFile(path.join(clientPath, "index.html"));
   });
 }
 
-// Démarrer le serveur après la connexion à la base de données
+// Démarrage du serveur après la connexion à la base de données
 app.listen(PORT, async () => {
   try {
     await sequelize.authenticate();
     console.log("Connexion à la base de données réussie.");
-    await sequelize.sync({ alter: true }); // Synchronisation avec alter
-    console.log("Models synchronized");
+    await sequelize.sync({ alter: true });
+    console.log("Modèles synchronisés.");
     console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
   } catch (error) {
-    console.error("Erreur lors de la connexion à la base de données :", error);
+    console.error(
+      "Erreur lors de la connexion à la base de données :",
+      error.message
+    );
+    process.exit(1);
   }
 });
