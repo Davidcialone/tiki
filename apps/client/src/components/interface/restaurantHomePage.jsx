@@ -21,7 +21,7 @@ export function RestaurantHomePage() {
         </p>
         <div className="flex justify-center">
           <img
-            src="2024-04-27.jpg"
+            src="002-lac-terrasse-restaurant-au-bord-de-l'eau-decines.jpg"
             alt="Restaurant ambiance festive"
             className="rounded-lg shadow-2xl w-full md:w-3/4 lg:w-1/2 h-80 z-10 mb-4"
           />
