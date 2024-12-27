@@ -4,7 +4,6 @@ import cors from "cors";
 import sequelize from "./db.js";
 import { router as apiRouter } from "./app/routers/index.js";
 import dotenv from "dotenv";
-import { setupAssociations } from "../api/app/models/associations.js";
 
 // Chargement des variables d'environnement
 dotenv.config();
@@ -25,16 +24,8 @@ app.use(
   })
 );
 
-// Configuration de Sequelize et des associations
-sequelize
-  .sync({ alter: true })
-  .then(() => {
-    console.log("Models synchronized");
-    setupAssociations();
-  })
-  .catch((err) => {
-    console.error("Error syncing models:", err);
-  });
+// Définir les associations avant la synchronisation
+// setupAssociations();
 
 // Middleware pour le parsing des JSON et des données encodées en URL
 app.use(express.json({ limit: "10mb" }));
@@ -61,13 +52,15 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// Démarrage du serveur
+// Démarrer le serveur après la connexion à la base de données
 app.listen(PORT, async () => {
   try {
     await sequelize.authenticate();
     console.log("Connexion à la base de données réussie.");
+    await sequelize.sync({ alter: true }); // Synchronisation avec alter
+    console.log("Models synchronized");
+    console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
   } catch (error) {
     console.error("Erreur lors de la connexion à la base de données :", error);
   }
-  console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
 });

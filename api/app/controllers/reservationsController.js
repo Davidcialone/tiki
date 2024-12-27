@@ -1,5 +1,4 @@
-import { Reservations } from "../models/Reservations.js";
-import { Users } from "../models/Users.js";
+import { Reservations, Users } from "../models/index.js";
 
 export const createReservation = async (req, res) => {
   try {
@@ -116,35 +115,28 @@ export const getReservations = async (req, res) => {
   }
 };
 
-export const getReservationById = async (req, res) => {
+// controllers/reservationsController.js
+export async function getReservationsByClientId(req, res) {
+  const { clientId } = req.params;
+
   try {
-    const { id } = req.params;
-
-    console.log(`Requête reçue pour récupérer la réservation avec l'ID: ${id}`);
-
-    // Récupérer la réservation avec l'ID donné et les détails de l'utilisateur associé
-    const reservation = await Reservations.findByPk(id, {
-      include: {
-        model: Users,
-        attributes: ["email", "firstname", "lastname", "phone"],
-      },
+    const reservations = await Reservations.findAll({
+      where: { userId: clientId }, // Filtrer par ID du client
+      order: [["date", "DESC"]], // Trier par date décroissante
     });
 
-    if (!reservation) {
-      console.log("Réservation non trouvée.");
-      return res.status(404).json({ message: "Reservation not found" });
+    if (reservations.length > 0) {
+      return res.json(reservations);
+    } else {
+      return res
+        .status(404)
+        .json({ message: "Aucune réservation trouvée pour ce client." });
     }
-
-    console.log("Réservation récupérée avec succès:", reservation);
-
-    res.json(reservation);
   } catch (error) {
     console.error(
-      "Erreur lors de la récupération de la réservation:",
+      "Erreur lors de la récupération des réservations :",
       error.message
     );
-    res
-      .status(500)
-      .json({ message: "Error getting reservation", error: error.message });
+    return res.status(500).json({ message: "Erreur interne du serveur." });
   }
-};
+}

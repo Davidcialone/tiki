@@ -29,18 +29,14 @@ Users.init(
     role_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 1,
-      references: {
-        model: "role",
-        key: "id",
-      },
+      // Remove the direct reference here since we'll handle it in associations
     },
   },
   {
     sequelize,
     tableName: "users",
     timestamps: true,
-    createdAt: "created_at", // Map Sequelize `createdAt` to DB `created_at`
-    updatedAt: "updated_at", // Map Sequelize `updatedAt` to DB `updated_at`
+    createdAt: "created_at",
+    updatedAt: "updated_at",
   }
 );

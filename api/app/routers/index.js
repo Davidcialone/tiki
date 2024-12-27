@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { router as reservationsRouter } from "./reservations.js";
-import { router as clientsRouter } from "./userRouter.js";
+import { router as clientsRouter } from "./clientsRouter.js";
 import { router as menusRouter } from "./menus.js";
+import { router as authRouter } from "./authRouter.js";
 
 export const router = Router();
 
 router.use("/reservations", reservationsRouter);
 router.use("/clients", clientsRouter);
 router.use("/menus", menusRouter);
+router.use("/auth", authRouter);
 
 // Middleware 404 (API)
 router.use((req, res) => {

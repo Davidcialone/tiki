@@ -1,5 +1,4 @@
-import { MenuItems } from "../models/MenuItems.js";
-import { Categories } from "../models/Categories.js";
+import { MenuItems, Categories } from "../models/index.js";
 
 export const getMenusItems = async (req, res) => {
   try {

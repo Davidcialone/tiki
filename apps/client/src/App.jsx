@@ -3,7 +3,7 @@ import './App.css'
 import { ReservationProvider } from './reservationContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { NavBarClient } from './components/interface/navBarClient';
-import { HomePageClient } from './components/interface/homePageClient';
+import { RestaurantHomePage } from './components/interface/restaurantHomePage';
 import { ReservationPage } from './components/customer/reservationPage';
 import { MenuDisplay } from './components/interface/menuDisplay';
 import { Contact } from './components/interface/contact';
@@ -20,7 +20,7 @@ function App() {
       <div className="App">
         <NavBarClient /> {/* Navigation Bar */}
         <Routes> {/* Define the Routes */}
-          <Route path="/" element={<HomePageClient />} /> {/* Home Page route */}
+          <Route path="/" element={<RestaurantHomePage />} /> {/* Home Page route */}
           <Route path="/reservations" element={<ReservationPage />} /> {/* Reservation Page route */}
           <Route path="/menus" element={<MenuDisplay />} /> {/* Restaurant Layout route */}
           <Route path="/opening" element={<OpeningView />} /> {/* Opening route */}

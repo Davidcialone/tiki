@@ -3,20 +3,27 @@ import { NavBarEmployee } from "../../employee/src/components/interface/navBarEm
 import { HomePageEmployee } from "../../employee/src/components/interface/homePageEmployee";
 import { GestionReservations } from "../../employee/src/components/dashBoard/reservationsDashboard";
 import { ClientSearch } from "../../employee/src/components/dashBoard/clientSearch";
-import {CustomerFile} from "../../employee/src/components/dashBoard/customerFile";
+import { CustomerFile } from "../../employee/src/components/dashBoard/customerFile";
+import { LoginPage } from "./auth/loginPage";
+import { AuthProvider } from "./auth/authContext"; // Import AuthProvider
+import { RegisterPage } from "./auth/registerPage"; // Import Register
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <NavBarEmployee />
-      <Routes>
-        <Route path="/" element={<HomePageEmployee />} />
-        <Route path="/reservations" element={<GestionReservations/>} />
-        <Route path="/clients" element={<ClientSearch/>} />
-        <Route path="/clients/:clientId" element={<CustomerFile/>} />
-        <Route path="*" element={<h1>404 - Page Not Found</h1>} />
-      </Routes>
+      <AuthProvider>
+        <NavBarEmployee />
+        <Routes>
+          <Route path="/" element={<HomePageEmployee />} />
+          <Route path="/reservations" element={<GestionReservations />} />
+          <Route path="/clients" element={<ClientSearch />} />
+          <Route path="/clients/:clientId" element={<CustomerFile />} />
+          <Route path="/connexion" element={<LoginPage />} />
+          <Route path="/inscription" element={<RegisterPage/>} />
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 }

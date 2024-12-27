@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { Users } from "../models/Users.js";
+import { Users } from "../models/index.js";
 
 // Fonction pour récupérer les clients avec un filtre
 export async function getClients(req, res) {
@@ -77,7 +77,6 @@ export async function createClient(clientData) {
 
 // Fonction pour mettre à jour les détails du client
 export async function updateClient(clientId, clientData) {
-  const { clientId } = req.params; // Récupération du paramètre clientId
   try {
     if (!clientId || isNaN(clientId)) {
       // Vérification si l'ID est valide
@@ -104,7 +103,6 @@ export async function updateClient(clientId, clientData) {
 
 // Fonction pour supprimer un client
 export async function deleteClient(clientId) {
-  const { clientId } = req.params; // Récupération du paramètre clientId
   try {
     if (!clientId || isNaN(clientId)) {
       // Vérification si l'ID est valide

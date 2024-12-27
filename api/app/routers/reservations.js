@@ -8,3 +8,6 @@ router.get("/", reservationsController.getReservations);
 
 // POST /reservations
 router.post("/", reservationsController.createReservation);
+
+// GET /reservations/clientId
+router.get("/:clientId", reservationsController.getReservationsByClientId);
