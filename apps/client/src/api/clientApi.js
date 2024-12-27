@@ -1,7 +1,10 @@
-API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5000";
-
 // clientApi.js
 export async function fetchClientDetails(clientId) {
+  let API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Récupération de l'URL de base de l'API
+  if (import.meta.env.MODE === "production") {
+    // Supprimer le slash initial en production si nécessaire
+    API_BASE_URL = API_BASE_URL.replace(/\/$/, ""); // Supprime le slash final éventuel
+  }
   try {
     const response = await fetch(`${API_BASE_URL}/api/clients/${clientId}`);
     if (!response.ok) {

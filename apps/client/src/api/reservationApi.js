@@ -1,11 +1,15 @@
-API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5000";
-
 export async function createReservation(formData) {
   try {
     console.log("=== Sending Reservation Request ===");
     console.log("Endpoint Full URL:", "/api/reservations");
     console.log("Payload:", JSON.stringify(formData));
 
+    // Déterminer l'URL de base en fonction de l'environnement
+    let API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Récupération de l'URL de base de l'API
+    if (import.meta.env.MODE === "production") {
+      // Supprimer le slash initial en production si nécessaire
+      API_BASE_URL = API_BASE_URL.replace(/\/$/, ""); // Supprime le slash final éventuel
+    }
     const response = await fetch(`${API_BASE_URL}/api/reservations`, {
       method: "POST",
       headers: {
@@ -47,6 +51,12 @@ export async function getReservations() {
   try {
     console.log("=== Sending Reservations Request ===");
     console.log("Endpoint Full URL:", "/api/reservations");
+
+    let API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Récupération de l'URL de base de l'API
+    if (import.meta.env.MODE === "production") {
+      // Supprimer le slash initial en production si nécessaire
+      API_BASE_URL = API_BASE_URL.replace(/\/$/, ""); // Supprime le slash final éventuel
+    }
 
     const response = await fetch(`${API_BASE_URL}/api/reservations`);
 
