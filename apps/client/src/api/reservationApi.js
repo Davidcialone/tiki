@@ -1,10 +1,12 @@
+API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5000";
+
 export async function createReservation(formData) {
   try {
     console.log("=== Sending Reservation Request ===");
-    console.log("Endpoint Full URL:", "http://localhost:5000/api/reservations");
+    console.log("Endpoint Full URL:", "/api/reservations");
     console.log("Payload:", JSON.stringify(formData));
 
-    const response = await fetch("http://localhost:5000/api/reservations", {
+    const response = await fetch(`${API_BASE_URL}/api/reservations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,9 +46,9 @@ export async function createReservation(formData) {
 export async function getReservations() {
   try {
     console.log("=== Sending Reservations Request ===");
-    console.log("Endpoint Full URL:", "http://localhost:5000/api/reservations");
+    console.log("Endpoint Full URL:", "/api/reservations");
 
-    const response = await fetch("http://localhost:5000/api/reservations");
+    const response = await fetch(`${API_BASE_URL}/api/reservations`);
 
     console.log("Full Response:", response);
     console.log("Response Status:", response.status);
@@ -80,14 +82,9 @@ export async function getReservations() {
 export async function getReservationById(id) {
   try {
     console.log("=== Sending Reservation Request ===");
-    console.log(
-      "Endpoint Full URL:",
-      `http://localhost:5000/api/reservations/${id}`
-    );
+    console.log("Endpoint Full URL:", `/api/reservations/${id}`);
 
-    const response = await fetch(
-      `http://localhost:5000/api/reservations/${id}`
-    );
+    const response = await fetch(`${API_BASE_URL}/api/reservations/${id}`);
 
     console.log("Full Response:", response);
     console.log("Response Status:", response.status);

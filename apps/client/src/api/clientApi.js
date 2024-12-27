@@ -1,9 +1,9 @@
+API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5000";
+
 // clientApi.js
 export async function fetchClientDetails(clientId) {
   try {
-    const response = await fetch(
-      `http://localhost:5000/api/clients/${clientId}`
-    );
+    const response = await fetch(`${API_BASE_URL}/api/clients/${clientId}`);
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des détails du client");
     }
