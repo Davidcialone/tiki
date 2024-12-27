@@ -9,13 +9,13 @@ export function RestaurantHomePage() {
 
 
  
-  <div className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-16 bg-opacity-60 shadow-lg mt-2">
+  <div className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-16 bg-opacity-60 shadow-lg mt-2 p-1">
     <h1 className="text-white text-4xl font-bold">Bienvenue dans un cadre tropical</h1>
     <p className="text-white mt-4">Profitez de l'effet d'opacité sur le fond d'écran sans perturber le contenu.</p>
   </div>
 
       {/* Hero Section */}
-      <section className=" bg-white bg-opacity-20 mx-auto text-center m-2">
+      <section className=" bg-white bg-opacity-20 mx-auto text-center m-2 p-1">
         <p className="text-white text-lg mb-6 px-6 md:px-16 mx-auto leading-relaxed">
           Bienvenue au Tiki au Bord de l'Eau, votre destination pour des moments festifs et conviviaux. Situé à Meyzieu, notre restaurant vous offre une vue imprenable sur le Grand Large et une ambiance chaleureuse.
         </p>
@@ -29,7 +29,7 @@ export function RestaurantHomePage() {
       </section>
 
       {/* History Section */}
-      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-16 bg-opacity-60 shadow-lg mb-2">
+      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-16 bg-opacity-60 shadow-lg mb-2 p-1">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-semibold mb-6">Notre Histoire</h2>
           <p className="text-lg mb-6 max-w-3xl mx-auto">
@@ -42,7 +42,7 @@ export function RestaurantHomePage() {
       </section>
 
       {/* Highlights Section */}
-      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-12 bg-opacity-70 mb-2">
+      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-12 bg-opacity-70 mb-2 p-1">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-semibold mb-6">Pourquoi choisir le Tiki ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -78,7 +78,7 @@ export function RestaurantHomePage() {
       </section>
 
       {/* Events Section */}
-      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-16 bg-opacity-60 shadow-lg mb-2">
+      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-16 bg-opacity-60 shadow-lg mb-2 p-1">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-semibold mb-6">Événements Inoubliables</h2>
           <p className="text-lg mb-6">
@@ -91,7 +91,7 @@ export function RestaurantHomePage() {
       </section>
 
       {/* Reservation Section */}
-      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-12 bg-opacity-60 mb-2">
+      <section className="bg-gradient-to-b from-[#390009] to-[#790000] text-white py-12 bg-opacity-60 mb-2 p-1">
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-semibold mb-4">Réservez une soirée magique</h2>
           <p className="mb-6">
