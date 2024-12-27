@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 // Charger les variables d'environnement
 dotenv.config();
 
+// Vérifier que la variable PG_URL est bien définie
+console.log("PG_URL:", process.env.PG_URL);
+
 // Configurer Sequelize
 const sequelize = new Sequelize(process.env.PG_URL, {
   dialect: "postgres",
