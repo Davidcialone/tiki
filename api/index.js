@@ -5,7 +5,7 @@ import sequelize from "./db.js";
 import { router as apiRouter } from "./app/routers/index.js";
 import dotenv from "dotenv";
 
-// Charger le fichier .env approprié
+// Charger le fichier .env approprié en fonction de l'environnement (production ou développement)
 const envFile =
   process.env.NODE_ENV === "production" ? ".env.production" : ".env";
 dotenv.config({ path: envFile });
@@ -14,8 +14,9 @@ dotenv.config({ path: envFile });
 const requiredEnvVars = [
   "FRONTEND_URL_CLIENT",
   "FRONTEND_URL_EMPLOYEE",
-  "PG_URL",
+  "PG_URL", // Si vous utilisez une base de données PostgreSQL
 ];
+
 requiredEnvVars.forEach((varName) => {
   if (!process.env[varName]) {
     console.error(
@@ -36,11 +37,12 @@ app.use(
       "http://localhost:5174",
       "http://localhost:5175",
       "http://localhost:5176",
-      process.env.FRONTEND_URL_CLIENT,
-      process.env.FRONTEND_URL_EMPLOYEE,
-    ].filter(Boolean), // Supprime les valeurs non définies
+      process.env.FRONTEND_URL_CLIENT, // Origine frontend client en production
+      process.env.FRONTEND_URL_EMPLOYEE, // Origine frontend employé en production
+    ].filter(Boolean), // Filtrer les valeurs non définies
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Si vous utilisez des cookies, pensez à ajouter cette option
   })
 );
 
@@ -62,7 +64,7 @@ app.get("/", (req, res) => {
 // Routes de l'API
 app.use("/api", apiRouter);
 
-// Servir les fichiers statiques en production
+// Servir les fichiers statiques en production (si le serveur est en production)
 if (process.env.NODE_ENV === "production") {
   const clientPath = path.join(process.cwd(), "client/dist");
   app.use(express.static(clientPath));
@@ -74,9 +76,9 @@ if (process.env.NODE_ENV === "production") {
 // Démarrage du serveur après la connexion à la base de données
 app.listen(PORT, async () => {
   try {
-    await sequelize.authenticate();
+    await sequelize.authenticate(); // Connexion à la base de données
     console.log("Connexion à la base de données réussie.");
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ alter: true }); // Synchroniser les modèles
     console.log("Modèles synchronisés.");
     console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
   } catch (error) {
@@ -84,6 +86,6 @@ app.listen(PORT, async () => {
       "Erreur lors de la connexion à la base de données :",
       error.message
     );
-    process.exit(1);
+    process.exit(1); // Arrêter le serveur si la connexion à la base échoue
   }
 });
