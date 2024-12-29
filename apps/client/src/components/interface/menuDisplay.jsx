@@ -6,7 +6,7 @@ export function MenuDisplay() {
         // Entrées
         { id: 1, name: "Salade César", description: "Une salade classique avec poulet et croûtons.", price: "8.50", category: "Entrées", image_url: "saladeCesar.png" },
         { id: 2, name: "Soupe à l'oignon", description: "Un classique français avec fromage gratiné.", price: "6.00", category: "Entrées", image_url: "soupeALoignon.png" },
-        { id: 3, name: "Bruschetta", description: "Pain grillé garni de tomates fraîches et basilic.", price: "5.00", category: "Entrées", image_url: "bruschetta.png" },
+        { id: 3, name: "Bruschetta", description: "Pain grillé garni de tomates fraîches et basilic.", price: "5.00", category: "Entrées", image_url: "bruschetta." },
         { id: 4, name: "Caprese", description: "Mozzarella et tomates fraîches avec basilic.", price: "7.50", category: "Entrées", image_url: "https://via.placeholder.com/150" },
         { id: 5, name: "Assiette de charcuterie", description: "Sélection de jambon, saucisson et pâté.", price: "12.00", category: "Entrées", image_url: "https://via.placeholder.com/150" },
         { id: 6, name: "Carpaccio de bœuf", description: "Fines tranches de bœuf cru avec parmesan.", price: "10.00", category: "Entrées", image_url: "https://via.placeholder.com/150" },
@@ -81,36 +81,53 @@ export function MenuDisplay() {
          
             {/* Si aucune catégorie sélectionnée, afficher les photos des catégories */}
             {!selectedCategory ? (
-                <div style={{ 
-                    display: "grid", 
-                    gridTemplateColumns: "repeat(auto-fit, minmax(5rem, 1fr))", // Corrigé : Retrait de la virgule
-                    gap: "10px" // Corrigé : Placé correctement en dehors de `gridTemplateColumns`
-                }}>
-                
-                    {Object.keys(categoryImages).map((category) => (
-                        <div
-                            key={category}
-                            style={{
-                                textAlign: "center",
-                                cursor: "pointer",
-                                border: "1px solid #ddd",
-                                borderRadius: "8px",
-                                // overflow: "hidden",
-                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)",
-                                backgroundColor: "#fff",
-                            }}
-                            onClick={() => setSelectedCategory(category)} // Sélectionner une catégorie
-                        >
-                            <img
-                                src={categoryImages[category]}
-                                alt={category}
-                                style={{ width: "100%", height: "3rem", objectFit: "cover" }}
-                            />
-                            <h2 style={{ margin: "0.rem 0", color: "black" }}>{category}</h2>
-                        </div>
-                    ))}
+    <div className="w-full max-w-6xl mx-auto">
+        {/* Version desktop en grille */}
+        <div className="hidden md:grid md:grid-cols-5 md:gap-4">
+            {Object.keys(categoryImages).map((category) => (
+                <div
+                    key={category}
+                    className="flex flex-col cursor-pointer border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow duration-200"
+                    onClick={() => setSelectedCategory(category)}
+                >
+                    <img
+                        src={categoryImages[category]}
+                        alt={category}
+                        className="w-full h-12 object-cover rounded-t-lg"
+                    />
+                    <h2 className="text-center text-sm font-medium text-gray-900 p-2">
+                        {category}
+                    </h2>
                 </div>
-                               
+            ))}
+        </div>
+
+        {/* Version mobile avec alignement vertical strict */}
+        <div className="flex flex-col gap-2 md:hidden">
+            {Object.keys(categoryImages).map((category) => (
+                <div
+                    key={category}
+                    className="grid grid-cols-2 cursor-pointer border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow duration-200 p-2"
+                    onClick={() => setSelectedCategory(category)}
+                >
+                    <div className="flex justify-end">
+                        <img
+                            src={categoryImages[category]}
+                            alt={category}
+                            className="w-12 h-12 object-cover rounded-lg"
+                        />
+                    </div>
+                    <div className="flex items-center">
+                        <h2 className="text-sm font-medium text-gray-900 ml-4">
+                            {category}
+                        </h2>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+
+
             ) : (
                 // Si une catégorie est sélectionnée, afficher les items de la catégorie
                 <div>
