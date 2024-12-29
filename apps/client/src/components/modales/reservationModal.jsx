@@ -26,12 +26,12 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
     number_of_people: 1,
     reservation_date: today,
     reservation_time: lunchTimes[0],
-    // isLunch: true,
+     // isLunch: true,
     // zone_id: zones.length > 0 ? zones[0] : "",
   });
   const [reservationDetails, setReservationDetails] = useState(null);
 
-  console.log("Détails de la réservation :", reservationDetails);
+  // console.log("Détails de la réservation :", reservationDetails);
 
 
   const handleChange = (e) => {
@@ -78,13 +78,16 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
   const handleBackStep = () => {
     setStep(1); // Revenir à la première étape (Disponibilité)
   };
-
   const handleSave = async () => {
     try {
       const response = await createReservation(formData);
   
       if (response) {
         console.log("Réservation créée avec succès:", response);
+  
+        // Mettre à jour reservationDetails avec les informations de la réservation
+        setReservationDetails(response); // Vous pouvez ajuster cela en fonction de la structure de la réponse
+  
         onSubmit(formData); // Envoie les données au parent
         onClose(); // Ferme la modale
       } else {
@@ -96,6 +99,7 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
       alert("Une erreur inattendue s'est produite.");
     }
   };
+  
 
   const sendConfirmationEmail = async (data) => {
     try {

@@ -1,8 +1,8 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 
-// Charger les variables d'environnement depuis le fichier .env.local
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env.production" });
+console.log("PG_URL from .env.production:", process.env.PG_URL);
 
 // Vérifier que la variable PG_URL est bien définie
 console.log("PG_URL:", process.env.PG_URL);

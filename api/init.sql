@@ -14,6 +14,14 @@ CREATE TABLE Roles (
     "updated_at" TIMESTAMPTZ DEFAULT now()        -- Date de mise à jour
 );
 
+-- Insertion des rôles
+INSERT INTO Roles (name, created_at, updated_at) VALUES
+    ('client', now(), now()),
+    ('worker', now(), now()),
+    ('manager', now(), now());
+
+
+
 -- Table `Zones`
 CREATE TABLE Zones (
     "id" SERIAL PRIMARY KEY,                       -- Identifiant unique

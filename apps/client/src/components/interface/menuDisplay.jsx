@@ -4,9 +4,9 @@ export function MenuDisplay() {
     // Données fictives pour le menu
     const menuItems = [
         // Entrées
-        { id: 1, name: "Salade César", description: "Une salade classique avec poulet et croûtons.", price: "8.50", category: "Entrées", image_url: "https://via.placeholder.com/150" },
-        { id: 2, name: "Soupe à l'oignon", description: "Un classique français avec fromage gratiné.", price: "6.00", category: "Entrées", image_url: "https://via.placeholder.com/150" },
-        { id: 3, name: "Bruschetta", description: "Pain grillé garni de tomates fraîches et basilic.", price: "5.00", category: "Entrées", image_url: "https://via.placeholder.com/150" },
+        { id: 1, name: "Salade César", description: "Une salade classique avec poulet et croûtons.", price: "8.50", category: "Entrées", image_url: "saladeCesar.png" },
+        { id: 2, name: "Soupe à l'oignon", description: "Un classique français avec fromage gratiné.", price: "6.00", category: "Entrées", image_url: "soupeALoignon.png" },
+        { id: 3, name: "Bruschetta", description: "Pain grillé garni de tomates fraîches et basilic.", price: "5.00", category: "Entrées", image_url: "bruschetta.png" },
         { id: 4, name: "Caprese", description: "Mozzarella et tomates fraîches avec basilic.", price: "7.50", category: "Entrées", image_url: "https://via.placeholder.com/150" },
         { id: 5, name: "Assiette de charcuterie", description: "Sélection de jambon, saucisson et pâté.", price: "12.00", category: "Entrées", image_url: "https://via.placeholder.com/150" },
         { id: 6, name: "Carpaccio de bœuf", description: "Fines tranches de bœuf cru avec parmesan.", price: "10.00", category: "Entrées", image_url: "https://via.placeholder.com/150" },
@@ -55,10 +55,11 @@ export function MenuDisplay() {
 
     // Images représentatives des catégories
     const categoryImages = {
-        Entrées: "https://via.placeholder.com/300x200?text=Entrées",
-        Plats: "https://via.placeholder.com/300x200?text=Plats",
-        Desserts: "https://via.placeholder.com/300x200?text=Desserts",
-        Boissons: "https://via.placeholder.com/300x200?text=Boissons",
+        Entrées: "entree.png",
+        Plats: "plat.png",
+        Desserts: "dessert.png",
+        Boissons: "boissons.png",
+        Vins :"vins.png"
     };
 
     // Fonction pour gérer le retour à la section des catégories
@@ -80,7 +81,12 @@ export function MenuDisplay() {
          
             {/* Si aucune catégorie sélectionnée, afficher les photos des catégories */}
             {!selectedCategory ? (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" }}>
+                <div style={{ 
+                    display: "grid", 
+                    gridTemplateColumns: "repeat(auto-fit, minmax(5rem, 1fr))", // Corrigé : Retrait de la virgule
+                    gap: "10px" // Corrigé : Placé correctement en dehors de `gridTemplateColumns`
+                }}>
+                
                     {Object.keys(categoryImages).map((category) => (
                         <div
                             key={category}
@@ -89,8 +95,8 @@ export function MenuDisplay() {
                                 cursor: "pointer",
                                 border: "1px solid #ddd",
                                 borderRadius: "8px",
-                                overflow: "hidden",
-                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                                // overflow: "hidden",
+                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.4)",
                                 backgroundColor: "#fff",
                             }}
                             onClick={() => setSelectedCategory(category)} // Sélectionner une catégorie
@@ -98,9 +104,9 @@ export function MenuDisplay() {
                             <img
                                 src={categoryImages[category]}
                                 alt={category}
-                                style={{ width: "100%", height: "150px", objectFit: "cover" }}
+                                style={{ width: "100%", height: "3rem", objectFit: "cover" }}
                             />
-                            <h2 style={{ margin: "10px 0" }}>{category}</h2>
+                            <h2 style={{ margin: "0.rem 0", color: "black" }}>{category}</h2>
                         </div>
                     ))}
                 </div>
