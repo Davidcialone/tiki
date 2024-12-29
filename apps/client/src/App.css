@@ -1,8 +1,19 @@
 #root {
   width: 100%;
   margin: 0 auto;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   text-align: center;
+}
+
+:root {
+  --primary-color: #1f2937; /* Couleur primaire (par exemple, noir ou gris foncé) */
+  --secondary-color: #b3e7e1; /* Couleur secondaire (par exemple, une teinte claire) */
+  --accent-color: #609082; /* Couleur d'accentuation */
+  --background-color: #ffffff; /* Couleur de fond des sections */
+  --text-color: #000000; /* Couleur du texte principal */
+  --text-color-secondary: #ffffff; /* Couleur du texte secondaire */
+  --footer-background: #2d3748; /* Couleur de fond du footer */
+  --footer-text: #edf2f7; /* Couleur du texte du footer */
 }
 
 .logo {

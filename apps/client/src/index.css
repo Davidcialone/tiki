@@ -72,9 +72,8 @@ button:focus-visible {
 }
 
 @font-face {
-  font-family: 'Aquatico';
-  src: url('./assets/fonts/Aquatico-Regular.ttf') format('truetype');
+  font-family: "Aquatico";
+  src: url("./assets/fonts/Aquatico-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
-
