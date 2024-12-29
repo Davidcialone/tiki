@@ -5,7 +5,7 @@ export function RestaurantHomePage() {
   return (
     <div className="relative font-sans text-gray-800 min-h-screen">
       {/* Background Image */}
-      <div className="absolute inset-0 bg-[url('logo.jpg')] bg-center opacity-5 z-0"></div>
+      <div className="absolute inset-0 bg-[url('/logo.jpg')] bg-center opacity-5 z-0"></div>
 
       {/* Hero Section */}
       <div className="bg-gradient-to-b from-[#a3e7df] to-[#deeeeb] text-black py-16 bg-opacity-60 shadow-lg mt-2 p-4 text-center">

@@ -24,7 +24,7 @@ export function NavBarClient() {
 
   return (
     <nav className="bg-gradient-to-b from-[#3f1010] to-[#814646] text-white py-2 bg-opacity-60 relative z-50">
-      <div className="absolute inset-0 bg-[url('logo.jpg')] bg-center opacity-5 z-0"></div>
+      <div className="absolute inset-0 bg-[url('/logo.jpg')] bg-center opacity-5 z-0"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           {/* Bouton du menu mobile */}
