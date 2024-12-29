@@ -37,8 +37,8 @@ app.use(
       "http://localhost:5174",
       "http://localhost:5175",
       "http://localhost:5176",
-      "https://tiki-sigma.vercel.app/",
-      "https://tiki-ermployee.vercel.app/",
+      "https://tiki-sigma.vercel.app",
+      "https://tiki-ermployee.vercel.app",
     ].filter(Boolean), // Filtrer les valeurs non définies
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
