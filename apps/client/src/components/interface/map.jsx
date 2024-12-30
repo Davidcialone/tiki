@@ -105,6 +105,7 @@ export const Map = ({
   }, [restaurantLat, restaurantLng, zoom, restaurantName]);
 
   return (
+
     <div>
       <div 
         id="map" 

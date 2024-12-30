@@ -33,12 +33,20 @@ export function ReservationPage() {
   };
 
   return (
+    <>
+    {/* Espace sous la navbar */}
+<div className="mt-20"></div>
     <div>
-      <h1>Réservation</h1>
+      <h2>Vous pouvez effectuer votre réservation</h2>
 
-      <button onClick={() => setIsModalOpen(true)} style={buttonStyle}>
-        Réserver
-      </button>
+      <button 
+  onClick={() => setIsModalOpen(true)} 
+  style={buttonStyle} 
+  className="relative z-50"
+>
+  Réserver
+</button>
+
 
       {!reservationDetails ? (
         <p style={{ marginTop: "20px" }}>Aucune réservation n'a encore été effectuée.</p>
@@ -64,5 +72,6 @@ export function ReservationPage() {
         availableTimes={availableTimes}
       />
     </div>
+    </>
   );
 }

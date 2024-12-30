@@ -1,4 +1,4 @@
-    const menuItems = [
+ const menuItems = [
         // Entrées
         { id: 1, name: "Salade César", description: "Une salade classique avec poulet et croûtons.", price: "8.50", category: "Entrées", image_url: "saladeCesar.png" },
         { id: 2, name: "Soupe à l'oignon", description: "Un classique français avec fromage gratiné.", price: "6.00", category: "Entrées", image_url: "soupeALoignon.png" },
@@ -45,6 +45,17 @@
         { id: 37, name: "Jus d'orange", description: "100% pur jus pressé.", price: "3.00", category: "Boissons", image_url: "https://via.placeholder.com/150" },
         { id: 38, name: "Mojito sans alcool", description: "Cocktail rafraîchissant à la menthe.", price: "6.00", category: "Boissons", image_url: "https://via.placeholder.com/150" },
         { id: 39, name: "Vin rouge Bordeaux", description: "Aromatique et corsé.", price: "5.50", category: "Boissons", image_url: "https://via.placeholder.com/150" },
-        { id: 40, name: "Bière artisanale", description: "Blonde ou ambrée.", price: "4.50", category: "Boissons", image_url: "https://via.placeholder.com/150" }
+        { id: 40, name: "Bière artisanale", description: "Blonde ou ambrée.", price: "4.50", category: "Boissons", image_url: "https://via.placeholder.com/150" },
+
+        //Vins
+        { id: 41, name: "Château Margaux", description: "Grand cru classé de Bordeaux.", price: "150.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 42, name: "Champagne", description: "Bulles festives pour célébrer.", price: "60.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 43, name: "Chardonnay", description: "Vin blanc fruité et élégant.", price: "30.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 44, name: "Pinot Noir", description: "Rouge léger et fruité.", price: "35.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 45, name: "Rosé", description: "Vin frais et délicat.", price: "25.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 46, name: "Sauvignon Blanc", description: "Vin blanc sec et vif.", price: "28.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 47, name: "Merlot", description: "Rouge souple et fruité.", price: "32.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 48, name: "Châteauneuf-du-Pape", description: "Vin rouge corsé et épicé.", price: "40.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 49, name: "Sancerre", description: "Vin blanc minéral et frais.", price: "35.00", category: "Vins", image_url: "https://via.placeholder.com/150" },
+        { id: 50, name: "Côtes du Rhône", description: "Vin rouge fruité et équilibré.", price: "30.00", category: "Vins", image_url: "https://via.placeholder.com/150" }
     ];
-    

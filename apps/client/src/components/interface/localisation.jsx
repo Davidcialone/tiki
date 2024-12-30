@@ -6,6 +6,9 @@ export function Location() {
     const googleMapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(address)}`;
 
     return (
+      <>
+        {/* Espace sous la navbar */}
+        <div className="mt-16"></div>
         <div style={{ fontFamily: "Arial, sans-serif", padding: "1rem" }}>
           <h1 style={{ padding: "1rem" }}>Itinéraire</h1>
           <p>Notre adresse :</p>
@@ -21,5 +24,6 @@ export function Location() {
           </p>
           <Map />
         </div>
+        </>
       );
     }

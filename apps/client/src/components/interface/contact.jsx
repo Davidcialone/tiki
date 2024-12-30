@@ -24,6 +24,9 @@ export function Contact() {
     };
 
     return (
+        <>
+          {/* Espace sous la navbar */}
+      <div className="mt-16"></div>
         <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
             <h1>Contactez-nous</h1>
 
@@ -69,5 +72,6 @@ export function Contact() {
                 </button>
             </form>
         </div>
+        </>
     );
 }
