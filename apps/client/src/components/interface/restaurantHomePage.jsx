@@ -52,9 +52,9 @@ export function RestaurantHomePage() {
 
 
            {/* Highlights Section */}
-      <section className="bg-[var(--background-color)] py-12 bg-opacity-90 p-4 m-0 border-none">
+      <section className="bg-black py-12 bg-opacity-90 p-4 m-0 border-none">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-semibold mb-6">Pourquoi choisir le Tiki ?</h2>
+          <h2 className="text-4xl text-white font-semibold mb-6">Pourquoi choisir O Resto ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-6 shadow-lg rounded-lg bg-[var(--background-color)] z-10">
               <h3 className="text-[var(--text-color)] text-xl font-bold mb-2">Plats raffinés</h3>
@@ -62,8 +62,8 @@ export function RestaurantHomePage() {
                 Des créations culinaires inspirées par les produits locaux et les saveurs du monde.
               </p>
               <img
-                src="2024-05-02.jpg"
-                alt="Plats raffinés au Tiki"
+                src="/bruschetta.png"
+                alt="Plats raffinés O Resto"
                 className="rounded-lg shadow-xl w-full h-64 object-cover mx-auto"
               />
             </div>
@@ -73,19 +73,19 @@ export function RestaurantHomePage() {
                 Un lieu animé par des braseros, des soirées festives et des rencontres authentiques.
               </p>
               <img
-                src="2024-12-09 (1).jpg"
-                alt="Ambiance chaleureuse au Tiki"
+                src="restaurant2.png"
+                alt="Ambiance chaleureuse O Resto"
                 className="rounded-lg shadow-xl w-full h-64 object-cover mx-auto"
               />
             </div>
             <div className="p-6 shadow-lg rounded-lg bg-[var(--background-color)] z-10">
               <h3 className="text-[var(--text-color)] text-xl font-bold mb-2">Vue imprenable</h3>
               <p className="text-[var(--text-color)]">
-                Admirez le Grand Large tout en dégustant des plats dans un cadre idyllique.
+                Admirez le lac tout en dégustant des plats dans un cadre idyllique.
               </p>
               <img
-                src="2024-12-09.jpg"
-                alt="Vue imprenable au Tiki"
+                src="restaurant.png"
+                alt="Vue imprenable O resto"
                 className="rounded-lg shadow-xl w-full h-64 object-cover mx-auto"
               />
             </div>
@@ -94,35 +94,41 @@ export function RestaurantHomePage() {
       </section>
 
       {/* Events Section */}
-      <section className="bg-[var(--background-color)] bg-opacity-90 text-[var(--text-color)] py-16 shadow-lg p-4 m-0 border-none">
+      <section className="bg-black bg-opacity-90 text-[var(--text-color)] py-16 shadow-lg p-4 m-0 border-none">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-semibold mb-6">Événements Inoubliables</h2>
-          <p className="text-lg mb-6">
-            Le Tiki accueille vos événements avec style : mariages, anniversaires, soirées
+          <h2 className="text-4xl text-white font-semibold mb-6">Événements Inoubliables</h2>
+          <p className="text-lg text-white mb-6">
+            O resto accueille vos événements avec style : mariages, anniversaires, soirées
             d'entreprise, ou fêtes entre amis. Laissez notre équipe transformer vos moments spéciaux
             en souvenirs mémorables.
           </p>
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 mb-6">
             <img
-              className="rounded-lg shadow-2xl w-full md:w-3/4 lg:w-1/2 h-80 object-cover z-20"
-              src="téléchargement.jpg"
-              alt="Événements festifs au Tiki"
+              className="rounded-lg shadow-2xl w-full md:w-3/4 lg:w-1/2 h-80 object-cover z-20 border-4 border-white"
+              src="soiree.png"
+              alt="Événements festifs O Resto"
             />
           </div>
+          <Link
+            to="/contact"
+            className="inline-block bg-white  text-black px-6 py-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
+          >
+            Nous contacter
+          </Link>
         </div>
       </section>
 
       {/* Reservation Section */}
-      <section className="bg-[var(--background-color)] bg-opacity-90 py-12 p-4 m-0 border-none">
+      <section className="bg-black bg-opacity-90 py-12 p-4 m-0 border-none">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-semibold mb-4">Réservez une soirée magique</h2>
-          <p className="mb-6">
+          <h2 className="text-4xl text-white font-semibold mb-4">Réservez une table</h2>
+          <p className="mb-6 text-white">
             Profitez de l'ambiance festive et d'un cadre exceptionnel. Réservez votre table
             maintenant !
           </p>
           <Link
             to="/reservations"
-            className="inline-block bg-[var(--primary-color)] bg-opacity-30 text-[var(--text-color-secondary)] px-6 py-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
+            className="inline-block bg-white  text-black px-6 py-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
           >
             Réserver une table
           </Link>
@@ -130,7 +136,7 @@ export function RestaurantHomePage() {
       </section>
 
       {/* Footer Section */}
-      <footer className="bg-[var(--footer-background)] text-[var(--footer-text)] py-8 m-0 border-none">
+      <footer className="bg-black text-[var(--footer-text)] py-8 m-0 border-white border-solid border-t-2">
         <div className="container mx-auto text-center">
           <p className="text-sm">© 2024 Tiki au Bord de l'Eau. Tous droits réservés.</p>
           <p className="text-sm mt-2">123 Quai du Grand Large, Meyzieu, France</p>
