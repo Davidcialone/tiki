@@ -6,28 +6,34 @@ export function RestaurantHomePage() {
   return (
     <div className="relative font-sans text-gray-800 min-h-screen space-y-0">
       {/* Background Image */}
-          <div className="relative w-full h-screen bg-[url('/restaurant2.png')] bg-center bg-cover bg-no-repeat">
+      <div className="relative w-full h-screen bg-[url('/restaurant2.png')] bg-center bg-cover bg-no-repeat z-0">
         {/* Overlay for contrast */}
         <div className="absolute inset-0 bg-black opacity-40"></div>
 
         {/* Text Section */}
         <div className="relative z-10 flex items-center justify-center w-full h-full text-center">
-          <div className="text-[var(--text-color-secondary)]  px-8 py-6">
+          <div className="text-[var(--text-color-secondary)] px-8 py-6">
             <h1 className="text-4xl font-bold">O Resto</h1>
             <p className="mt-4 text-lg">
               Profitez d'une vue magnifique au bord du lac et d'une ambiance festive chez O resto.
             </p>
+            <Link
+              to="/reservations"
+              className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
+            >
+              Réserver une table
+            </Link>
           </div>
         </div>
       </div>
 
-
-          <div className="relative w-full h-screen bg-[url('/restaurant.png')] bg-center bg-cover bg-no-repeat">
-      {/* Overlay for better text visibility */}
-      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+      {/* Second Background Image */}
+      <div className="relative w-full h-screen bg-[url('/restaurant.png')] bg-center bg-cover bg-no-repeat">
+        {/* Overlay for better text visibility */}
+        <div className="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
 
         {/* Text at the top */}
-        <div className="absolute top-0 w-full text-center pt-12 z-10">
+        <div className="absolute top-0 w-full text-center pt-12 z-20">
           <p className="text-[var(--text-color-secondary)] text-lg px-6 md:px-16 mx-auto leading-relaxed">
             Bienvenue à O Resto,<br />
             Votre destination pour des moments festifs et conviviaux. Situé à Meyzieu, notre restaurant
@@ -37,10 +43,10 @@ export function RestaurantHomePage() {
         </div>
 
         {/* Text at the bottom */}
-        <div className="absolute bottom-0 w-full text-center pb-12 z-10">
+        <div className="absolute bottom-0 w-full text-center pb-12 z-20">
           <p className="text-[var(--text-color-secondary)] text-lg px-6 md:px-16 mx-auto leading-relaxed">
-          <h2>L'histoire d'O resto</h2>
-          Fondé pour célébrer la joie de vivre au bord de l'eau, O Resto est bien plus qu'un
+            <h2>L'histoire d'O resto</h2>
+            Fondé pour célébrer la joie de vivre au bord de l'eau, O Resto est bien plus qu'un
             restaurant. C'est un lieu où la gastronomie rencontre une ambiance festive et
             conviviale.
             <br />
@@ -50,8 +56,7 @@ export function RestaurantHomePage() {
         </div>
       </div>
 
-
-           {/* Highlights Section */}
+      {/* Highlights Section */}
       <section className="bg-black py-12 bg-opacity-90 p-4 m-0 border-none">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl text-white font-semibold mb-6">Pourquoi choisir O Resto ?</h2>
@@ -128,7 +133,7 @@ export function RestaurantHomePage() {
           </p>
           <Link
             to="/reservations"
-            className="inline-block bg-white  text-black px-6 py-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
+            className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
           >
             Réserver une table
           </Link>
@@ -145,4 +150,3 @@ export function RestaurantHomePage() {
     </div>
   );
 }
-

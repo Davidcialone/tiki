@@ -23,7 +23,11 @@ export function NavBarClient() {
   };
 
   return (
-    <nav className="absolute inset-0 text-white p-4 m-0 z-50">
+    <nav
+      className={`${
+        mobileMenuOpen ? "fixed inset-0 z-50" : "fixed top-0 left-0 w-full z-50"
+      } text-white p-4 m-0`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           {/* Bouton du menu mobile */}
@@ -109,7 +113,7 @@ export function NavBarClient() {
       {/* Menu mobile */}
       {mobileMenuOpen && (
         <div
-          className="sm:hidden fixed inset-0 z-40 bg-opacity-90 bg-gray-800 flex flex-col items-center justify-center space-y-4"
+          className="sm:hidden fixed inset-0 z-50 bg-opacity-90 bg-gray-800 flex flex-col items-center justify-center space-y-4"
           onClick={toggleMenu}
         >
           <Link
@@ -153,3 +157,4 @@ export function NavBarClient() {
     </nav>
   );
 }
+
