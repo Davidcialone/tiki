@@ -1,10 +1,20 @@
+const API_BASE_URL = "https://tiki-ew5j.onrender.com"; // URL de base pour les appels API
+
 export async function createReservation(formData) {
   try {
     console.log("=== Sending Reservation Request ===");
-    console.log("Endpoint Full URL:", "http://localhost:5000/api/reservations");
+
+    // Ajouter automatiquement un role_id s'il manque dans le formData
+    if (!formData.role_id) {
+      console.warn("role_id is missing, assigning default value of 1");
+      formData.role_id = 1; // Assurez-vous que ce rôle existe dans votre table Roles
+    }
+
+    // Afficher les données envoyées pour vérifier que tout est correct
     console.log("Payload:", JSON.stringify(formData));
 
-    const response = await fetch("http://localhost:5000/api/reservations", {
+    // Envoi de la requête à l'API
+    const response = await fetch(`${API_BASE_URL}/api/reservations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -12,24 +22,18 @@ export async function createReservation(formData) {
       body: JSON.stringify(formData),
     });
 
-    console.log("Full Response:", response);
-    console.log("Response Status:", response.status);
-    console.log(
-      "Response Headers:",
-      Object.fromEntries(response.headers.entries())
-    );
-
+    // Lire et afficher la réponse brute
     const responseText = await response.text();
     console.log("Response Text:", responseText);
 
+    // Vérifier si la réponse est une erreur
+    if (!response.ok) {
+      throw new Error(responseText || "Reservation creation failed");
+    }
+
+    // Tenter de parser la réponse en JSON
     try {
       const responseData = JSON.parse(responseText);
-      console.log("Parsed Response Data:", responseData);
-
-      if (!response.ok) {
-        throw new Error(responseData.error || "Reservation creation failed");
-      }
-
       return responseData;
     } catch (parseError) {
       console.error("Error parsing response:", parseError);
@@ -44,9 +48,11 @@ export async function createReservation(formData) {
 export async function getReservations() {
   try {
     console.log("=== Sending Reservations Request ===");
-    console.log("Endpoint Full URL:", "http://localhost:5000/api/reservations");
 
-    const response = await fetch("http://localhost:5000/api/reservations");
+    const fullUrl = `${API_BASE_URL}/api/reservations`;
+    console.log("Endpoint Full URL:", fullUrl);
+
+    const response = await fetch(fullUrl);
 
     console.log("Full Response:", response);
     console.log("Response Status:", response.status);
@@ -80,14 +86,11 @@ export async function getReservations() {
 export async function getReservationById(id) {
   try {
     console.log("=== Sending Reservation Request ===");
-    console.log(
-      "Endpoint Full URL:",
-      `http://localhost:5000/api/reservations/${id}`
-    );
 
-    const response = await fetch(
-      `http://localhost:5000/api/reservations/${id}`
-    );
+    const fullUrl = `${API_BASE_URL}/api/reservations/${id}`;
+    console.log("Endpoint Full URL:", fullUrl);
+
+    const response = await fetch(fullUrl);
 
     console.log("Full Response:", response);
     console.log("Response Status:", response.status);
