@@ -6,49 +6,52 @@ export function RestaurantHomePage() {
   return (
     <div className="relative font-sans text-gray-800 min-h-screen space-y-0">
       {/* Background Image */}
-      <div className="absolute inset-0 bg-[url('/logo.jpg')] bg-center opacity-5 z-0"></div>
+          <div className="relative w-full h-screen bg-[url('/restaurant2.png')] bg-center bg-cover bg-no-repeat">
+        {/* Overlay for contrast */}
+        <div className="absolute inset-0 bg-black opacity-40"></div>
 
-      {/* Hero Section */}
-      <div className="bg-[var(--background-color)] bg-opacity-90 text-[var(--text-color)] py-16 p-4 text-center m-0 border-none">
-        <h1 className="text-[var(--text-color)] text-4xl font-bold">Bienvenue dans un cadre incroyable</h1>
-        <p className="text-[var(--text-color)] mt-4">
-          Profitez d'une vue magnifique sur le Grand Large et d'une ambiance festive au Tiki.
-        </p>
+        {/* Text Section */}
+        <div className="relative z-10 flex items-center justify-center w-full h-full text-center">
+          <div className="text-[var(--text-color-secondary)]  px-8 py-6">
+            <h1 className="text-4xl font-bold">O Resto</h1>
+            <p className="mt-4 text-lg">
+              Profitez d'une vue magnifique au bord du lac et d'une ambiance festive chez O resto.
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Welcome Section */}
-      <section className="bg-[var(--background-color)] bg-opacity-90 mx-auto text-center p-4 m-0 border-none">
-        <p className="text-[var(--text-color)] text-lg mb-6 px-6 md:px-16 mx-auto leading-relaxed">
-          Bienvenue au Tiki au Bord de l'Eau, votre destination pour des moments festifs et
-          conviviaux. Situé à Meyzieu, notre restaurant vous offre une vue imprenable sur le Grand
-          Large et une ambiance chaleureuse.
-        </p>
-        <div className="flex justify-center">
-          <img
-            src="002-lac-terrasse-restaurant-au-bord-de-l'eau-decines.jpg"
-            alt="Vue du restaurant au bord de l'eau"
-            className="rounded-lg shadow-2xl w-full md:w-3/4 lg:w-1/2 h-80 z-10 mb-4 object-cover"
-          />
-        </div>
-      </section>
 
-      {/* History Section */}
-      <section className="bg-[var(--background-color)] bg-opacity-90 text-[var(--text-color)] py-16 shadow-lg p-4 m-0 border-none">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-semibold mb-6">Notre Histoire</h2>
-          <p className="text-lg mb-6 max-w-3xl mx-auto">
-            Fondé pour célébrer la joie de vivre au bord de l'eau, le Tiki est bien plus qu'un
+          <div className="relative w-full h-screen bg-[url('/restaurant.png')] bg-center bg-cover bg-no-repeat">
+      {/* Overlay for better text visibility */}
+      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+
+        {/* Text at the top */}
+        <div className="absolute top-0 w-full text-center pt-12 z-10">
+          <p className="text-[var(--text-color-secondary)] text-lg px-6 md:px-16 mx-auto leading-relaxed">
+            Bienvenue à O Resto,<br />
+            Votre destination pour des moments festifs et conviviaux. Situé à Meyzieu, notre restaurant
+            vous offre une vue imprenable sur le lac et une ambiance chaleureuse. Venez déguster des plats
+            raffinés et profiter de soirées inoubliables.
+          </p>
+        </div>
+
+        {/* Text at the bottom */}
+        <div className="absolute bottom-0 w-full text-center pb-12 z-10">
+          <p className="text-[var(--text-color-secondary)] text-lg px-6 md:px-16 mx-auto leading-relaxed">
+          <h2>L'histoire d'O resto</h2>
+          Fondé pour célébrer la joie de vivre au bord de l'eau, O Resto est bien plus qu'un
             restaurant. C'est un lieu où la gastronomie rencontre une ambiance festive et
             conviviale.
-          </p>
-          <p className="text-lg max-w-3xl mx-auto">
+            <br />
             Avec des braseros pour illuminer vos soirées, des musiques envoûtantes et des saveurs
-            exquises, chaque visite au Tiki est une expérience inoubliable.
+            exquises, chaque visite O Resto est une expérience inoubliable.
           </p>
         </div>
-      </section>
+      </div>
 
-      {/* Highlights Section */}
+
+           {/* Highlights Section */}
       <section className="bg-[var(--background-color)] py-12 bg-opacity-90 p-4 m-0 border-none">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-semibold mb-6">Pourquoi choisir le Tiki ?</h2>
