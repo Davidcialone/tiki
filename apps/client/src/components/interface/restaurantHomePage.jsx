@@ -19,7 +19,7 @@ export function RestaurantHomePage() {
             </p>
             <Link
               to="/reservations"
-              className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
+               className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-black  hover:text-white hover:border-white transition duration-200 z-50 relative"
             >
               Réserver une table
             </Link>
@@ -34,7 +34,7 @@ export function RestaurantHomePage() {
 
         {/* Text at the top */}
         <div className="absolute top-0 w-full text-center pt-12 z-20">
-          <p className="text-[var(--text-color-secondary)] text-lg px-6 md:px-16 mx-auto leading-relaxed">
+          <p className="text-[var(--text-color-secondary)] text-xs px-6 md:px-16 mx-auto leading-relaxed">
             Bienvenue à O Resto,<br />
             Votre destination pour des moments festifs et conviviaux. Situé à Meyzieu, notre restaurant
             vous offre une vue imprenable sur le lac et une ambiance chaleureuse. Venez déguster des plats
@@ -44,7 +44,7 @@ export function RestaurantHomePage() {
 
         {/* Text at the bottom */}
         <div className="absolute bottom-0 w-full text-center pb-12 z-20">
-          <p className="text-[var(--text-color-secondary)] text-lg px-6 md:px-16 mx-auto leading-relaxed">
+          <p className="text-[var(--text-color-secondary)] text-xs px-6 md:px-16 mx-auto leading-relaxed">
             <h2>L'histoire d'O resto</h2>
             Fondé pour célébrer la joie de vivre au bord de l'eau, O Resto est bien plus qu'un
             restaurant. C'est un lieu où la gastronomie rencontre une ambiance festive et
@@ -116,7 +116,7 @@ export function RestaurantHomePage() {
           </div>
           <Link
             to="/contact"
-            className="inline-block bg-white  text-black px-6 py-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
+             className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-black  hover:text-white hover:border-white transition duration-200 z-50 relative"
           >
             Nous contacter
           </Link>
@@ -133,7 +133,7 @@ export function RestaurantHomePage() {
           </p>
           <Link
             to="/reservations"
-            className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-[var(--accent-color)] transition duration-200 z-50 relative"
+           className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-black  hover:text-white hover:border-white transition duration-200 z-50 relative"
           >
             Réserver une table
           </Link>

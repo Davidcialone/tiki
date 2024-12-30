@@ -134,7 +134,7 @@ export function MenuDisplay() {
                         console.log("Retour à la liste des catégories");
                         setSelectedCategory(null);
                     }}
-                    className="fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 bg-white text-black font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 text-xs bg-white text-black font-semibold rounded-lg shadow-md hover:bg-black hover:text-white hover:border-white  transition duration-200"
                     >
                     Retour aux catégories
                     </button>
@@ -145,3 +145,5 @@ export function MenuDisplay() {
         </>
     );
 }
+
+ 

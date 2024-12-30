@@ -23,14 +23,7 @@ export function ReservationPage() {
     setIsModalOpen(false);
   };
 
-  const buttonStyle = {
-    padding: "10px 20px",
-    backgroundColor: "#007BFF",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  };
+  
 
   return (
     <>
@@ -41,8 +34,8 @@ export function ReservationPage() {
 
       <button 
   onClick={() => setIsModalOpen(true)} 
-  style={buttonStyle} 
-  className="relative z-50"
+   
+  className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-black  hover:text-white hover:border-white transition duration-200 z-50 relative"
 >
   Réserver
 </button>
