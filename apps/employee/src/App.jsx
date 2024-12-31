@@ -4,6 +4,7 @@ import { HomePageEmployee } from "../../employee/src/components/interface/homePa
 import { ReservationsDashboard } from "./components/dashBoard/reservationsDashboard";
 import { ClientSearch } from "../../employee/src/components/dashBoard/clientSearch";
 import { CustomerFile } from "../../employee/src/components/dashBoard/customerFile";
+import { TablesDashBoard } from "../../employee/src/components/dashBoard/tablesDashBoard";
 import { LoginPage } from "./auth/loginPage";
 import { AuthProvider } from "./auth/authContext"; // Import AuthProvider
 import { RegisterPage } from "./auth/registerPage"; // Import Register
@@ -19,6 +20,7 @@ function App() {
           <Route path="/reservations" element={<ReservationsDashboard />} />
           <Route path="/clients" element={<ClientSearch />} />
           <Route path="/clients/:clientId" element={<CustomerFile />} />
+          <Route path="/dashboard" element={<TablesDashBoard/>} />
           <Route path="/connexion" element={<LoginPage />} />
           <Route path="/inscription" element={<RegisterPage/>} />
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />

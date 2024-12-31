@@ -140,3 +140,39 @@ export async function getReservationsByClientId(req, res) {
     return res.status(500).json({ message: "Erreur interne du serveur." });
   }
 }
+
+export async function getReservationsByDate(req, res) {
+  const { date } = req.params;
+
+  try {
+    const reservations = await Reservations.findAll({
+      where: { reservation_date: date }, // Filtrer par date de réservation
+      attributes: [
+        "id",
+        "user_id",
+        "reservation_date",
+        "reservation_time",
+        "number_of_people",
+        "places_used",
+        "end_time",
+        "note",
+        "zone_id",
+      ],
+      order: [["reservation_time", "ASC"]], // Trier par heure de réservation croissante
+    });
+
+    if (reservations.length > 0) {
+      return res.json(reservations);
+    } else {
+      return res
+        .status(404)
+        .json({ message: "Aucune réservation trouvée pour cette date." });
+    }
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des réservations :",
+      error.message
+    );
+    return res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+}

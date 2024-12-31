@@ -83,6 +83,46 @@ export async function getReservations() {
   }
 }
 
+// reservationApi.js
+export async function getReservationsbyDate(date) {
+  try {
+    console.log("=== Sending Reservations Request ===");
+
+    // L'URL de l'API pour récupérer les réservations pour une date spécifique
+    const fullUrl = `${API_BASE_URL}/api/reservations?date=${date}`;
+    console.log("Endpoint Full URL:", fullUrl);
+
+    const response = await fetch(fullUrl);
+
+    console.log("Full Response:", response);
+    console.log("Response Status:", response.status);
+    console.log(
+      "Response Headers:",
+      Object.fromEntries(response.headers.entries())
+    );
+
+    const responseText = await response.text();
+    console.log("Response Text:", responseText);
+
+    try {
+      const responseData = JSON.parse(responseText);
+      console.log("Parsed Response Data:", responseData);
+
+      if (!response.ok) {
+        throw new Error(responseData.error || "Reservations fetch failed");
+      }
+
+      return responseData; // Les réservations doivent être retournées sous forme d'un tableau
+    } catch (parseError) {
+      console.error("Error parsing response:", parseError);
+      throw new Error(responseText || "Unexpected response format");
+    }
+  } catch (error) {
+    console.error("Detailed Reservations Error:", error);
+    throw error;
+  }
+}
+
 export async function getReservationById(id) {
   try {
     console.log("=== Sending Reservation Request ===");
