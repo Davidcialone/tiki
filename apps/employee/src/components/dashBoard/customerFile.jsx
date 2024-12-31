@@ -12,8 +12,12 @@ export function CustomerFile() {
   useEffect(() => {
     const loadClientData = async () => {
       try {
+        setLoading(true);
+        // Récupérer les détails du client et ses réservations en parallèle
         const client = await fetchClientDetails(clientId);
         const clientReservations = await fetchClientReservations(clientId);
+        console.log("Client détails :", client);
+        console.log("Réservations :", clientReservations);
 
         setClientDetails(client);
         setReservations(clientReservations);
@@ -37,15 +41,19 @@ export function CustomerFile() {
         <div className="mt-4 space-y-2">
           <p className="text-gray-700">
             <span className="font-semibold">Nom : </span>
-            {clientDetails.firstname} {clientDetails.lastname}
+            {clientDetails.firstname}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-semibold">Prénom : </span>
+            {clientDetails.lastname}
           </p>
           <p className="text-gray-700">
             <span className="font-semibold">Email : </span>
-            {clientDetails.email}
+            {clientDetails ? clientDetails.email : "Chargement..."}
           </p>
           <p className="text-gray-700">
             <span className="font-semibold">Téléphone : </span>
-            {clientDetails.phone}
+            {clientDetails ? clientDetails.phone : "Chargement..."}
           </p>
         </div>
 
@@ -58,11 +66,15 @@ export function CustomerFile() {
                 <li key={reservation.id} className="p-4 bg-gray-100 rounded shadow">
                   <p className="text-gray-700">
                     <span className="font-semibold">Date : </span>
-                    {new Date(reservation.date).toLocaleDateString()}
+                    {new Date(reservation.reservation_date).toLocaleDateString()}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Heure : </span>
+                    {reservation.reservation_time}
                   </p>
                   <p className="text-gray-700">
                     <span className="font-semibold">Statut : </span>
-                    {reservation.status}
+                    {reservation.status || "Non défini"}
                   </p>
                 </li>
               ))}

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { NavBarEmployee } from "../../employee/src/components/interface/navBarEmployee";
 import { HomePageEmployee } from "../../employee/src/components/interface/homePageEmployee";
-import { GestionReservations } from "../../employee/src/components/dashBoard/reservationsDashboard";
+import { ReservationsDashboard } from "./components/dashBoard/reservationsDashboard";
 import { ClientSearch } from "../../employee/src/components/dashBoard/clientSearch";
 import { CustomerFile } from "../../employee/src/components/dashBoard/customerFile";
 import { LoginPage } from "./auth/loginPage";
@@ -16,7 +16,7 @@ function App() {
         <NavBarEmployee />
         <Routes>
           <Route path="/" element={<HomePageEmployee />} />
-          <Route path="/reservations" element={<GestionReservations />} />
+          <Route path="/reservations" element={<ReservationsDashboard />} />
           <Route path="/clients" element={<ClientSearch />} />
           <Route path="/clients/:clientId" element={<CustomerFile />} />
           <Route path="/connexion" element={<LoginPage />} />

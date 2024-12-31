@@ -30,13 +30,21 @@ export async function searchInClientsDB(searchQuery) {
 }
 
 // clientApi.js
+
 export async function fetchClientReservations(clientId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/clients/${clientId}`);
+    // Utilisation de clientId pour récupérer les réservations du client
+    const response = await fetch(
+      `${API_BASE_URL}/api/reservations?user_id=${clientId}`
+    );
+
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des réservations.");
     }
-    return await response.json();
+
+    // Retourne les réservations pour le client
+    const data = await response.json();
+    return data;
   } catch (err) {
     throw new Error(err.message);
   }

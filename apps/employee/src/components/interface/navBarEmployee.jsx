@@ -5,9 +5,9 @@ export function NavBarEmployee() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-red-800 shadow-md">
+    <nav className="bg-red-800 shadow-md rounded-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16">
+        <div className="relative flex items-center justify-between h-12">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             {/* Mobile menu button */}
             <button
@@ -42,37 +42,37 @@ export function NavBarEmployee() {
             <div className="flex space-x-4">
               <Link
                 to="/"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Accueil
               </Link>
               <Link
                 to="/reservations"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Réservations
               </Link>
               <Link
                 to="/clients"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Clients
               </Link>
               <Link
                 to="/plannings"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Plannings
               </Link>
               <Link
                 to="/dashboard"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Gestion
               </Link>
               <Link
                 to="/connexion"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Connexion
               </Link>
