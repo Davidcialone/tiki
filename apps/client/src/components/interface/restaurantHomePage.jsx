@@ -45,7 +45,6 @@ export function RestaurantHomePage() {
         {/* Text at the bottom */}
         <div className="absolute bottom-0 w-full text-center pb-12 z-20">
           <p className="text-[var(--text-color-secondary)] text-xs px-6 md:px-16 mx-auto leading-relaxed">
-            <h2>L'histoire d'O resto</h2>
             Fondé pour célébrer la joie de vivre au bord de l'eau, O Resto est bien plus qu'un
             restaurant. C'est un lieu où la gastronomie rencontre une ambiance festive et
             conviviale.

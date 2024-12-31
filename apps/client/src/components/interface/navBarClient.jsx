@@ -69,12 +69,12 @@ export function NavBarClient() {
           {/* Liens pour grand écran */}
           <div className="hidden sm:block sm:ml-6">
             <div className="flex space-x-4">
-              <Link
+              {/* <Link
                 to="/"
                 className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Accueil
-              </Link>
+              </Link> */}
               <Link
                 to="/reservations"
                 className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"

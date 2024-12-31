@@ -85,12 +85,12 @@ export function NavBarEmployee() {
       {mobileMenuOpen && (
         <div className="sm:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link
+            {/* <Link
               to="/"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Accueil
-            </Link>
+            </Link> */}
             <Link
               to="/reservations"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
