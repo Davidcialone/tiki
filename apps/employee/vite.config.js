@@ -7,9 +7,9 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
   },
-  resolve: {
-    alias: {
-      "react-datepicker": require.resolve("react-datepicker"),
+  build: {
+    rollupOptions: {
+      external: ["react-datepicker"], // Ajoutez react-datepicker à la liste des dépendances externes si nécessaire
     },
   },
 });
