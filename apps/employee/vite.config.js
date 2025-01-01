@@ -9,7 +9,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ["react-datepicker/dist/react-datepicker.css"], // Exclut le CSS de la construction
+      external: ["react-datepicker/dist/react-datepicker.css"],
     },
   },
 });
