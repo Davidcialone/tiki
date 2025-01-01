@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
+// import 'react-datepicker/dist/react-datepicker.css';
 import { fr } from "date-fns/locale";
 import PropTypes from "prop-types";
 import { createReservation } from "../../api/reservationApi";
