@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { Register } from '../api/userApi';
+import { useNavigate } from "react-router-dom"; // Import de useNavigate
 
 export function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,31 +28,51 @@ export function RegisterPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (formData.password !== formData.passwordConfirm) {
       setError('Les mots de passe ne correspondent pas.');
       return;
     }
-
+  
     if (formData.password.length < 8) {
       setError('Le mot de passe doit contenir au moins 8 caractères.');
       return;
     }
+  
+    try {
+      // Ajout d'un appel réel à l'API
+      const response = await Register({
+        lastname: formData.lastname,
+        firstname: formData.firstname,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        passwordConfirm: formData.passwordConfirm,
+      });
+  
+      console.log('Réponse de l\'API:', response); // Log de la réponse API
+      setSuccess(true);
+      setError('');
+      setFormData({
+        lastname: '',
+        firstname: '',
+        email: '',
+        phone: '',
+        password: '',
+        passwordConfirm: ''
+      });
+      // Redirection vers la page de connexion après 2 secondes
+      setTimeout(() => {
+        navigate("/login"); // Redirige vers la page de connexion
+      }, 2000);
 
-    // Effectuez l'envoi du formulaire (simulation ici)
-    setError('');
-    setSuccess(true);
-    // Réinitialiser les champs après une inscription réussie
-    setFormData({
-      lastname: '',
-      firstname: '',
-      email: '',
-      phone: '',
-      password: '',
-      passwordConfirm: ''
-    });
+    } catch (err) {
+      console.error('Erreur lors de l\'inscription:', err); // Log des erreurs
+      setError(err.message);
+      setSuccess(false);
+    }
   };
 
   return (
@@ -194,7 +216,7 @@ export function RegisterPage() {
 
         <p className="text-center text-gray-600 mt-4">
           Vous avez déjà un compte ?{' '}
-          <a href="#" className="text-green-600 hover:text-green-700 font-medium">
+          <a href="/connexion" className="text-green-600 hover:text-green-700 font-medium">
             Connectez-vous ici
           </a>
         </p>

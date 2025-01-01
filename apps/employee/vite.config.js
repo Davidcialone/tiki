@@ -6,8 +6,6 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
-  },
-  optimizeDeps: {
     include: ["react-datepicker"],
   },
 });
