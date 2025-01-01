@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { Register } from '../api/userApi';
-import { useNavigate } from "react-router-dom"; // Import de useNavigate
+import { useNavigate } from "react-router-dom";
 
 export function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +16,7 @@ export function RegisterPage() {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate(); // Utilisation correcte du hook
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm);
@@ -42,7 +43,7 @@ export function RegisterPage() {
     }
   
     try {
-      // Ajout d'un appel réel à l'API
+      // Appel à l'API
       const response = await Register({
         lastname: formData.lastname,
         firstname: formData.firstname,
@@ -63,9 +64,10 @@ export function RegisterPage() {
         password: '',
         passwordConfirm: ''
       });
+
       // Redirection vers la page de connexion après 2 secondes
       setTimeout(() => {
-        navigate("/login"); // Redirige vers la page de connexion
+        navigate("/login"); // Utilisation correcte de navigate
       }, 2000);
 
     } catch (err) {
@@ -86,7 +88,7 @@ export function RegisterPage() {
         )}
         {success && (
           <div className="bg-green-50 border-l-4 border-green-500 p-4 my-4">
-            <p className="text-green-700">Inscription réussie !</p>
+            <p className="text-green-700">Inscription réussie ! Redirection en cours...</p>
           </div>
         )}
 

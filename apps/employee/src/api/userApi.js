@@ -78,3 +78,46 @@ export async function Register({
     throw error; // Renvoie les autres erreurs
   }
 }
+
+export async function Login({ email, password }) {
+  // Validations côté client
+  if (!email || !password) {
+    throw new Error("Email et mot de passe requis");
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ email: email.toLowerCase().trim(), password }),
+    });
+
+    // Gestion des réponses HTTP
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+
+      switch (response.status) {
+        case 400:
+          throw new Error(data?.message || "Données de connexion invalides");
+        case 401:
+          throw new Error("Email ou mot de passe incorrect");
+        case 500:
+          throw new Error("Erreur serveur, veuillez réessayer plus tard");
+        default:
+          throw new Error("Erreur lors de la connexion");
+      }
+    }
+
+    // Retourne la réponse JSON en cas de succès
+    return await response.json();
+  } catch (error) {
+    if (error instanceof TypeError) {
+      // Erreur réseau ou problème de connexion
+      throw new Error("Erreur de connexion au serveur");
+    }
+    throw error; // Renvoie les autres erreurs
+  }
+}

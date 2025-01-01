@@ -2,40 +2,38 @@ import { Users } from "../models/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-// Fonction pour s'authentifier
 export async function login(req, res) {
-  const { email, password } = req.body;
-
   try {
-    // Recherche de l'utilisateur par email
-    const user = await Users.findOne({ where: { email } });
+    const { email, password } = req.body;
 
-    // Si l'utilisateur n'est pas trouvé
+    // Log pour vérifier la structure des données reçues
+    console.log("Requête de connexion reçue avec email:", email);
+
+    // Vérifiez les champs requis
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email et mot de passe requis" });
+    }
+
+    const user = await Users.findOne({ email });
     if (!user) {
-      return res
-        .status(404)
-        .json({ message: "Email ou mot de passe incorrect" });
+      return res.status(401).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Vérification du mot de passe
-    const isValidPassword = await bcrypt.compare(password, user.password);
-
-    // Si le mot de passe est incorrect
-    if (!isValidPassword) {
-      return res
-        .status(401)
-        .json({ message: "Email ou mot de passe incorrect" });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Mot de passe incorrect" });
     }
 
-    // Génération du token JWT
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-
-    return res.json({ token });
-  } catch (error) {
-    console.error("Erreur lors de l'authentification:", error.message);
-    return res.status(500).json({ message: "Erreur interne du serveur." });
+    console.log("Token généré:", token);
+    return res.status(200).json({ token });
+  } catch (err) {
+    console.error("Erreur dans /api/auth/login:", err);
+    return res
+      .status(500)
+      .json({ message: "Erreur serveur, veuillez réessayer plus tard" });
   }
 }
 
