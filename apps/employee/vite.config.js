@@ -7,9 +7,4 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
   },
-  build: {
-    rollupOptions: {
-      external: ["react-datepicker"], // Ajoutez react-datepicker à la liste des dépendances externes si nécessaire
-    },
-  },
 });
