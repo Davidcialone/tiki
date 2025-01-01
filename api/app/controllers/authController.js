@@ -39,36 +39,82 @@ export async function login(req, res) {
   }
 }
 
-// Fonction pour s'inscrire
 export async function register(req, res) {
-  const { email, password, confirmation } = req.body;
+  const { lastname, firstname, email, phone, password, passwordConfirm } =
+    req.body;
 
   try {
-    // Vérification de la correspondance des mots de passe
-    if (password !== confirmation) {
-      return res
-        .status(400)
-        .json({ message: "Les mots de passe ne correspondent pas" });
+    // Validation des champs requis
+    if (!lastname || !firstname || !email || !password || !passwordConfirm) {
+      return res.status(400).json({
+        message: "Tous les champs obligatoires doivent être remplis",
+      });
     }
 
-    // Vérification si l'utilisateur existe déjà
-    const existingUser = await Users.findOne({ where: { email } });
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "Un utilisateur existe déjà avec cet email" });
+    // Validation du format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        message: "Format d'email invalide",
+      });
+    }
+
+    // Validation du mot de passe
+    if (password.length < 8) {
+      return res.status(400).json({
+        message: "Le mot de passe doit contenir au moins 8 caractères",
+      });
+    }
+
+    // Vérification des mots de passe
+    if (password !== passwordConfirm) {
+      return res.status(400).json({
+        message: "Les mots de passe ne correspondent pas",
+      });
+    }
+
+    // Vérification de l'utilisateur existant avec try-catch spécifique
+    try {
+      const existingUser = await Users.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({
+          message: "Un utilisateur existe déjà avec cet email",
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification de l'email:", error);
+      return res.status(500).json({
+        message: "Erreur lors de la vérification de l'email",
+      });
     }
 
     // Hachage du mot de passe
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
+    const hash = await bcrypt.hash(password, 12); // On peut utiliser directement 12 rounds
 
-    // Création de l'utilisateur
-    await Users.create({ email, password: hash, role_id: 1 });
+    // Création de l'utilisateur avec try-catch spécifique
+    try {
+      await Users.create({
+        lastname: lastname.trim(),
+        firstname: firstname.trim(),
+        email: email.toLowerCase().trim(),
+        phone: phone ? phone.trim() : null,
+        password: hash,
+        role_id: 1,
+      });
 
-    return res.status(201).json({ message: "Utilisateur créé avec succès" });
+      return res.status(201).json({
+        message: "Utilisateur créé avec succès",
+      });
+    } catch (error) {
+      console.error("Erreur lors de la création de l'utilisateur:", error);
+      return res.status(500).json({
+        message: "Erreur lors de la création de l'utilisateur",
+      });
+    }
   } catch (error) {
-    console.error("Erreur lors de l'inscription:", error.message);
-    return res.status(500).json({ message: "Erreur interne du serveur." });
+    console.error("Erreur lors de l'inscription:", error);
+    return res.status(500).json({
+      message: "Erreur interne du serveur",
+    });
   }
 }

@@ -7,7 +7,7 @@ import { CustomerFile } from "../../employee/src/components/dashBoard/customerFi
 import { TablesDashBoard } from "../../employee/src/components/dashBoard/tablesDashBoard";
 import { LoginPage } from "./auth/loginPage";
 import { AuthProvider } from "./auth/authContext"; // Import AuthProvider
-import { RegisterPage } from "./auth/registerPage"; // Import Register
+import { RegisterPage } from "./auth/registerPage"; // Import RegisterPage
 import './App.css';
 
 function App() {
