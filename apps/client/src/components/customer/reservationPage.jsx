@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ReservationModal } from "../modales/reservationModal";
+import { ReservationModal } from "../../../../client/src/components/modales/reservationModal";
 
 export function ReservationPage() {
   const [zonesOpened, setZonesOpened] = useState({

@@ -12,7 +12,7 @@ export function NavBarClient() {
       const scrollPosition = window.scrollY;
 
       // Calculer l'opacité de la navbar : plus on défile, plus l'opacité augmente
-      const opacity = Math.min(scrollPosition / 300, 0.5); // L'opacité est limitée à 0.5
+      const opacity = Math.min(scrollPosition / 300, 0.7); // L'opacité est limitée à 0.5
       setNavbarOpacity(opacity);
 
       // Gérer la visibilité de la navbar
