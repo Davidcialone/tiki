@@ -55,7 +55,7 @@ export function TablesDashBoard() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 mt-16">
       <h1 className="text-2xl font-bold">Tableau de bord - Gestion des Réservations</h1>
       <p className="mt-2 text-gray-600">Vous pouvez gérer les réservations et les tables de votre restaurant à partir de cette page.</p>
 
