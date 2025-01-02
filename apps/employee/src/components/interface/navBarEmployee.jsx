@@ -48,13 +48,12 @@ export function NavBarEmployee() {
       }`}
       style={{
         backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})` // Exemple d'un fond transparent ou noir avec opacité dynamique
-
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           {/* Logo à gauche */}
-          <div className="flex items-center">
+          <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <Link to="/" className="flex items-center">
               <div className="h-12 w-12 rounded-full border-2 border-white overflow-hidden">
                 <img
@@ -66,7 +65,7 @@ export function NavBarEmployee() {
             </Link>
           </div>
 
-          {/* Menu burger à droite */}
+          {/* Menu burger à droite pour petits écrans */}
           <div className="absolute right-0 sm:hidden">
             <button
               onClick={toggleMenu}
@@ -90,15 +89,45 @@ export function NavBarEmployee() {
               </svg>
             </button>
           </div>
+
+          {/* Menu pour grands écrans */}
+          <div className="hidden sm:block sm:ml-6">
+            <div className="flex space-x-4">
+              <Link
+                to="/reservations"
+                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Réservations
+              </Link>
+              <Link
+                to="/plannings"
+                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Plannings
+              </Link>
+              <Link
+                to="/dashboard"
+                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Gestion
+              </Link>
+              <Link
+                to="/login"
+                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Connexion
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Menu mobile qui se déploie sous la navbar */}
       {mobileMenuOpen && (
-         <div
-         className="sm:hidden fixed top-16 left-0 w-full bg-black bg-opacity-30 flex flex-col items-center justify-start space-y-4 py-4 transition-all duration-300"
-         onClick={toggleMenu}
-       >
+        <div
+          className="sm:hidden fixed top-16 left-0 w-full bg-black bg-opacity-30 flex flex-col items-center justify-start space-y-4 py-4 transition-all duration-300"
+          onClick={toggleMenu}
+        >
           <Link
             to="/"
             className="text-white text-lg hover:text-gray-300"
@@ -132,7 +161,7 @@ export function NavBarEmployee() {
             className="text-white text-lg hover:text-gray-300"
             onClick={toggleMenu}
           >
-            Déconnexion
+            Connexion
           </Link>
         </div>
       )}
