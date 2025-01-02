@@ -7,12 +7,26 @@ export function NavBarEmployee() {
   return (
     <nav className="bg-red-800 shadow-md rounded-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-12">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            {/* Mobile menu button */}
+        <div className="relative flex items-center justify-between h-14">
+          {/* Logo à gauche */}
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center">
+              {/* Logo dans un cercle avec une bordure blanche */}
+              <div className="h-12 w-12 rounded-full border-2 border-white overflow-hidden">
+                <img
+                  src="logo.jpg"
+                  alt="Logo"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </Link>
+          </div>
+
+          {/* Menu burger à droite */}
+          <div className="absolute right-0 sm:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75"
+              className="text-white-400 hover:text-white focus:outline-none focus:ring-2 bg-transparent focus:ring-white focus:ring-opacity-75"
             >
               <span className="sr-only">Open main menu</span>
               <svg
@@ -32,12 +46,8 @@ export function NavBarEmployee() {
               </svg>
             </button>
           </div>
-          <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-            <Link to="/" className="flex items-center">
-              <img src="logo.jpg" alt="Logo" className="h-14 w-auto object-contain" />
-            </Link>
-          </div>
 
+          {/* Menu principal pour les écrans plus larges */}
           <div className="hidden sm:block sm:ml-6">
             <div className="flex space-x-4">
               <Link
@@ -71,7 +81,7 @@ export function NavBarEmployee() {
                 Gestion
               </Link>
               <Link
-                to="/register"
+                to="/login"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Connexion
@@ -85,12 +95,6 @@ export function NavBarEmployee() {
       {mobileMenuOpen && (
         <div className="sm:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {/* <Link
-              to="/"
-              className="text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Accueil
-            </Link> */}
             <Link
               to="/reservations"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
@@ -116,7 +120,7 @@ export function NavBarEmployee() {
               Gestion
             </Link>
             <Link
-              to="/register"
+              to="/login"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Connexion
@@ -127,4 +131,3 @@ export function NavBarEmployee() {
     </nav>
   );
 }
-

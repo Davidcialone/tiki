@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://tiki-ew5j.onrender.com"; // URL de base pour les appels API
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"; // Valeur de secours en local
 
 export async function createReservation(formData) {
   try {
@@ -14,7 +14,7 @@ export async function createReservation(formData) {
     console.log("Payload:", JSON.stringify(formData));
 
     // Envoi de la requête à l'API
-    const response = await fetch(`${API_BASE_URL}/api/reservations`, {
+    const response = await fetch(`${apiBaseUrl}/api/reservations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export async function getReservations() {
   try {
     console.log("=== Sending Reservations Request ===");
 
-    const fullUrl = `${API_BASE_URL}/api/reservations`;
+    const fullUrl = `${apiBaseUrl}/api/reservations`;
     console.log("Endpoint Full URL:", fullUrl);
 
     const response = await fetch(fullUrl);
@@ -89,7 +89,7 @@ export async function getReservationsbyDate(date) {
     console.log("=== Sending Reservations Request ===");
 
     // L'URL de l'API pour récupérer les réservations pour une date spécifique
-    const fullUrl = `${API_BASE_URL}/api/reservations?date=${date}`;
+    const fullUrl = `${apiBaseUrl}/api/reservations?date=${date}`;
     console.log("Endpoint Full URL:", fullUrl);
 
     const response = await fetch(fullUrl);
@@ -127,7 +127,7 @@ export async function getReservationById(id) {
   try {
     console.log("=== Sending Reservation Request ===");
 
-    const fullUrl = `${API_BASE_URL}/api/reservations/${id}`;
+    const fullUrl = `${apiBaseUrl}/api/reservations/${id}`;
     console.log("Endpoint Full URL:", fullUrl);
 
     const response = await fetch(fullUrl);

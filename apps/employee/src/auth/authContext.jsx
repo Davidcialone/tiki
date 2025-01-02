@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode"; // Correction : import direct sans accolades
+import { fetchUserDetails } from "../api/userApi"; // Correction : import direct sans accolades
 
 export const AuthContext = createContext();
 
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
           logout(); // Déconnexion si le token est expiré
         } else {
           setIsAuthenticated(true);
-          fetchUser()
+          fetchUserDetails()
             .then((data) => setUser(data))
             .catch((error) => {
               console.error("Erreur lors de la récupération de l'utilisateur:", error);

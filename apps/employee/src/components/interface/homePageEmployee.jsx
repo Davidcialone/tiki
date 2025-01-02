@@ -7,7 +7,7 @@ export function HomePageEmployee() {
   return (
 
     <div className="font-Asap  text-2xl m-4">
-        <h1><strong>TIKI employés</strong>  </h1>
+        <h2>TIKI employés</h2>
         
         <p  className="text-lg p-4 mt-4 mb-4">Bienvenue sur l'interface de gestion des employés. </p>
              

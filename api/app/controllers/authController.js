@@ -14,16 +14,21 @@ export async function login(req, res) {
       return res.status(400).json({ message: "Email et mot de passe requis" });
     }
 
+    // Recherche de l'utilisateur par email
     const user = await Users.findOne({ email });
+    console.log("Utilisateur trouvé:", user); // Loggez l'utilisateur pour vérifier le résultat de la requête
+
     if (!user) {
       return res.status(401).json({ message: "Utilisateur non trouvé" });
     }
 
+    // Vérification du mot de passe
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Mot de passe incorrect" });
     }
 
+    // Génération du token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
@@ -107,5 +112,28 @@ export async function register(req, res) {
   } catch (error) {
     console.error("Erreur lors de l'inscription :", error);
     return res.status(500).json({ message: "Erreur interne du serveur" });
+  }
+}
+
+export async function fetchUser(req, res) {
+  try {
+    const { userId } = req.params; // Récupération de l'ID de l'utilisateur depuis les paramètres de la route
+
+    // Recherche de l'utilisateur en fonction de l'ID
+    const user = await Users.findOne({ where: { id: userId } });
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    // Exclure le mot de passe des données renvoyées
+    const { password, ...userData } = user.dataValues;
+
+    return res.status(200).json(userData); // Retourner les données de l'utilisateur sans le mot de passe
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'utilisateur :", error);
+    return res
+      .status(500)
+      .json({ message: "Erreur serveur, veuillez réessayer plus tard" });
   }
 }

@@ -1,9 +1,8 @@
-const API_BASE_URL = "https://tiki-ew5j.onrender.com"; // URL de base pour les appels API
-
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"; // Valeur de secours en local
 // clientApi.js
 export async function fetchClientDetails(clientId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/clients/${clientId}`);
+    const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}`);
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des détails du client");
     }
@@ -16,9 +15,7 @@ export async function fetchClientDetails(clientId) {
 
 export async function searchInClientsDB(searchQuery) {
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/api/clients?q=${searchQuery}`
-    );
+    const response = await fetch(`${apiBaseUrl}/api/clients?q=${searchQuery}`);
     if (!response.ok) {
       throw new Error("Erreur lors de la recherche de clients");
     }
@@ -35,7 +32,7 @@ export async function fetchClientReservations(clientId) {
   try {
     // Utilisation de clientId pour récupérer les réservations du client
     const response = await fetch(
-      `${API_BASE_URL}/api/reservations?user_id=${clientId}`
+      `${apiBaseUrl}/api/reservations?user_id=${clientId}`
     );
 
     if (!response.ok) {

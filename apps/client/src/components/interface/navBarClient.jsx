@@ -3,19 +3,26 @@ import { Link } from "react-router-dom";
 
 export function NavBarClient() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true); // État pour gérer la visibilité de la barre
+  const [isVisible, setIsVisible] = useState(true); // Gérer la visibilité de la navbar
   const [lastScrollY, setLastScrollY] = useState(0); // Position précédente du défilement
+  const [navbarOpacity, setNavbarOpacity] = useState(0); // Opacité de la navbar (commence transparent)
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > lastScrollY && !mobileMenuOpen) {
-        // Si on défile vers le bas
+      const scrollPosition = window.scrollY;
+
+      // Calculer l'opacité de la navbar : plus on défile, plus l'opacité augmente
+      const opacity = Math.min(scrollPosition / 300, 0.5); // L'opacité est limitée à 0.9
+      setNavbarOpacity(opacity);
+
+      // Gérer la visibilité de la navbar (pour cacher quand on défile vers le bas)
+      if (scrollPosition > lastScrollY && !mobileMenuOpen) {
         setIsVisible(false);
       } else {
-        // Si on défile vers le haut
         setIsVisible(true);
       }
-      setLastScrollY(window.scrollY);
+
+      setLastScrollY(scrollPosition);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -34,6 +41,9 @@ export function NavBarClient() {
       className={`fixed top-0 left-0 w-full z-50 text-white p-4 m-0 transition-transform duration-300 ${
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
+      style={{
+        backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})`, // Applique l'opacité calculée
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">

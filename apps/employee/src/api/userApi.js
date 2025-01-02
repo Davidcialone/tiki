@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://tiki-ew5j.onrender.com";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"; // Valeur de secours en local
 
 // Utility function for validation
 const validateEmail = (email) => {
@@ -70,7 +70,7 @@ export async function Register({
   try {
     // Log de la requête complète
     console.log("4. Envoi de la requête:", {
-      url: `${API_BASE_URL}/api/auth/register`,
+      url: `${apiBaseUrl}/api/auth/register`,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export async function Register({
       },
     });
 
-    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    const response = await fetch(`${apiBaseUrl}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -131,7 +131,7 @@ export async function Login({ email, password }) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -162,6 +162,26 @@ export async function Login({ email, password }) {
     }
 
     throw new ApiError("Erreur lors de la connexion", 500);
+  }
+}
+
+export async function fetchUserDetails(userId) {
+  try {
+    const response = await fetch(`${apiBaseUrl}/api/users/${userId}`);
+    if (!response.ok) {
+      throw new ApiError(
+        "Erreur lors de la récupération des détails de l'utilisateur",
+        response.status
+      );
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new ApiError(
+      error.message ||
+        "Erreur lors de la récupération des détails de l'utilisateur",
+      500
+    );
   }
 }
 
