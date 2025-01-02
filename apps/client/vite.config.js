@@ -7,4 +7,9 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
   },
+  define: {
+    "process.env.VITE_API_BASE_URL": JSON.stringify(
+      "https://tiki-ermployee.vercel.app"
+    ),
+  },
 });

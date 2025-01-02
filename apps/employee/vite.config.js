@@ -8,4 +8,9 @@ export default defineConfig({
     exclude: ["sequelize", "pg-hstore"],
     include: ["react-datepicker"],
   },
+  define: {
+    "process.env.VITE_API_BASE_URL": JSON.stringify(
+      "https://tiki-ermployee.vercel.app"
+    ),
+  },
 });
