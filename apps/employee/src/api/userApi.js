@@ -1,5 +1,25 @@
 const API_BASE_URL = "https://tiki-ew5j.onrender.com";
 
+// Utility function for validation
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validatePhone = (phone) => {
+  return !phone || /^\d{10,15}$/.test(phone);
+};
+
+// Custom error class for API errors
+class ApiError extends Error {
+  constructor(message, status, data = null) {
+    super(message);
+    this.status = status;
+    this.data = data;
+    this.name = "ApiError";
+  }
+}
+
 export async function Register({
   lastname,
   firstname,
@@ -7,82 +27,107 @@ export async function Register({
   phone,
   password,
   passwordConfirm,
-  role_id = 1, // Ajout d'un rôle par défaut
+  role_id = 1,
 }) {
-  // Validations côté client
-  if (!lastname || !firstname || !email || !password || !passwordConfirm) {
-    throw new Error("Tous les champs obligatoires doivent être remplis");
+  // Log des données reçues
+  console.log("=== DEBUG REGISTER START ===");
+  console.log("1. Données reçues:", {
+    lastname,
+    firstname,
+    email,
+    phone,
+    role_id,
+    hasPassword: !!password,
+    hasPasswordConfirm: !!passwordConfirm,
+  });
+
+  // Validation des champs requis
+  const requiredFields = { lastname, firstname, email, password };
+  const missingFields = Object.entries(requiredFields)
+    .filter(([_, value]) => !value)
+    .map(([key]) => key);
+
+  if (missingFields.length > 0) {
+    console.log("2. Champs manquants:", missingFields);
+    throw new Error(`Champs manquants: ${missingFields.join(", ")}`);
   }
 
-  // Validation du format email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    throw new Error("Format d'email invalide");
-  }
+  // Préparation du payload
+  const payload = {
+    lastname: lastname?.trim(),
+    firstname: firstname?.trim(),
+    email: email?.toLowerCase().trim(),
+    phone: phone?.trim() || "",
+    password,
+    role_id: 1, // Forcer role_id à 1
+  };
 
-  // Validation des mots de passe
-  if (password !== passwordConfirm) {
-    throw new Error("Les mots de passe ne correspondent pas");
-  }
-
-  if (password.length < 8) {
-    throw new Error("Le mot de passe doit contenir au moins 8 caractères");
-  }
-
-  // Validation optionnelle du numéro de téléphone
-  if (phone && !/^\d{10,15}$/.test(phone)) {
-    throw new Error("Le numéro de téléphone est invalide");
-  }
+  console.log("3. Payload préparé:", {
+    ...payload,
+    password: "[MASQUÉ]",
+  });
 
   try {
+    // Log de la requête complète
+    console.log("4. Envoi de la requête:", {
+      url: `${API_BASE_URL}/api/auth/register`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
     const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({
-        lastname: lastname.trim(),
-        firstname: firstname.trim(),
-        email: email.toLowerCase().trim(),
-        phone: phone ? phone.trim() : null,
-        password,
-        passwordConfirm,
-        role_id,
-      }),
+      body: JSON.stringify(payload),
     });
 
-    // Gestion des réponses HTTP
+    console.log("5. Status de la réponse:", response.status);
+    console.log(
+      "6. Headers de la réponse:",
+      Object.fromEntries(response.headers)
+    );
+
+    // Récupérer et logger le texte brut de la réponse
+    const responseText = await response.text();
+    console.log("7. Réponse brute:", responseText);
+
+    // Tenter de parser la réponse JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+      console.log("8. Données parsées:", data);
+    } catch (e) {
+      console.error("9. Erreur de parsing JSON:", e);
+      throw new Error("Réponse invalide du serveur");
+    }
+
     if (!response.ok) {
-      const data = await response.json().catch(() => null);
-
-      switch (response.status) {
-        case 400:
-          throw new Error(data?.message || "Données d'inscription invalides");
-        case 409:
-          throw new Error("Un utilisateur existe déjà avec cet email");
-        case 500:
-          throw new Error("Erreur serveur, veuillez réessayer plus tard");
-        default:
-          throw new Error("Erreur lors de l'inscription");
-      }
+      console.error("10. Erreur de réponse:", data);
+      throw new Error(data.message || "Erreur lors de l'inscription");
     }
 
-    // Retourne la réponse JSON en cas de succès
-    return await response.json();
+    console.log("=== DEBUG REGISTER SUCCESS ===");
+    return data;
   } catch (error) {
-    if (error instanceof TypeError) {
-      // Erreur réseau ou problème de connexion
-      throw new Error("Erreur de connexion au serveur");
-    }
-    throw error; // Renvoie les autres erreurs
+    console.error("=== DEBUG REGISTER ERROR ===");
+    console.error("Erreur complète:", error);
+    throw error;
   }
 }
 
 export async function Login({ email, password }) {
-  // Validations côté client
-  if (!email || !password) {
-    throw new Error("Email et mot de passe requis");
+  if (!email?.trim() || !password) {
+    throw new ApiError("Email et mot de passe requis", 400);
+  }
+
+  if (!validateEmail(email)) {
+    throw new ApiError("Format d'email invalide", 400);
   }
 
   try {
@@ -92,32 +137,42 @@ export async function Login({ email, password }) {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ email: email.toLowerCase().trim(), password }),
+      body: JSON.stringify({
+        email: email.toLowerCase().trim(),
+        password,
+      }),
     });
 
-    // Gestion des réponses HTTP
+    const data = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      const data = await response.json().catch(() => null);
-
-      switch (response.status) {
-        case 400:
-          throw new Error(data?.message || "Données de connexion invalides");
-        case 401:
-          throw new Error("Email ou mot de passe incorrect");
-        case 500:
-          throw new Error("Erreur serveur, veuillez réessayer plus tard");
-        default:
-          throw new Error("Erreur lors de la connexion");
-      }
+      throw new ApiError(
+        data?.message || getDefaultErrorMessage(response.status),
+        response.status,
+        data
+      );
     }
 
-    // Retourne la réponse JSON en cas de succès
-    return await response.json();
+    return data;
   } catch (error) {
+    if (error instanceof ApiError) throw error;
+
     if (error instanceof TypeError) {
-      // Erreur réseau ou problème de connexion
-      throw new Error("Erreur de connexion au serveur");
+      throw new ApiError("Erreur de connexion au serveur", 503);
     }
-    throw error; // Renvoie les autres erreurs
+
+    throw new ApiError("Erreur lors de la connexion", 500);
   }
+}
+
+function getDefaultErrorMessage(status) {
+  const messages = {
+    400: "Données invalides",
+    401: "Non autorisé",
+    403: "Accès refusé",
+    404: "Ressource non trouvée",
+    409: "Un utilisateur existe déjà avec cet email",
+    500: "Erreur serveur, veuillez réessayer plus tard",
+  };
+  return messages[status] || "Une erreur est survenue";
 }

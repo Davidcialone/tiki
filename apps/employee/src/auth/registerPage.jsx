@@ -31,6 +31,18 @@ export function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Debug log
+    console.log('Form Data being sent:', formData);
+  
+    // Validate required fields
+    const requiredFields = ['lastname', 'firstname', 'email', 'password', 'passwordConfirm'];
+    const missingFields = requiredFields.filter(field => !formData[field]?.trim());
+    
+    if (missingFields.length > 0) {
+      setError(`Les champs suivants sont requis : ${missingFields.join(', ')}`);
+      return;
+    }
   
     if (formData.password !== formData.passwordConfirm) {
       setError('Les mots de passe ne correspondent pas.');
@@ -43,17 +55,16 @@ export function RegisterPage() {
     }
   
     try {
-      // Appel à l'API
       const response = await Register({
-        lastname: formData.lastname,
-        firstname: formData.firstname,
-        email: formData.email,
-        phone: formData.phone,
+        lastname: formData.lastname.trim(),
+        firstname: formData.firstname.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone?.trim() || '',
         password: formData.password,
         passwordConfirm: formData.passwordConfirm,
       });
   
-      console.log('Réponse de l\'API:', response); // Log de la réponse API
+      console.log('Réponse de l\'API:', response);
       setSuccess(true);
       setError('');
       setFormData({
@@ -64,19 +75,17 @@ export function RegisterPage() {
         password: '',
         passwordConfirm: ''
       });
-
-      // Redirection vers la page de connexion après 2 secondes
+  
       setTimeout(() => {
-        navigate("/login"); // Utilisation correcte de navigate
+        navigate("/login");
       }, 2000);
-
+  
     } catch (err) {
-      console.error('Erreur lors de l\'inscription:', err); // Log des erreurs
-      setError(err.message);
+      console.error('Erreur lors de l\'inscription:', err);
+      setError(err.message || 'Une erreur est survenue lors de l\'inscription');
       setSuccess(false);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">

@@ -38,7 +38,7 @@ CREATE TABLE Users (
     "firstname" VARCHAR(100) NOT NULL,            -- Prénom du client
     "email" VARCHAR(150) UNIQUE,                  -- Email du client (doit être unique)
     "phone" VARCHAR(20),                          -- Numéro de téléphone
-    "password" VARCHAR(255) ,               -- Mot de passe
+    "password" VARCHAR(255) ,                       -- Mot de passe
     "role_id" INT NOT NULL,                       -- Identifiant du rôle
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
     "updated_at" TIMESTAMPTZ DEFAULT now(),       -- Date de mise à jour

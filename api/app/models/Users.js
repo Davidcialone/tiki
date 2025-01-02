@@ -11,7 +11,7 @@ Users.init(
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true,
+        isEmail: true, // Validation pour s'assurer que l'email a un format valide
       },
     },
     lastname: {
@@ -24,12 +24,22 @@ Users.init(
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true, // Permettre un téléphone manquant
+      validate: {
+        is: /^[0-9]{10}$/, // Validation pour un numéro de téléphone français de 10 chiffres
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false, // Le mot de passe est requis
+      validate: {
+        len: [8, 255], // Validation pour s'assurer que le mot de passe a au moins 8 caractères
+      },
     },
     role_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // Remove the direct reference here since we'll handle it in associations
+      // Si vous avez une table "Roles", vous pourriez vouloir ajouter une association ici
     },
   },
   {
