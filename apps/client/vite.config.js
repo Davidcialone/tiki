@@ -7,5 +7,4 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
   },
-  plugins: [react(), dynamicImport()],
 });

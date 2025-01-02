@@ -47,7 +47,7 @@ export function NavBarEmployee() {
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
       style={{
-        backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})` // Exemple d'un fond transparent ou noir avec opacité dynamique
+        backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})`, // Exemple d'un fond transparent ou noir avec opacité dynamique
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

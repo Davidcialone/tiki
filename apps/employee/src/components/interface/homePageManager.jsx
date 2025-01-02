@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Dashboard } from "../interface/dashboard";
+import { Dashboard } from "./dashboard";
 
 export function HomePageEmployee() {
   return (
@@ -12,7 +12,7 @@ export function HomePageEmployee() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Section d'accueil */}
         <section className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800">Bienvenue, Employé!</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Bienvenue, Manager!</h1>
           <p className="mt-4 text-lg text-gray-500">
             Gérez les réservations, les plannings et accédez à toutes les informations nécessaires pour votre journée de travail.
           </p>
@@ -36,12 +36,12 @@ export function HomePageEmployee() {
 
           {/* Carte de gestion des plannings */}
           <div className="bg-white shadow-sm rounded-lg p-6 text-center hover:bg-gray-100 transition-all duration-300">
-            <h3 className="text-xl font-semibold text-gray-800">Voir son planning</h3>
+            <h3 className="text-xl font-semibold text-gray-800">Voir les plannings</h3>
             <p className="mt-2 text-gray-600">
-              Endroit ou l'on peut voir son planning de travail.
+              Endroit ou l'on peut voir les plannings de l'équipe.
             </p>
             <Link to="/plannings" className="mt-4 inline-block text-blue-600 hover:text-blue-800 border border-blue-600 hover:bg-blue-100 rounded-lg px-4 py-2 transition-all duration-300">
-              Mon planning
+              Les plannings
             </Link>
           </div>
 

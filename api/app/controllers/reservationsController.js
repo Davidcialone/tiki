@@ -1,5 +1,17 @@
 import { Reservations, Users } from "../models/index.js";
 
+// Fonction pour générer un mot de passe aléatoire
+function generateRandomPassword(length = 12) {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:',.<>?";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    password += chars[randomIndex];
+  }
+  return password;
+}
+
 export const createReservation = async (req, res) => {
   try {
     const {
@@ -36,11 +48,13 @@ export const createReservation = async (req, res) => {
       console.log(
         "Utilisateur non trouvé, création d'un nouvel utilisateur..."
       );
+      const randomPassword = generateRandomPassword(); // Générer un mot de passe aléatoire
       user = await Users.create({
         email,
         firstname: firstName,
         lastname: lastName,
         phone,
+        password: randomPassword, // Utiliser le mot de passe généré
         role_id: 1, // Le rôle utilisateur par défaut, à ajuster selon vos besoins
       });
       console.log("Nouvel utilisateur créé avec succès:", user);
@@ -142,9 +156,14 @@ export async function getReservationsByClientId(req, res) {
 }
 
 export async function getReservationsByDate(req, res) {
-  const { date } = req.params;
+  const { date } = req.query; // Utiliser req.query.date pour obtenir la date depuis les paramètres de requête
+
+  if (!date) {
+    return res.status(400).json({ message: "La date est requise." });
+  }
 
   try {
+    // Assurez-vous que la date est bien au format YYYY-MM-DD
     const reservations = await Reservations.findAll({
       where: { reservation_date: date }, // Filtrer par date de réservation
       attributes: [
