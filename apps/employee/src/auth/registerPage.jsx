@@ -227,7 +227,7 @@ export function RegisterPage() {
 
         <p className="text-center text-gray-600 mt-4">
           Vous avez déjà un compte ?{' '}
-          <a href="/connexion" className="text-green-600 hover:text-green-700 font-medium">
+          <a href="/login" className="text-green-600 hover:text-green-700 font-medium">
             Connectez-vous ici
           </a>
         </p>

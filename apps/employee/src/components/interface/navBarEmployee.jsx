@@ -71,7 +71,7 @@ export function NavBarEmployee() {
                 Gestion
               </Link>
               <Link
-                to="/connexion"
+                to="/register"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
               >
                 Connexion
@@ -116,7 +116,7 @@ export function NavBarEmployee() {
               Gestion
             </Link>
             <Link
-              to="/connexion"
+              to="/register"
               className="text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Connexion

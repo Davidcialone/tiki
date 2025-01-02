@@ -21,8 +21,8 @@ function App() {
           <Route path="/clients" element={<ClientSearch />} />
           <Route path="/clients/:clientId" element={<CustomerFile />} />
           <Route path="/dashboard" element={<TablesDashBoard/>} />
-          <Route path="/connexion" element={<LoginPage />} />
-          <Route path="/inscription" element={<RegisterPage/>} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage/>} />
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
       </AuthProvider>
