@@ -1,17 +1,61 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Use Link from react-router-dom for routing
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export function NavBarEmployee() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true); // Visibilité de la navbar
+  const [lastScrollY, setLastScrollY] = useState(0); // Suivi de la position du défilement
+  const [navbarOpacity, setNavbarOpacity] = useState(0); // Opacité de la navbar (commence transparente)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+
+      // Calculer l'opacité de la navbar : plus on défile, plus l'opacité augmente
+      const opacity = Math.min(scrollPosition / 300, 0.5); // Opacité limitée à 0.5
+      setNavbarOpacity(opacity);
+
+      // Gestion de la visibilité de la navbar (cacher quand on défile vers le bas)
+      if (scrollPosition > lastScrollY && !mobileMenuOpen) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      // Fermer le menu mobile si l'utilisateur fait défiler la page
+      if (scrollPosition > 50 && mobileMenuOpen) { // Ferme le menu si on défile de 50px ou plus
+        setMobileMenuOpen(false);
+      }
+
+      setLastScrollY(scrollPosition);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY, mobileMenuOpen]);
+
+  const toggleMenu = () => {
+    setMobileMenuOpen((prev) => !prev);
+  };
 
   return (
-    <nav className="bg-red-800 shadow-md rounded-2xl">
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 p-4 transition-all duration-300 ${
+        isVisible ? "transform translate-y-0" : "transform -translate-y-full"
+      }`}
+      style={{
+        backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})` // Exemple d'un fond transparent ou noir avec opacité dynamique
+
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-14">
+        <div className="relative flex items-center justify-between h-16">
           {/* Logo à gauche */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              {/* Logo dans un cercle avec une bordure blanche */}
               <div className="h-12 w-12 rounded-full border-2 border-white overflow-hidden">
                 <img
                   src="logo.jpg"
@@ -25,7 +69,7 @@ export function NavBarEmployee() {
           {/* Menu burger à droite */}
           <div className="absolute right-0 sm:hidden">
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={toggleMenu}
               className="text-white-400 hover:text-white focus:outline-none focus:ring-2 bg-transparent focus:ring-white focus:ring-opacity-75"
             >
               <span className="sr-only">Open main menu</span>
@@ -46,86 +90,50 @@ export function NavBarEmployee() {
               </svg>
             </button>
           </div>
-
-          {/* Menu principal pour les écrans plus larges */}
-          <div className="hidden sm:block sm:ml-6">
-            <div className="flex space-x-4">
-              <Link
-                to="/"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
-              >
-                Accueil
-              </Link>
-              <Link
-                to="/reservations"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
-              >
-                Réservations
-              </Link>
-              <Link
-                to="/clients"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
-              >
-                Clients
-              </Link>
-              <Link
-                to="/plannings"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
-              >
-                Plannings
-              </Link>
-              <Link
-                to="/dashboard"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
-              >
-                Gestion
-              </Link>
-              <Link
-                to="/login"
-                className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-xl text-sm font-medium"
-              >
-                Connexion
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Mobile menu, toggle visibility based on mobileMenuOpen state */}
+      {/* Menu mobile qui se déploie sous la navbar */}
       {mobileMenuOpen && (
-        <div className="sm:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link
-              to="/reservations"
-              className="text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Réservations
-            </Link>
-            <Link
-              to="/clients"
-              className="text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Clients
-            </Link>
-            <Link
-              to="/plannings"
-              className="text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Plannings
-            </Link>
-            <Link
-              to="/dashboard"
-              className="text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Gestion
-            </Link>
-            <Link
-              to="/login"
-              className="text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Connexion
-            </Link>
-          </div>
+         <div
+         className="sm:hidden fixed top-16 left-0 w-full bg-black bg-opacity-30 flex flex-col items-center justify-start space-y-4 py-4 transition-all duration-300"
+         onClick={toggleMenu}
+       >
+          <Link
+            to="/"
+            className="text-white text-lg hover:text-gray-300"
+            onClick={toggleMenu}
+          >
+            Accueil
+          </Link>
+          <Link
+            to="/reservations"
+            className="text-white text-lg hover:text-gray-300"
+            onClick={toggleMenu}
+          >
+            Réservations
+          </Link>
+          <Link
+            to="/plannings"
+            className="text-white text-lg hover:text-gray-300"
+            onClick={toggleMenu}
+          >
+            Plannings
+          </Link>
+          <Link
+            to="/dashboard"
+            className="text-white text-lg hover:text-gray-300"
+            onClick={toggleMenu}
+          >
+            Gestion
+          </Link>
+          <Link
+            to="/login"
+            className="text-white text-lg hover:text-gray-300"
+            onClick={toggleMenu}
+          >
+            Déconnexion
+          </Link>
         </div>
       )}
     </nav>

@@ -12,17 +12,23 @@ export function NavBarClient() {
       const scrollPosition = window.scrollY;
 
       // Calculer l'opacité de la navbar : plus on défile, plus l'opacité augmente
-      const opacity = Math.min(scrollPosition / 300, 0.5); // L'opacité est limitée à 0.9
+      const opacity = Math.min(scrollPosition / 300, 0.5); // L'opacité est limitée à 0.5
       setNavbarOpacity(opacity);
 
-      // Gérer la visibilité de la navbar (pour cacher quand on défile vers le bas)
+      // Gérer la visibilité de la navbar
+      // Si on défile vers le bas et que le menu mobile est fermé, on cache la navbar
       if (scrollPosition > lastScrollY && !mobileMenuOpen) {
-        setIsVisible(false);
+        setIsVisible(false); // Cacher la navbar
       } else {
-        setIsVisible(true);
+        setIsVisible(true); // Afficher la navbar
       }
 
       setLastScrollY(scrollPosition);
+
+      // Fermer le menu mobile si l'utilisateur fait défiler
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false); // Fermer le menu burger quand on défile
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -30,7 +36,7 @@ export function NavBarClient() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY, mobileMenuOpen]);
+  }, [lastScrollY, mobileMenuOpen]); // Assurez-vous de réagir aux changements de lastScrollY et mobileMenuOpen
 
   const toggleMenu = () => {
     setMobileMenuOpen((prev) => !prev);
@@ -38,11 +44,11 @@ export function NavBarClient() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 text-white p-4 m-0 transition-transform duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 p-4 transition-all duration-300 ${
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
       style={{
-        backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})`, // Applique l'opacité calculée
+        backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})`, // Opacité dynamique
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,7 +130,7 @@ export function NavBarClient() {
       {/* Menu mobile */}
       {mobileMenuOpen && (
         <div
-          className="sm:hidden fixed inset-0 z-50 bg-opacity-90 bg-gray-800 flex flex-col items-center justify-center space-y-4"
+          className="sm:hidden fixed top-16 left-0 w-full bg-black bg-opacity-30 flex flex-col items-center justify-start space-y-4 py-4 transition-all duration-300"
           onClick={toggleMenu}
         >
           <Link to="/" className="text-white text-lg hover:text-gray-300">

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { NavBarEmployee } from "../../employee/src/components/interface/navBarEmployee";
-import { HomePageEmployee } from "../../employee/src/components/interface/homePageEmployee";
 import { ReservationsDashboard } from "./components/dashBoard/reservationsDashboard";
+import { HomePageEmployee } from "../../employee/src/components/interface/homePageEmployee";
 import { ClientSearch } from "../../employee/src/components/dashBoard/clientSearch";
 import { CustomerFile } from "../../employee/src/components/dashBoard/customerFile";
 import { TablesDashBoard } from "../../employee/src/components/dashBoard/tablesDashBoard";
