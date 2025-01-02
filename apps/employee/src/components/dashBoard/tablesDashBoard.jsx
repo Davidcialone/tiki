@@ -1,21 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { getReservationsbyDate } from "../../api/reservationApi";
 
 export function TablesDashBoard() {
-  const [dailyReservations, setDailyReservations] = useState([]);
-  const [totalCovers, setTotalCovers] = useState(0);
-  const [totalReservations, setTotalReservations] = useState(0);
-  const [totalTables, setTotalTables] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]); // Date par défaut: aujourd'hui
+  // Initialisation de la date sélectionnée par défaut à la date du jour
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // Format yyyy-mm-dd
+    return formattedDate;
+  });
+
+  const [reservations, setReservations] = useState([]);
+  const [filteredReservations, setFilteredReservations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [totalReservations, setTotalReservations] = useState(0);
+  const [totalCovers, setTotalCovers] = useState(0);
+  const [totalTables, setTotalTables] = useState(0);
 
+  // Charger les réservations dès qu'une nouvelle date est sélectionnée
   useEffect(() => {
-    const loadDashboardData = async () => {
+    const fetchReservations = async () => {
       setLoading(true);
       setError(""); // Réinitialiser l'erreur à chaque nouvelle requête
+
+      if (!selectedDate) return; // Si aucune date n'est sélectionnée, on ne fait rien
+
       console.log("Appel API avec la date : ", selectedDate); // Affiche la date envoyée
+
       try {
         // Récupération des réservations pour la date sélectionnée
         const reservations = await getReservationsbyDate(selectedDate);
@@ -26,10 +37,12 @@ export function TablesDashBoard() {
         }
 
         // Calcul des statistiques
-        setDailyReservations(reservations);
-        setTotalReservations(reservations.length);
-        setTotalCovers(reservations.reduce((total, reservation) => total + reservation.number_of_people, 0));
+        setReservations(reservations); // Enregistrer toutes les réservations
+        setFilteredReservations(reservations); // Si nécessaire, appliquer un filtrage
+        setTotalReservations(reservations.length); // Nombre total de réservations
+        setTotalCovers(reservations.reduce((total, reservation) => total + reservation.number_of_people, 0)); // Total des couverts
 
+        // Calcul du nombre total de tables utilisées
         const totalTablesCount = reservations.reduce((total, reservation) => {
           const placesUsed = reservation.places_used;
           if (typeof placesUsed === 'number' && !isNaN(placesUsed)) {
@@ -38,7 +51,7 @@ export function TablesDashBoard() {
           return total;
         }, 0);
 
-        setTotalTables(totalTablesCount);
+        setTotalTables(totalTablesCount); // Nombre total de tables utilisées
       } catch (error) {
         console.error("Erreur lors de la récupération des réservations:", error);
         setError("Une erreur s'est produite lors de la récupération des données. Veuillez réessayer.");
@@ -47,93 +60,78 @@ export function TablesDashBoard() {
       }
     };
 
-    loadDashboardData();
-  }, [selectedDate]); // L'effet se déclenche chaque fois que la date change
+    // Si selectedDate existe, alors on charge les données
+    if (selectedDate) {
+      fetchReservations();
+    }
 
+  }, [selectedDate]); // L'effet se déclenche chaque fois que la date change.
+
+  // Gestion du changement de la date sélectionnée
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
   };
 
   return (
-    <div className="p-6 mt-16">
-      <h1 className="text-2xl font-bold">Tableau de bord - Gestion des Réservations</h1>
-      <p className="mt-2 text-gray-600">Vous pouvez gérer les réservations et les tables de votre restaurant à partir de cette page.</p>
-
-      {/* Message d'erreur global */}
-      {error && <p className="mt-4 text-red-600">{error}</p>}
-
-      {/* Conteneur principal */}
-      <div className="mt-6 flex flex-col md:flex-row md:space-x-8">
-        {/* Sélectionner la date */}
-        <div className="bg-white p-4 rounded-lg shadow-md w-full md:w-1/3">
-          <label htmlFor="date-picker" className="font-semibold text-lg">Sélectionner la date</label>
-          <input
-            id="date-picker"
-            type="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            className="border p-2 mt-2 rounded-md w-full"
-            aria-label="Sélectionner une date pour afficher les réservations"
-          />
-        </div>
-
-        {/* Informations sur les réservations */}
-        <div className="bg-white p-4 rounded-lg shadow-md w-full md:w-1/3">
-          <h3 className="font-semibold text-lg">Réservations du jour</h3>
-          <p className="text-gray-700 mt-2">{loading ? 'Chargement...' : `${totalReservations} réservations`}</p>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-md w-full md:w-1/3">
-          <h3 className="font-semibold text-lg">Nombre de couverts</h3>
-          <p className="text-gray-700 mt-2">{loading ? 'Chargement...' : `${totalCovers} couverts`}</p>
-        </div>
-
-        <div className="bg-white p-4 rounded-lg shadow-md w-full md:w-1/3">
-          <h3 className="font-semibold text-lg">Nombre de tables</h3>
-          <p className="text-gray-700 mt-2">{loading ? 'Chargement...' : `${totalTables} tables`}</p>
-        </div>
+    <div className="p-6">
+      {/* Sélecteur de date */}
+      <div className="mb-6">
+        <label htmlFor="date-picker" className="block text-lg font-semibold text-gray-800">
+          Sélectionnez une date :
+        </label>
+        <input
+          id="date-picker"
+          type="date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          className="mt-2 p-2 border border-gray-300 rounded-lg w-full sm:w-1/3"
+        />
       </div>
+
+      {/* Chargement et erreur */}
+      {loading && <p>Chargement des réservations...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* Résumé des statistiques */}
+      {selectedDate && !loading && (
+        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Résumé des réservations pour {selectedDate}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-blue-100 p-4 rounded-lg text-center">
+              <h3 className="font-bold text-xl">{totalReservations}</h3>
+              <p className="text-gray-600">Réservations totales</p>
+            </div>
+            <div className="bg-green-100 p-4 rounded-lg text-center">
+              <h3 className="font-bold text-xl">{totalCovers}</h3>
+              <p className="text-gray-600">Couverts totaux</p>
+            </div>
+            <div className="bg-yellow-100 p-4 rounded-lg text-center">
+              <h3 className="font-bold text-xl">{totalTables}</h3>
+              <p className="text-gray-600">Tables utilisées</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Liste des réservations */}
-      <div className="mt-6">
-        <h2 className="font-semibold text-lg">Liste des réservations pour {selectedDate}</h2>
-        <table className="min-w-full table-auto mt-4 border-collapse border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border px-4 py-2">Heure</th>
-              <th className="border px-4 py-2">Client</th>
-              <th className="border px-4 py-2">Nombre de couverts</th>
-              <th className="border px-4 py-2">Détails</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="4" className="text-center py-4 text-gray-500">Chargement...</td>
-              </tr>
-            ) : dailyReservations.length > 0 ? (
-              dailyReservations.map((reservation) => (
-                <tr key={reservation.id}>
-                  <td className="border px-4 py-2">{reservation.reservation_time}</td>
-                  <td className="border px-4 py-2">
-                    {reservation.user ? `${reservation.user.lastname} ${reservation.user.firstname}` : 'Inconnu'}
-                  </td>
-                  <td className="border px-4 py-2">{reservation.number_of_people}</td>
-                  <td className="border px-4 py-2">
-                    <Link to={`/reservations/${reservation.id}`} className="text-blue-500 hover:text-blue-700">
-                      Voir les détails
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" className="text-center py-4 text-gray-500">Aucune réservation pour cette date</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      {selectedDate && !loading && (
+        <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+          <h3 className="text-xl font-semibold text-gray-800">Liste des réservations</h3>
+          <ul className="mt-4">
+            {filteredReservations.map((reservation) => (
+              <li key={reservation.id} className="flex justify-between p-4 border-b">
+                <div>
+                  <p className="font-semibold">{reservation.reservation_time}</p>
+                  <p className="text-gray-600">{reservation.number_of_people} couverts</p>
+                </div>
+                <div>
+                  <p className="text-gray-500">Table utilisée : {reservation.places_used}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

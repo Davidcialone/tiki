@@ -88,7 +88,7 @@ export async function getReservationById(id) {
   try {
     console.log("=== Sending Reservation Request ===");
 
-    const fullUrl = `${API_BASE_URL}/api/reservations/${id}`;
+    const fullUrl = `${apiBaseUrl}/api/reservations/${id}`;
     console.log("Endpoint Full URL:", fullUrl);
 
     const response = await fetch(fullUrl);
@@ -118,6 +118,19 @@ export async function getReservationById(id) {
     }
   } catch (error) {
     console.error("Detailed Reservation Error:", error);
+    throw error;
+  }
+}
+
+export async function getReservationsByDate(date) {
+  try {
+    const response = await fetch(`${apiBaseUrl}/api/reservations?date=${date}`);
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des réservations");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur de récupération des réservations:", error);
     throw error;
   }
 }
