@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ReservationModal } from "../../../../client/src/components/modales/reservationModal";
 
+
 export function ReservationPage() {
   const [zonesOpened, setZonesOpened] = useState({
     herb: true,
@@ -45,6 +46,7 @@ export function ReservationPage() {
         <p style={{ marginTop: "20px" }}>Aucune réservation n'a encore été effectuée.</p>
       ) : (
         <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
+        
           <h2>Récapitulatif de la réservation</h2>
           <p><strong>Nom : </strong>{reservationDetails.lastName} {reservationDetails.firstName}</p>
           <p><strong>Nombre de personnes : </strong>{reservationDetails.number_of_people}</p>
@@ -55,6 +57,8 @@ export function ReservationPage() {
           {/* <p><strong>Zone choisie : </strong>{reservationDetails.zone}</p> */}
         </div>
       )}
+
+
 
       <ReservationModal
         isOpen={isModalOpen}

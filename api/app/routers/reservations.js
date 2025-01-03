@@ -11,3 +11,6 @@ router.post("/", reservationsController.createReservation);
 
 // GET /reservations/clientId
 router.get("/:clientId", reservationsController.getReservationsByClientId);
+
+// GET /reservations?date=YYYY-MM-DD
+router.get("/by-date", reservationsController.getReservationsByDate);

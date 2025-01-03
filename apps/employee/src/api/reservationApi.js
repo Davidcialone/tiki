@@ -1,5 +1,6 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 // || "http://localhost:5000";
+console.log("API Base URL:", apiBaseUrl);
 
 export async function createReservation(formData) {
   try {
@@ -53,6 +54,61 @@ export async function getReservations() {
     const fullUrl = `${apiBaseUrl}/api/reservations`;
     console.log("Endpoint Full URL:", fullUrl);
 
+    // Faire la requête fetch
+    const response = await fetch(fullUrl);
+
+    // Log du statut et des en-têtes de la réponse
+    console.log("Response Status:", response.status);
+    console.log(
+      "Response Headers:",
+      Object.fromEntries(response.headers.entries())
+    );
+
+    // Vérifiez si la réponse est OK (code HTTP 2xx)
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error Response:", errorText);
+      throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
+    }
+
+    // Vérifier si le Content-Type est JSON
+    const contentType = response.headers.get("Content-Type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error(
+        "Invalid Content-Type: expected application/json, but got " +
+          contentType
+      );
+    }
+
+    // Lecture du corps de la réponse
+    const responseText = await response.text();
+    console.log("Response Text:", responseText);
+
+    // Essayer de parser la réponse JSON
+    try {
+      const responseData = JSON.parse(responseText);
+      console.log("Parsed Response Data:", responseData);
+      return responseData;
+    } catch (parseError) {
+      console.error("Error parsing JSON response:", parseError);
+      throw new Error(
+        "Failed to parse JSON response. Response text: " + responseText
+      );
+    }
+  } catch (error) {
+    console.error("Detailed Reservations Error:", error);
+    throw error;
+  }
+}
+
+// reservationApi.js
+export async function getReservationsbyDate(date) {
+  try {
+    console.log("=== Sending Reservations Request ===");
+
+    const fullUrl = `${apiBaseUrl}/api/reservations/date/${date}`;
+    console.log("Endpoint Full URL:", fullUrl);
+
     const response = await fetch(fullUrl);
 
     console.log("Full Response:", response);
@@ -70,7 +126,7 @@ export async function getReservations() {
       console.log("Parsed Response Data:", responseData);
 
       if (!response.ok) {
-        throw new Error(responseData.error || "Reservations fetch failed");
+        throw new Error(responseData.error || "Reservation fetch failed");
       }
 
       return responseData;
@@ -79,54 +135,8 @@ export async function getReservations() {
       throw new Error(responseText || "Unexpected response format");
     }
   } catch (error) {
-    console.error("Detailed Reservations Error:", error);
+    console.error("Detailed Reservation Error:", error);
     throw error;
-  }
-}
-
-// reservationApi.js
-export async function getReservationsbyDate(date) {
-  try {
-    console.log("=== Sending Reservations Request ===");
-
-    // L'URL de l'API pour récupérer les réservations pour une date spécifique
-    const fullUrl = `${apiBaseUrl}/api/reservations?date=${date}`;
-    console.log("Endpoint Full URL:", fullUrl);
-
-    // Envoi de la requête fetch
-    const response = await fetch(fullUrl);
-
-    // Vérification de la réponse
-    console.log("Full Response:", response);
-    console.log("Response Status:", response.status);
-    console.log(
-      "Response Headers:",
-      Object.fromEntries(response.headers.entries())
-    );
-
-    // Si la réponse n'est pas OK (status autre que 2xx), gérer l'erreur
-    if (!response.ok) {
-      const errorData = await response.text(); // Lire l'erreur renvoyée par l'API
-      throw new Error(errorData || "Failed to fetch reservations");
-    }
-
-    const responseText = await response.text();
-    console.log("Response Text:", responseText);
-
-    // Tenter de parser la réponse JSON
-    try {
-      const responseData = JSON.parse(responseText);
-      console.log("Parsed Response Data:", responseData);
-
-      // Retourner les réservations sous forme de tableau
-      return responseData;
-    } catch (parseError) {
-      console.error("Error parsing response:", parseError);
-      throw new Error("Failed to parse response data");
-    }
-  } catch (error) {
-    console.error("Detailed Reservations Error:", error);
-    throw error; // Rejeter l'erreur pour que le frontend puisse la gérer
   }
 }
 

@@ -133,9 +133,7 @@ export function NavBarClient() {
           className="sm:hidden fixed top-16 left-0 w-full bg-black bg-opacity-30 flex flex-col items-center justify-start space-y-4 py-4 transition-all duration-300"
           onClick={toggleMenu}
         >
-          <Link to="/" className="text-white text-lg hover:text-gray-300">
-            Accueil
-          </Link>
+          
           <Link to="/reservations" className="text-white text-lg hover:text-gray-300">
             Réserver
           </Link>
