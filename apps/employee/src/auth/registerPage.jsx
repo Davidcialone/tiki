@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
-import { Register } from '../api/userApi';
 import { useNavigate } from "react-router-dom";
+import { Register } from '../api/userApi';
 
 export function RegisterPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const [showPasswords, setShowPasswords] = useState(false);
   const [formData, setFormData] = useState({
     lastname: '',
     firstname: '',
@@ -16,10 +14,7 @@ export function RegisterPage() {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const navigate = useNavigate(); // Utilisation correcte du hook
-
-  const toggleShowPassword = () => setShowPassword(!showPassword);
-  const toggleShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,10 +27,7 @@ export function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Debug log
-    console.log('Form Data being sent:', formData);
-  
-    // Validate required fields
+    // Validation
     const requiredFields = ['lastname', 'firstname', 'email', 'password', 'passwordConfirm'];
     const missingFields = requiredFields.filter(field => !formData[field]?.trim());
     
@@ -61,10 +53,8 @@ export function RegisterPage() {
         email: formData.email.trim(),
         phone: formData.phone?.trim() || '',
         password: formData.password,
-        passwordConfirm: formData.passwordConfirm,
       });
   
-      console.log('Réponse de l\'API:', response);
       setSuccess(true);
       setError('');
       setFormData({
@@ -76,16 +66,13 @@ export function RegisterPage() {
         passwordConfirm: ''
       });
   
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-  
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      console.error('Erreur lors de l\'inscription:', err);
       setError(err.message || 'Une erreur est survenue lors de l\'inscription');
       setSuccess(false);
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
@@ -171,50 +158,49 @@ export function RegisterPage() {
             <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
               Mot de passe
             </label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                required
-              />
-              <button
-                type="button"
-                onClick={toggleShowPassword}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
+            <input
+              type={showPasswords ? 'text' : 'password'}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            />
           </div>
 
-          {/* Confirmer le mot de passe */}
+          {/* Confirmation du mot de passe */}
           <div className="mb-4">
             <label htmlFor="passwordConfirm" className="block text-gray-700 text-sm font-semibold mb-2">
               Confirmer le mot de passe
             </label>
-            <div className="relative">
+            <input
+              type={showPasswords ? 'text' : 'password'}
+              id="passwordConfirm"
+              name="passwordConfirm"
+              value={formData.passwordConfirm}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            />
+          </div>
+
+         {/* Option pour afficher ou masquer les mots de passe */}
+          <div className="mt-4">
+            <div className="flex items-center">
               <input
-                type={showPasswordConfirm ? 'text' : 'password'}
-                id="passwordConfirm"
-                name="passwordConfirm"
-                value={formData.passwordConfirm}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                required
+                type="checkbox"
+                id="togglePasswords"
+                checked={showPasswords}
+                onChange={() => setShowPasswords(!showPasswords)}
+                className="mr-2"
               />
-              <button
-                type="button"
-                onClick={toggleShowPasswordConfirm}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-              >
-                {showPasswordConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
+              <label htmlFor="togglePasswords" className="text-gray-700">
+                Afficher les mots de passe
+              </label>
             </div>
           </div>
+
 
           {/* Bouton de soumission */}
           <button

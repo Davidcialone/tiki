@@ -84,7 +84,8 @@ CREATE TABLE Reservations (
         END
     ) STORED,                                    -- Calcul automatique
     "end_time" TIME,                             -- Heure de fin (calculée par trigger)
-    "note" VARCHAR(255),                         -- Note éventuelle
+    "note" VARCHAR(255),                         -- Note pour la réservation
+     "status" ENUM('pending', 'confirmed', 'cancelled') NOT NULL DEFAULT 'pending',
     "zone_id" INT,                               -- Référence à une zone
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
     "updated_at" TIMESTAMPTZ DEFAULT now(),      -- Date de mise à jour
@@ -109,5 +110,7 @@ FOR EACH ROW
 EXECUTE FUNCTION calculate_end_time();
 
 -- Index pour optimiser les recherches sur les dates et heures
-CREATE INDEX idx_reservation_date_time
-ON Reservations (reservation_date, reservation_time);
+CREATE INDEX idx_reservation_date ON Reservations(reservation_date);
+CREATE INDEX idx_user_id ON Reservations(user_id);
+CREATE INDEX idx_zone_id ON Reservations(zone_id);
+CREATE INDEX idx_status ON Reservations(status);

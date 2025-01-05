@@ -33,6 +33,12 @@ Reservations.init(
         key: "id",
       },
     },
+    status: {
+      type: DataTypes.ENUM("pending", "confirmed", "cancelled"),
+      allowNull: false,
+      defaultValue: "pending",
+    },
+
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

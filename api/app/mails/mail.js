@@ -13,6 +13,13 @@ const transporter = nodemailer.createTransport({
     pass: process.env.GMAIL_PASS, // Utilisation de la variable d'environnement pour le mot de passe
   },
 });
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("Erreur de configuration Nodemailer :", error);
+  } else {
+    console.log("Serveur prêt à envoyer des e-mails");
+  }
+});
 
 // Fonction pour envoyer l'e-mail de confirmation avec résumé de réservation
 export async function sendConfirmationEmail(reservation) {

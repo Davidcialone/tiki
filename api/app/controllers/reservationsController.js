@@ -1,4 +1,5 @@
 import { Reservations, Users } from "../models/index.js";
+import { sendConfirmationEmail } from "../mails/mail.js";
 
 // Fonction pour générer un mot de passe aléatoire
 function generateRandomPassword(length = 12) {
@@ -80,16 +81,19 @@ export const createReservation = async (req, res) => {
     // Créer la réservation avec l'utilisateur récupéré ou nouvellement créé
     console.log("Création de la réservation...");
     const reservation = await Reservations.create({
-      user_id: user.id, // Utilisation de l'ID de l'utilisateur existant ou créé
+      user_id: user.id,
       reservation_date,
       reservation_time,
       number_of_people,
       places_used: placesUsed,
       note,
-      date: new Date(), // Date de création de la réservation (actuelle)
+      date: new Date(), // Date de création de la réservation
       end_time: endTime, // Heure de fin calculée
     });
+
     console.log("Réservation créée avec succès:", reservation);
+
+    await sendConfirmationEmail(reservation); // Envoyer un e-mail de confirmation
 
     res.status(201).json(reservation);
   } catch (error) {
