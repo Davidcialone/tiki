@@ -4,8 +4,9 @@ import { ReservationsDashboard } from "./components/dashBoard/reservationsDashbo
 import { HomePageEmployee } from "../../employee/src/components/interface/homePageEmployee";
 import { ClientSearch } from "../../employee/src/components/dashBoard/clients/clientSearch";
 import { CustomerFile } from "../../employee/src/components/dashBoard/clients/customerFile";
-import { TablesDashBoard } from "../../employee/src/components/dashBoard/tablesDashBoard";
 import { PlanningPage } from "../../employee/src/components/dashBoard/worker/plannigPage";
+import { ReservationsViews } from "../../employee/src/components/dashBoard/reservations/reservationsViews";
+
 
 import { LoginPage } from "./auth/loginPage";
 import { AuthProvider } from "./auth/authContext"; // Import AuthProvider
@@ -22,7 +23,7 @@ function App() {
           <Route path="/reservations" element={<ReservationsDashboard />} />
           <Route path="/clients" element={<ClientSearch />} />
           <Route path="/clients/:clientId" element={<CustomerFile />} />
-          <Route path="/dashboard" element={<TablesDashBoard/>} />
+          <Route path="/dashboard" element={<ReservationsViews/>} />
           <Route path="/plannings" element={<PlanningPage/>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage/>} />
