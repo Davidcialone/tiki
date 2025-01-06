@@ -7,31 +7,36 @@ export function NavBarEmployee() {
   const [lastScrollY, setLastScrollY] = useState(0); // Suivi de la position du défilement
   const [navbarOpacity, setNavbarOpacity] = useState(0); // Opacité de la navbar (commence transparente)
 
-  useEffect(() => {
+useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-
-      // Calculer l'opacité de la navbar : plus on défile, plus l'opacité augmente
-      const opacity = Math.min(scrollPosition / 300, 0.5); // Opacité limitée à 0.5
+  
+      // Calcul de l'opacité
+      const opacity = Math.min(scrollPosition / 300, 0.7);
       setNavbarOpacity(opacity);
-
-      // Gestion de la visibilité de la navbar (cacher quand on défile vers le bas)
+  
+      // Si on est tout en haut, afficher toujours la navbar
+      if (scrollPosition === 0) {
+        setIsVisible(true);
+        return;
+      }
+  
+      // Gérer la visibilité lors du défilement
       if (scrollPosition > lastScrollY && !mobileMenuOpen) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
       }
-
-      // Fermer le menu mobile si l'utilisateur fait défiler la page
-      if (scrollPosition > 50 && mobileMenuOpen) { // Ferme le menu si on défile de 50px ou plus
+  
+      setLastScrollY(scrollPosition);
+  
+      // Fermer le menu mobile si l'utilisateur fait défiler
+      if (mobileMenuOpen) {
         setMobileMenuOpen(false);
       }
-
-      setLastScrollY(scrollPosition);
     };
-
+  
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };

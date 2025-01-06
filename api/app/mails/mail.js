@@ -12,6 +12,8 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_USER, // Utilisation de la variable d'environnement pour l'email
     pass: process.env.GMAIL_PASS, // Utilisation de la variable d'environnement pour le mot de passe
   },
+  logger: true, // Active les journaux SMTP
+  debug: true, // Active le mode débogage
 });
 transporter.verify(function (error, success) {
   if (error) {
@@ -24,19 +26,19 @@ transporter.verify(function (error, success) {
 // Fonction pour envoyer l'e-mail de confirmation avec résumé de réservation
 export async function sendConfirmationEmail(reservation) {
   const mailOptions = {
-    from: process.env.GMAIL_USER, // Utilisation de la variable d'environnement pour l'email
-    to: reservation.user.email,
+    from: process.env.GMAIL_USER, // Assurez-vous que cette variable d'environnement est définie
+    to: reservation.user.email, // L'email de l'utilisateur
     subject: "Confirmation de votre réservation",
     html: `
       <h1>Confirmation de votre réservation</h1>
-      <p>Bonjour ${reservation.user.firstName} ${reservation.user.lastName},</p>
+      <p>Bonjour ${reservation.user.firstname} ${reservation.user.lastname},</p>
       <p>Nous avons bien reçu votre réservation pour le ${new Date(
         reservation.reservation_date
       ).toLocaleDateString()} à ${reservation.reservation_time}.</p>
       <p><strong>Détails de la réservation :</strong></p>
       <ul>
-        <li><strong>Nom :</strong> ${reservation.user.firstName} ${
-      reservation.user.lastName
+        <li><strong>Nom :</strong> ${reservation.user.firstname} ${
+      reservation.user.lastname
     }</li>
         <li><strong>Email :</strong> ${reservation.user.email}</li>
         <li><strong>Nombre de personnes :</strong> ${
@@ -50,12 +52,12 @@ export async function sendConfirmationEmail(reservation) {
         }</li>
       </ul>
       <p>Pour confirmer votre réservation, veuillez cliquer sur le lien suivant :</p>
-      <p><a href="${apiBaseUrl}/mails/${
-      reservation.reservationId
+      <p><a href="${process.env.API_BASE_URL}/mails/${
+      reservation.id
     }/confirm">Confirmer ma réservation</a></p>
       <p>Si vous souhaitez annuler votre réservation, veuillez cliquer sur le lien suivant :</p>
-      <p><a href="${apiBaseUrl}/mails/${
-      reservation.reservationId
+      <p><a href="${process.env.API_BASE_URL}/mails/${
+      reservation.id
     }/cancel">Annuler ma réservation</a></p>
       <p>Nous vous remercions pour votre confiance et restons à votre disposition pour toute information complémentaire.</p>
       <p>Cordialement,</p>
