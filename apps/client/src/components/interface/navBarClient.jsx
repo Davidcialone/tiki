@@ -10,33 +10,38 @@ export function NavBarClient() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-
-      // Calculer l'opacité de la navbar : plus on défile, plus l'opacité augmente
-      const opacity = Math.min(scrollPosition / 300, 0.7); // L'opacité est limitée à 0.5
+  
+      // Calcul de l'opacité
+      const opacity = Math.min(scrollPosition / 300, 0.7);
       setNavbarOpacity(opacity);
-
-      // Gérer la visibilité de la navbar
-      // Si on défile vers le bas et que le menu mobile est fermé, on cache la navbar
-      if (scrollPosition > lastScrollY && !mobileMenuOpen) {
-        setIsVisible(false); // Cacher la navbar
-      } else {
-        setIsVisible(true); // Afficher la navbar
+  
+      // Si on est tout en haut, afficher toujours la navbar
+      if (scrollPosition === 0) {
+        setIsVisible(true);
+        return;
       }
-
+  
+      // Gérer la visibilité lors du défilement
+      if (scrollPosition > lastScrollY && !mobileMenuOpen) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+  
       setLastScrollY(scrollPosition);
-
+  
       // Fermer le menu mobile si l'utilisateur fait défiler
       if (mobileMenuOpen) {
-        setMobileMenuOpen(false); // Fermer le menu burger quand on défile
+        setMobileMenuOpen(false);
       }
     };
-
+  
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY, mobileMenuOpen]); // Assurez-vous de réagir aux changements de lastScrollY et mobileMenuOpen
+  }, [lastScrollY, mobileMenuOpen]);
+  
 
   const toggleMenu = () => {
     setMobileMenuOpen((prev) => !prev);
