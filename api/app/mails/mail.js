@@ -9,11 +9,12 @@ const apiBaseUrl = process.env.API_BASE_URL || "http://localhost:5000";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER, // Utilisation de la variable d'environnement pour l'email
-    pass: process.env.GMAIL_PASS, // Utilisation de la variable d'environnement pour le mot de passe
+    type: "OAuth2",
+    user: "votre.email@gmail.com",
+    clientId: "VOTRE_CLIENT_ID",
+    clientSecret: "VOTRE_CLIENT_SECRET",
+    refreshToken: "VOTRE_REFRESH_TOKEN",
   },
-  logger: true, // Active les journaux SMTP
-  debug: true, // Active le mode débogage
 });
 transporter.verify(function (error, success) {
   if (error) {
