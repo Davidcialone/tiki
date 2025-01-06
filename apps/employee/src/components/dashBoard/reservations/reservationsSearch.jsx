@@ -37,13 +37,16 @@ export function ReservationSearch() {
         reservation.user?.lastname || ""
       }`.toLowerCase();
       const matchesName = fullName.includes(query);
+
+      // Filtrage par date (si une date est sélectionnée)
       const matchesDate = filterDate
         ? reservation.reservation_date === filterDate
         : true;
+
       return matchesName && matchesDate;
     });
     setFilteredReservations(filtered);
-    setCurrentPage(1); // Reset pagination
+    setCurrentPage(1); // Réinitialiser la pagination
   };
 
   useEffect(() => {
@@ -88,58 +91,62 @@ export function ReservationSearch() {
         />
       </div>
 
-      {/* Reservation Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse border border-gray-300">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Heure</th>
-              <th className="px-4 py-2">Nombre</th>
-              <th className="px-4 py-2">Client</th>
-              <th className="px-4 py-2">Note</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedReservations.length > 0 ? (
-              paginatedReservations.map((reservation) => (
-                <tr key={reservation.id} className="hover:bg-gray-100">
-                  <td className="px-4 py-2">{reservation.reservation_date}</td>
-                  <td className="px-4 py-2">{reservation.reservation_time}</td>
-                  <td className="px-4 py-2">{reservation.number_of_people}</td>
-                  <td className="px-4 py-2">
-                    {reservation.user ? (
-                      <Link
-                        to={`/clients/${reservation.user.id}`}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {reservation.user.firstname} {reservation.user.lastname}
-                      </Link>
-                    ) : (
-                      "Client inconnu"
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    {reservation.note || "Aucune note"}
+      {/* Reservation Table - Only show if search query exists */}
+      {searchQuery || filterDate ? (
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Heure</th>
+                <th className="px-4 py-2">Nombre</th>
+                <th className="px-4 py-2">Client</th>
+                <th className="px-4 py-2">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedReservations.length > 0 ? (
+                paginatedReservations.map((reservation) => (
+                  <tr key={reservation.id} className="hover:bg-gray-100">
+                    <td className="px-4 py-2">{reservation.reservation_date}</td>
+                    <td className="px-4 py-2">{reservation.reservation_time}</td>
+                    <td className="px-4 py-2">{reservation.number_of_people}</td>
+                    <td className="px-4 py-2">
+                      {reservation.user ? (
+                        <Link
+                          to={`/clients/${reservation.user.id}`}
+                          className="text-blue-600 hover:underline"
+                        >
+                          {reservation.user.firstname} {reservation.user.lastname}
+                        </Link>
+                      ) : (
+                        "Client inconnu"
+                      )}
+                    </td>
+                    <td className="px-4 py-2">
+                      {reservation.note || "Aucune note"}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="text-center py-4 text-gray-500 italic"
+                  >
+                    Aucune réservation trouvée.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="text-center py-4 text-gray-500 italic"
-                >
-                  Aucune réservation trouvée.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-center text-gray-500 italic">Veuillez effectuer une recherche.</p>
+      )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPages > 1 && (searchQuery || filterDate) && (
         <div className="flex justify-center items-center space-x-2">
           <button
             disabled={currentPage === 1}

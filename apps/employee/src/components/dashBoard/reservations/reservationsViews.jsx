@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Clock, Users } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, Users, Table } from 'lucide-react';
 import { getReservations } from "../../../api/reservationApi";
 
 export const ReservationsViews = () => {
@@ -139,57 +139,82 @@ export const ReservationsViews = () => {
           onTouchCancel={onTouchCancel}
         >
           {generateDays().map((day) => (
-            <button
-              key={day}
-              className={`relative flex flex-col items-center justify-center px-4 py-2 rounded-lg
-                ${day === selectedDay ? 'bg-blue-500 text-white' : 'bg-gray-100 text-black'}`}
-              onClick={() => handleDaySelect(day)}
-            >
-              <span className="text-sm font-medium">{day}</span>
-              <span
-                className={`text-xs mt-1
-                  ${day === selectedDay ? 'text-white' : 'text-blue-500'}`}
-              >
-                {getTotalGuests(day)} clients <br />
-                {getTotalTables(day)} tables
-              </span>
-            </button>
+        <button
+        key={day}
+        className={`relative flex flex-col items-center justify-center px-4 py-2 rounded-lg
+          ${day === selectedDay ? 'bg-white-500 text-white' : 'bg-gray-100 text-black'}`}
+        onClick={() => handleDaySelect(day)}
+      >
+        <span className="text-sm font-medium">{day}</span>
+        <div className="text-xs mt-1 flex flex-col items-center justify-center">
+          <div className="flex items-center space-x-1">
+            <Users className="w-4 h-4 text-blue-500" />
+            <span>{getTotalGuests(day)}</span>
+          </div>
+          <div className="flex items-center space-x-1 mt-1">
+            <Table className="w-4 h-4 text-blue-500" />
+            <span>{getTotalTables(day)}</span>
+          </div>
+        </div>
+      </button>
           ))}
         </div>
 
-        {/* Liste des réservations */}
-        <div className="px-4 py-2">
-          {getReservationsForDay(selectedDay).length > 0 ? (
-            <div className="space-y-2">
-              {getReservationsForDay(selectedDay).map((reservation) => (
-                <div
-                  key={reservation.id}
-                  className="flex items-center justify-between py-2 border-b last:border-0"
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="text-sm text-gray-600">
-                      <Clock className="w-4 h-4 inline mr-1" />
-                      {reservation.reservation_time}
-                    </span>
-                    <span className="text-sm text-black">{reservation.user.lastname}</span> {/* Nom de l'utilisateur */}
-                    <span className="text-sm text-black">{reservation.user.firstname}</span> {/* Nom de l'utilisateur */}
-                  </div>
+  {/* Liste des réservations */}
+      <div className="px-4 py-2">
+        {getReservationsForDay(selectedDay).length > 0 ? (
+          <div className="space-y-2">
+            {/* En-têtes des colonnes */}
+            <div className="grid grid-cols-4 gap-4 font-semibold text-gray-600 py-2 border-b">
+              <span className="text-sm text-center">Heure</span>
+              <span className="text-sm text-center">Nom</span>
+              <span className="text-sm text-center">Clients</span>
+              <span className="text-sm text-center">Téléphone</span>
+            </div>
+
+            {/* Liste des réservations */}
+            {getReservationsForDay(selectedDay).map((reservation) => (
+              <div
+                key={reservation.id}
+                className="grid grid-cols-4 gap-4 py-2 border-b last:border-0 items-center"
+              >
+                {/* Heure */}
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-gray-600">
+                    <Clock className="w-4 h-4 inline mr-1" />
+                    {reservation.reservation_time}
+                  </span>
+                </div>
+
+                {/* Nom de l'utilisateur */}
+                <div className="flex flex-col items-center">
+                  <span className="text-sm text-black">{reservation.user.lastname}</span>
+                  <span className="text-sm text-black">{reservation.user.firstname}</span>
+                </div>
+
+                {/* Nombre de clients */}
+                <div className="flex items-center justify-center">
                   <span className="text-sm text-gray-600">
                     <Users className="w-4 h-4 inline mr-1" />
                     {reservation.number_of_people}
                   </span>
-                  <div className="flex flex-col items-end">
-                    <span className="text-sm text-gray-600">{reservation.user.phone}</span> {/* Numéro de téléphone */}
-                  </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-500 text-center py-2">
-              Aucune réservation
-            </p>
-          )}
-        </div>
+
+                {/* Numéro de téléphone */}
+                <div className="flex flex-col items-center justify-end">
+                  <span className="text-sm text-gray-600">{reservation.user.phone}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 text-center py-2">
+            Aucune réservation
+          </p>
+        )}
+      </div>
+
+
       </div>
     </div>
   );

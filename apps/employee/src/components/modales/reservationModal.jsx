@@ -81,6 +81,7 @@ export function ReservationModal({ isOpen, onClose, zones, onSubmit }) {
   const handleSave = async () => {
     try {
       const response = await createReservation(formData);
+      console.log("Réservation créée avec succès:", response);
   
       if (response) {
         console.log("Réservation créée avec succès:", response);

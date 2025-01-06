@@ -15,39 +15,31 @@ export function ReservationPage() {
   const [availableDates, setAvailableDates] = useState(["2024-12-20", "2024-12-21"]);
   const [availableTimes, setAvailableTimes] = useState(["19:00", "20:00"]);
   const [reservationDetails, setReservationDetails] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const openZones = Object.keys(zonesOpened).filter((zone) => zonesOpened[zone]);
 
   // Fonction de soumission du formulaire dans le modal
   const handleModalSubmit = async (formData) => {
     try {
-      // Appeler l'API pour créer la réservation et obtenir la réponse
       const response = await createReservation(formData);
-  
-      // Vérifier si la réponse est correcte
       if (!response.ok) {
         throw new Error("Erreur lors de la création de la réservation.");
       }
-  
-      // Récupérer les données de la réservation
       const data = await response.json();
-      setReservationDetails(data); // Met à jour l'état avec les détails de la réservation
-  
-      // Fermer le modal après soumission
+      setReservationDetails(data);
       setIsModalOpen(false);
-  
-      // Envoi de l'email de confirmation
+
       await sendReservationMail(data.id);
       console.log("Email de confirmation envoyé avec succès pour la réservation:", data.id);
     } catch (error) {
       console.error("Erreur lors de la soumission de la réservation:", error.message);
-      // Gérer l'erreur ici, par exemple, afficher un message d'erreur à l'utilisateur
+      setErrorMessage(error.message); // Stocker l'erreur
     }
   };
-  
+
   return (
     <>
-      {/* Espace sous la navbar */}
       <div className="mt-20"></div>
       <div>
         <h2>Vous pouvez effectuer votre réservation</h2>
@@ -58,6 +50,8 @@ export function ReservationPage() {
         >
           Réserver
         </button>
+
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
         {!reservationDetails ? (
           <p style={{ marginTop: "20px" }}>Aucune réservation n'a encore été effectuée.</p>
@@ -70,7 +64,7 @@ export function ReservationPage() {
             <p><strong>Email : </strong>{reservationDetails.email}</p>
             <p><strong>Date : </strong>{new Date(reservationDetails.reservation_date).toLocaleDateString()}</p>
             <p><strong>Heure : </strong>{reservationDetails.reservation_time}</p>
-            {/* <p><strong>Zone choisie : </strong>{reservationDetails.zone}</p> */}
+            {/* <p><strong>Zone choisie : </strong>{reservationDetails.zone || "Non spécifiée"}</p> */}
           </div>
         )}
 

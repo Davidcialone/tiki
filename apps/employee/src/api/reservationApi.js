@@ -24,12 +24,24 @@ async function fetchWithErrorHandling(url, options = {}) {
 export async function createReservation(formData) {
   console.log("=== Sending Reservation Request ===");
 
+  // Vérifiez que l'objet user contient les informations nécessaires
+  if (!formData.user || !formData.user.email) {
+    console.warn(
+      "User email is missing! Received formData:",
+      JSON.stringify(formData)
+    );
+    console.log("Form Data Submitted:", JSON.stringify(formData));
+
+    return; // Arrêter l'exécution si l'email est manquant
+  }
+
+  // Si 'role_id' n'est pas spécifié, définir la valeur par défaut (1)
   if (!formData.role_id) {
     console.warn("role_id is missing, assigning default value of 1");
     formData.role_id = 1;
   }
 
-  console.log("Payload:", JSON.stringify(formData));
+  console.log("Payload to be sent:", JSON.stringify(formData));
 
   const url = `${apiBaseUrl}/api/reservations`;
   const options = {
