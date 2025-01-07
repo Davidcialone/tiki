@@ -74,10 +74,8 @@ export const createReservation = async (req, res) => {
       reservation_date,
       reservation_time,
       number_of_people,
-      places_used: placesUsed,
       note,
       date: new Date(), // Date de création de la réservation
-      end_time: endTime, // Heure de fin calculée
     });
 
     console.log("Réservation créée dans la base de données :", reservation); // Ajout d'un log ici

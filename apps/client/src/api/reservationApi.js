@@ -58,16 +58,16 @@ export async function createReservation(formData) {
     throw new Error("Le format de l'email est invalide");
   }
 
-  // Validation du format de la date
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.reservation_date)) {
-    throw new Error("Le format de la date doit être YYYY-MM-DD");
-  }
+  // // Validation du format de la date
+  // if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.reservation_date)) {
+  //   throw new Error("Le format de la date doit être YYYY-MM-DD");
+  // }
 
-  // Validation du format de l'heure
-  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
-  if (!timeRegex.test(formData.reservation_time)) {
-    throw new Error("Le format de l'heure doit être HH:MM:SS");
-  }
+  // // Validation du format de l'heure
+  // const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+  // if (!timeRegex.test(formData.reservation_time)) {
+  //   throw new Error("Le format de l'heure doit être HH:MM:SS");
+  // }
 
   // Validation du nombre de personnes
   if (formData.number_of_people < 1) {
@@ -97,6 +97,8 @@ export async function createReservation(formData) {
   // Vérification de la réponse
   if (response?.dataValues) {
     console.log("Réservation créée avec succès, ID:", response.dataValues.id);
+    console.log("Réponse de l'API :", response);
+
     return response.dataValues;
   }
 
