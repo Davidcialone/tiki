@@ -110,13 +110,13 @@ export const ReservationsViews = () => {
       <div className="w-full mx-auto bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 py-2 border-b bg-gray-50 text-black">
           <button onClick={() => navigateMonth('prev')} className="p-1">
-            <ChevronLeft className="w-5 h-5 text-white" />
+            <ChevronLeft className="w-5 h-5 bg-black text-white" />
           </button>
           <span className="text-sm font-medium">
             {currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
           </span>
           <button onClick={() => navigateMonth('next')} className="p-1">
-            <ChevronRight className="w-5 h-5 text-white" />
+            <ChevronRight className="w-5 h-5 bg-black text-white" />
           </button>
         </div>
 
@@ -132,7 +132,7 @@ export const ReservationsViews = () => {
               <button
                 key={day}
                 className={`relative flex flex-col items-center justify-center px-4 py-2 rounded-lg
-                  ${day === selectedDay.getDate() ? 'bg-blue-500 text-white' : 'bg-gray-100 text-black'}`}
+                  ${day === selectedDay.getDate() ? 'bg-green-500 text-white' : 'bg-gray-100 text-black'}`}
                 onClick={() => handleDaySelect(day)}
               >
                 <span className="text-sm font-medium">{day}</span>
