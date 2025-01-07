@@ -26,28 +26,17 @@ export const createReservation = async (req, res) => {
       note,
     } = req.body;
 
-    console.log(
-      "Requête reçue pour créer une réservation avec les données suivantes:"
-    );
-    console.log({
-      email,
-      firstName,
-      lastName,
-      phone,
-      reservation_date,
-      reservation_time,
-      number_of_people,
-      note,
-    });
+    console.log("Requête reçue pour créer une réservation :", req.body);
 
-    if (!email) {
-      return res
-        .status(400)
-        .json({ message: "Le champ 'email' est obligatoire." });
+    // Validation des champs obligatoires
+    if (!email || !reservation_date || !reservation_time || !number_of_people) {
+      return res.status(400).json({
+        message:
+          "Les champs 'email', 'reservation_date', 'reservation_time', et 'number_of_people' sont obligatoires.",
+      });
     }
 
     // Vérifier si l'utilisateur existe déjà avec l'email
-    console.log(`Recherche d'un utilisateur avec l'email: ${email}`);
     let user = await Users.findOne({ where: { email } });
 
     // Si l'utilisateur n'existe pas, créez-le
@@ -55,36 +44,30 @@ export const createReservation = async (req, res) => {
       console.log(
         "Utilisateur non trouvé, création d'un nouvel utilisateur..."
       );
-      const randomPassword = generateRandomPassword(); // Générer un mot de passe aléatoire
+      const randomPassword = generateRandomPassword();
       user = await Users.create({
         email,
         firstname: firstName,
         lastname: lastName,
         phone,
-        password: randomPassword, // Utiliser le mot de passe généré
-        role_id: 1, // Le rôle utilisateur par défaut, à ajuster selon vos besoins
+        password: randomPassword, // Stocker le mot de passe généré
+        role_id: 1, // Rôle utilisateur par défaut
       });
-      console.log("Nouvel utilisateur créé avec succès:", user);
+      console.log("Nouvel utilisateur créé :", user);
     } else {
-      console.log("Utilisateur existant trouvé:", user);
+      console.log("Utilisateur existant trouvé :", user);
     }
-
-    // Calcul de places_used
-    const placesUsed = Math.ceil(number_of_people / 2) * 2; // Arrondir à la valeur supérieure si impair
-    console.log(
-      `Nombre de personnes: ${number_of_people}, Places utilisées calculées: ${placesUsed}`
-    );
 
     // Calcul de l'heure de fin (ajout de 1h30 à l'heure de réservation)
     const reservationDateTime = new Date(
-      `${reservation_date} ${reservation_time}`
+      `${reservation_date}T${reservation_time}`
     );
     const endTime = new Date(reservationDateTime.getTime() + 90 * 60000); // Ajoute 1h30 (90 minutes)
     console.log(
-      `Heure de réservation: ${reservationDateTime}, Heure de fin calculée: ${endTime}`
+      `Heure de réservation : ${reservationDateTime}, Heure de fin : ${endTime}`
     );
 
-    // Créer la réservation avec l'utilisateur récupéré ou nouvellement créé
+    // Création de la réservation
     console.log("Création de la réservation...");
     const reservation = await Reservations.create({
       user_id: user.id,
@@ -97,19 +80,21 @@ export const createReservation = async (req, res) => {
       end_time: endTime, // Heure de fin calculée
     });
 
-    console.log("Réservation créée avec succès:", reservation);
+    console.log("Réservation créée dans la base de données :", reservation); // Ajout d'un log ici
 
-    await sendConfirmationEmail(reservation); // Envoyer un e-mail de confirmation
+    // Envoyer un email de confirmation
+    await sendConfirmationEmail(reservation);
 
     res.status(201).json(reservation);
   } catch (error) {
     console.error(
-      "Erreur lors de la création de la réservation:",
+      "Erreur lors de la création de la réservation :",
       error.message
     );
-    res
-      .status(500)
-      .json({ message: "Error creating reservation", error: error.message });
+    res.status(500).json({
+      message: "Erreur lors de la création de la réservation",
+      error: error.message,
+    });
   }
 };
 
