@@ -6,10 +6,13 @@ DROP TABLE IF EXISTS Users CASCADE;
 DROP TABLE IF EXISTS Zones CASCADE;
 DROP TABLE IF EXISTS Roles CASCADE;
 
+-- Création du type ENUM pour les statuts de réservation
+CREATE TYPE reservation_status AS ENUM ('pending', 'confirmed', 'cancelled');
+
 -- Table `Roles`
 CREATE TABLE Roles (
     "id" SERIAL PRIMARY KEY,                       -- Identifiant unique
-    "name" VARCHAR(100) NOT NULL UNIQUE,          -- Nom du rôle (doit être unique pour éviter les doublons)
+    "name" VARCHAR(100) NOT NULL UNIQUE,           -- Nom du rôle (doit être unique pour éviter les doublons)
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
     "updated_at" TIMESTAMPTZ DEFAULT now()        -- Date de mise à jour
 );
@@ -20,12 +23,10 @@ INSERT INTO Roles (name, created_at, updated_at) VALUES
     ('worker', now(), now()),
     ('manager', now(), now());
 
-
-
 -- Table `Zones`
 CREATE TABLE Zones (
     "id" SERIAL PRIMARY KEY,                       -- Identifiant unique
-    "name" VARCHAR(100) NOT NULL UNIQUE,          -- Nom de la zone
+    "name" VARCHAR(100) NOT NULL UNIQUE,           -- Nom de la zone
     "capacity" INT NOT NULL,                      -- Capacité de la zone
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
     "updated_at" TIMESTAMPTZ DEFAULT now()        -- Date de mise à jour
@@ -38,10 +39,10 @@ CREATE TABLE Users (
     "firstname" VARCHAR(100) NOT NULL,            -- Prénom du client
     "email" VARCHAR(150) UNIQUE,                  -- Email du client (doit être unique)
     "phone" VARCHAR(20),                          -- Numéro de téléphone
-    "password" VARCHAR(255) ,                       -- Mot de passe
+    "password" VARCHAR(255),                      -- Mot de passe
     "role_id" INT NOT NULL,                       -- Identifiant du rôle
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now(),       -- Date de mise à jour
+    "updated_at" TIMESTAMPTZ DEFAULT now(),      -- Date de mise à jour
     CONSTRAINT phone_format CHECK (phone ~ '^\+?[0-9]*$'), -- Vérification du format téléphone
     CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES Roles(id) ON DELETE CASCADE -- Clé étrangère vers la table Roles
 );
@@ -52,7 +53,7 @@ ALTER TABLE "users" ALTER COLUMN "role_id" SET DEFAULT 1;
 -- Table `Categories` (pour catégoriser les éléments de menu)
 CREATE TABLE Categories (
     "id" SERIAL PRIMARY KEY,                      -- Identifiant unique
-    "name" VARCHAR(100) NOT NULL UNIQUE,          -- Nom de la catégorie
+    "name" VARCHAR(100) NOT NULL UNIQUE,           -- Nom de la catégorie
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
     "updated_at" TIMESTAMPTZ DEFAULT now()        -- Date de mise à jour
 );
@@ -60,35 +61,35 @@ CREATE TABLE Categories (
 -- Table `MenuItems` (éléments du menu comme plats, desserts, boissons, etc.)
 CREATE TABLE MenuItems (
     "id" SERIAL PRIMARY KEY,                      -- Identifiant unique
-    "name" VARCHAR(150) NOT NULL,                -- Nom de l'élément
-    "description" TEXT,                          -- Description de l'élément
-    "price" NUMERIC(10, 2) NOT NULL,             -- Prix
-    "category_id" INT NOT NULL,                  -- Référence à une catégorie
-    "image_url" TEXT,                            -- URL d'une image du plat
+    "name" VARCHAR(150) NOT NULL,                 -- Nom de l'élément
+    "description" TEXT,                           -- Description de l'élément
+    "price" NUMERIC(10, 2) NOT NULL,              -- Prix
+    "category_id" INT NOT NULL,                   -- Référence à une catégorie
+    "image_url" TEXT,                             -- URL d'une image du plat
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now(),      -- Date de mise à jour
+    "updated_at" TIMESTAMPTZ DEFAULT now(),       -- Date de mise à jour
     CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE CASCADE
 );
 
 -- Table `Reservations`
 CREATE TABLE Reservations (
     "id" SERIAL PRIMARY KEY,                      -- Identifiant unique
-    "user_id" INT NOT NULL,                      -- Référence au client
-    "reservation_date" DATE NOT NULL,            -- Date de la réservation
-    "reservation_time" TIME NOT NULL,            -- Heure de début de la réservation
-    "number_of_people" INT NOT NULL,             -- Nombre de personnes
+    "user_id" INT NOT NULL,                       -- Référence au client
+    "reservation_date" DATE NOT NULL,             -- Date de la réservation
+    "reservation_time" TIME NOT NULL,             -- Heure de début de la réservation
+    "number_of_people" INT NOT NULL,              -- Nombre de personnes
     "places_used" INT GENERATED ALWAYS AS (
         CASE 
             WHEN number_of_people % 2 = 0 THEN number_of_people 
             ELSE number_of_people + 1 
         END
-    ) STORED,                                    -- Calcul automatique
-    "end_time" TIME,                             -- Heure de fin (calculée par trigger)
-    "note" VARCHAR(255),                         -- Note pour la réservation
-     "status" ENUM('pending', 'confirmed', 'cancelled') NOT NULL DEFAULT 'pending',
-    "zone_id" INT,                               -- Référence à une zone
+    ) STORED,                                     -- Calcul automatique
+    "end_time" TIME,                              -- Heure de fin (calculée par trigger)
+    "note" VARCHAR(255),                          -- Note pour la réservation
+    "status" reservation_status NOT NULL DEFAULT 'pending', -- Utilisation du type ENUM défini plus tôt
+    "zone_id" INT,                                -- Référence à une zone
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now(),      -- Date de mise à jour
+    "updated_at" TIMESTAMPTZ DEFAULT now(),       -- Date de mise à jour
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
     CONSTRAINT fk_zone FOREIGN KEY (zone_id) REFERENCES Zones(id) ON DELETE SET NULL
 );
