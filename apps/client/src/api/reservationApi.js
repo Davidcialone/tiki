@@ -25,9 +25,9 @@ export async function createReservation(formData) {
   console.log("=== Sending Reservation Request ===");
 
   // Vérifiez que l'objet user contient les informations nécessaires
-  if (!formData.user) {
+  if (!formData) {
     console.warn(
-      "User data is missing, cannot submit form data:",
+      "Form Data is missing, cannot submit reservation:",
       JSON.stringify(formData)
     );
     console.log("Form Data Submitted:", JSON.stringify(formData));
