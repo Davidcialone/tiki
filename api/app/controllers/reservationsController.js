@@ -40,6 +40,12 @@ export const createReservation = async (req, res) => {
       note,
     });
 
+    if (!email) {
+      return res
+        .status(400)
+        .json({ message: "Le champ 'email' est obligatoire." });
+    }
+
     // Vérifier si l'utilisateur existe déjà avec l'email
     console.log(`Recherche d'un utilisateur avec l'email: ${email}`);
     let user = await Users.findOne({ where: { email } });
