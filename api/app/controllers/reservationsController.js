@@ -1,5 +1,5 @@
 import { Reservations, Users } from "../models/index.js";
-import { sendConfirmationEmail } from "../mails/mail.js";
+// import { sendConfirmationEmail } from "../mails/mail.js";
 
 // Génération de mot de passe aléatoire
 function generateRandomPassword(length = 12) {
@@ -75,7 +75,7 @@ export const createReservation = async (req, res) => {
     console.log("Réservation créée :", reservation);
 
     // Envoyer un email de confirmation
-    await sendConfirmationEmail(reservation);
+    // await sendConfirmationEmail(reservation);
 
     res.status(201).json(reservation);
   } catch (error) {
