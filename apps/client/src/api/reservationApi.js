@@ -6,7 +6,7 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
-// Validation du format de l'heure
+// Validation de l'heure au format HH:MM
 function isValidTime(time) {
   const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
   return timeRegex.test(time);
@@ -51,7 +51,7 @@ export async function createReservation(formData) {
   // Création de l'objet final à envoyer à l'API
   const reservationData = {
     ...formData,
-    reservation_time: formData.reservation_time + ":00", // Ajouter les secondes pour l'API
+    reservation_time: formData.reservation_time, // Ne pas ajouter ":00"
   };
 
   const url = `${apiBaseUrl}/api/reservations`;

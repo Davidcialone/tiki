@@ -1,18 +1,15 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 
-dotenv.config({ path: ".env.production" });
-console.log("PG_URL from .env.production:", process.env.PG_URL);
+dotenv.config(); // Charge les variables d'environnement
 
-// Configurer Sequelize
 const sequelize = new Sequelize(process.env.PG_URL, {
   dialect: "postgres",
-  logging: process.env.NODE_ENV === "development",
+  logging: process.env.NODE_ENV === "development", // Active les logs en mode dev
   dialectOptions: {
     ssl: process.env.NODE_ENV === "production" && {
       require: true,
       rejectUnauthorized: false,
-      // Ajuster en fonction de votre environnement
     },
   },
   pool: {
@@ -23,4 +20,4 @@ const sequelize = new Sequelize(process.env.PG_URL, {
   },
 });
 
-export default sequelize; // Exportation par défaut du sequelize
+export default sequelize; // Export par défaut

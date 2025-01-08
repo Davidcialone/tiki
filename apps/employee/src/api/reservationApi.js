@@ -1,45 +1,25 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-/**
- * Valide le format de l'email
- * @param {string} email - Email à valider
- * @returns {boolean} True si l'email est valide
- */
+// Validation du format de l'email
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-/**
- * Fonction utilitaire pour les requêtes fetch
- * @param {string} url - URL de l'API
- * @param {object} options - Options pour la requête fetch
- */
-async function fetchWithErrorHandling(url, options = {}) {
-  try {
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Erreur côté serveur :", errorText);
-      throw new Error(errorText || "Requête échouée");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erreur lors de l'exécution de la requête :", error);
-    throw error;
-  }
+// Validation de l'heure au format HH:MM
+function isValidTime(time) {
+  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+  return timeRegex.test(time);
 }
 
 /**
- * Création d'une réservation
+ * Fonction pour créer une réservation
  * @param {object} formData - Données du formulaire de réservation
  */
 export async function createReservation(formData) {
   console.log("=== Création d'une réservation ===");
 
-  // Validation des champs requis
+  // Validation des champs obligatoires
   const requiredFields = [
     "email",
     "reservation_date",
@@ -58,15 +38,9 @@ export async function createReservation(formData) {
     throw new Error("Le format de l'email est invalide");
   }
 
-  // Validation du format de la date
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.reservation_date)) {
-    throw new Error("Le format de la date doit être YYYY-MM-DD");
-  }
-
-  // Validation du format de l'heure
-  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
-  if (!timeRegex.test(formData.reservation_time)) {
-    throw new Error("Le format de l'heure doit être HH:MM:SS");
+  // Validation de l'heure au format HH:MM
+  if (!isValidTime(formData.reservation_time)) {
+    throw new Error("Le format de l'heure est invalide (ex : HH:MM)");
   }
 
   // Validation du nombre de personnes
@@ -74,13 +48,11 @@ export async function createReservation(formData) {
     throw new Error("Le nombre de personnes doit être au moins 1");
   }
 
-  // Ajout de valeurs par défaut si nécessaire
-  if (!formData.role_id) {
-    console.warn(
-      "role_id est manquant. Attribution de la valeur par défaut : 1"
-    );
-    formData.role_id = 1;
-  }
+  // Création de l'objet final à envoyer à l'API
+  const reservationData = {
+    ...formData,
+    reservation_time: formData.reservation_time, // Ne pas ajouter ":00"
+  };
 
   const url = `${apiBaseUrl}/api/reservations`;
   const options = {
@@ -88,19 +60,11 @@ export async function createReservation(formData) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify(reservationData),
   };
 
-  console.log("Envoi des données :", formData);
-  const response = await fetchWithErrorHandling(url, options);
-
-  // Vérification de la réponse
-  if (response?.dataValues) {
-    console.log("Réservation créée avec succès, ID:", response.dataValues.id);
-    return response.dataValues;
-  }
-
-  return response;
+  console.log("Envoi des données :", reservationData);
+  return await fetchWithErrorHandling(url, options);
 }
 
 /**
@@ -169,4 +133,27 @@ export async function getReservationsByDate(date) {
   };
 
   return await fetchWithErrorHandling(url, options);
+}
+
+/**
+ * Fonction générique pour gérer les erreurs d'appel API
+ * @param {string} url - URL de l'API
+ * @param {object} options - Options de la requête fetch
+ */
+async function fetchWithErrorHandling(url, options) {
+  try {
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur API : ${response.status} - ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API :", error);
+    throw new Error(
+      "Une erreur s'est produite lors de l'exécution de la requête."
+    );
+  }
 }

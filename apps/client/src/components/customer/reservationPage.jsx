@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ReservationModal } from "../../../../client/src/components/modales/reservationModal";
 import { createReservation } from "../../api/reservationApi";
-import { sendReservationMail } from "../../api/mailsApi";
+import { mailsReservations } from "../../../../../api/app/controllers/mailsController";
 
 export function ReservationPage() {
   const [zonesOpened, setZonesOpened] = useState({
@@ -19,18 +19,11 @@ export function ReservationPage() {
 
   const openZones = Object.keys(zonesOpened).filter((zone) => zonesOpened[zone]);
 
-  // Utilitaire : validation et formatage de la date
-  const formatReservationDate = (date) => {
-    if (date instanceof Date) {
-      return date.toISOString().split("T")[0];
-    }
-    return date;
-  };
-
   // Utilitaire : validation et formatage de l'heure
   const formatReservationTime = (time) => {
     if (time.includes(":")) {
-      return time.length === 5 ? `${time}:00` : time; // Ajouter les secondes si manquantes
+      // Si l'heure inclut les secondes, ne garder que les minutes
+      return time.split(":").slice(0, 2).join(":");
     }
     return `${time}:00`;
   };
@@ -38,40 +31,37 @@ export function ReservationPage() {
   // Fonction de soumission du formulaire dans le modal
   const handleModalSubmit = async (formData) => {
     try {
-      // S'assurer que la date est au bon format
-      if (!(formData.reservation_date instanceof Date) && !formData.reservation_date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        throw new Error("Le format de la date est invalide");
+      // Formatage de l'heure avant la soumission
+      const formattedTime = formatReservationTime(formData.reservation_time);
+  
+      // Validation stricte
+      if (!/^\d{2}:\d{2}$/.test(formattedTime)) { 
+        throw new Error("Le format de l'heure est invalide (ex : HH:MM)");
       }
   
-      // Créer l'objet de réservation
       const reservationData = {
         ...formData,
-        reservation_date: formData.reservation_date instanceof Date 
-          ? formData.reservation_date.toISOString().split('T')[0]
-          : formData.reservation_date,
-        reservation_time: formData.reservation_time // Déjà au format HH:MM
+        reservation_time: formattedTime,
       };
   
       const response = await createReservation(reservationData);
-      
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Erreur lors de la création de la réservation.");
       }
-  
-      const data = await response.json();
-      setReservationDetails(data);
-      setIsModalOpen(false);
-      setErrorMessage("");
-  
-      await sendReservationMail(data.id);
-      console.log("Email de confirmation envoyé avec succès pour la réservation:", data.id);
+
+      const reservation = await response.json();
+      setReservationDetails(reservation);
+
+      // Envoi de l'email après la création de la réservation
+      await mailsReservations({ params: { reservationId: reservation.id } });
+
     } catch (error) {
       console.error("Erreur lors de la soumission de la réservation:", error);
       setErrorMessage(error.message);
     }
   };
-  
+
   return (
     <>
       <div className="mt-20"></div>
@@ -98,7 +88,6 @@ export function ReservationPage() {
             <p><strong>Email : </strong>{reservationDetails.email}</p>
             <p><strong>Date : </strong>{new Date(reservationDetails.reservation_date).toLocaleDateString()}</p>
             <p><strong>Heure : </strong>{reservationDetails.reservation_time}</p>
-            {/* <p><strong>Zone choisie : </strong>{reservationDetails.zone || "Non spécifiée"}</p> */}
           </div>
         )}
 

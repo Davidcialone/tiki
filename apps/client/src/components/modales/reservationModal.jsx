@@ -37,8 +37,10 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
   };
 
   const handleTimeClick = (time) => {
-    setFormData((prev) => ({ ...prev, reservation_time: time }));
+    const formattedTime = time.length === 5 ? time : time.substring(0,5); // Assurez-vous que c'est toujours HH:mm
+    setFormData((prev) => ({ ...prev, reservation_time: formattedTime }));
   };
+  
 
   const toggleTimePeriod = () => {
     setFormData((prev) => ({

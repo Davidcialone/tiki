@@ -7,10 +7,12 @@ const apiBaseUrl = process.env.API_BASE_URL || "http://localhost:5000";
 
 // Créez un transporteur avec vos informations d'authentification Gmail
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com", // ou votre serveur SMTP
+  port: 587,
+  secure: false, // true pour 465, false pour les autres ports
   auth: {
-    user: process.env.GMAIL_USER, // Utilisation de la variable d'environnement pour l'email
-    pass: process.env.GMAIL_PASS, // Utilisation de la variable d'environnement pour le mot de passe
+    user: process.env.EMAIL_USER, // votre email
+    pass: process.env.EMAIL_PASSWORD, // votre mot de passe ou mot de passe d'application
   },
   logger: true, // Active les journaux SMTP
   debug: true, // Active le mode débogage
