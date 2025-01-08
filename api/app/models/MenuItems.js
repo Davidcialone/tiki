@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "./sequelizeClient.js";
+import sequelize from "../../db.js";
 
 export class MenuItems extends Model {}
 
