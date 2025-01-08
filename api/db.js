@@ -12,6 +12,7 @@ const sequelize = new Sequelize(process.env.PG_URL, {
       rejectUnauthorized: false,
     },
   },
+  schema: "public", // Assurez-vous que c'est le schéma correct
   pool: {
     max: 5,
     min: 0,

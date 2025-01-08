@@ -9,17 +9,16 @@ Reservations.init(
       type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
-        isDate: true, // Vérifie si c'est une date valide
+        isDate: true,
       },
     },
     reservation_time: {
       type: DataTypes.TIME,
       allowNull: false,
       validate: {
-        is: /^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$/, // Validation HH:mm
+        is: /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/,
       },
     },
-
     number_of_people: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -32,10 +31,6 @@ Reservations.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    end_time: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
     zone_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -43,6 +38,7 @@ Reservations.init(
         model: "zones",
         key: "id",
       },
+      onDelete: "SET NULL",
     },
     status: {
       type: DataTypes.ENUM("pending", "confirmed", "cancelled"),
@@ -56,43 +52,44 @@ Reservations.init(
         model: "users",
         key: "id",
       },
+      onDelete: "CASCADE",
     },
   },
   {
     sequelize,
     tableName: "reservations",
+    schema: "public",
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at",
-    hooks: {
-      beforeValidate: (reservation) => {
-        if (reservation.reservation_time) {
-          try {
-            // Décomposer l'heure `reservation_time`
-            const [hours, minutes] = reservation.reservation_time
-              .split(":")
-              .map(Number);
 
-            // Construire une date fictive pour le calcul
-            const reservationDateTime = new Date();
-            reservationDateTime.setHours(hours);
-            reservationDateTime.setMinutes(minutes);
+    getterMethods: {
+      places_used() {
+        // Si le nombre de personnes est pair, on retourne le même nombre
+        // Sinon, on retourne +1
+        return this.number_of_people % 2 === 0
+          ? this.number_of_people
+          : this.number_of_people + 1;
+      },
+      end_time() {
+        // Ajoute 1h30 à reservation_time
+        const [hours, minutes] = this.reservation_time.split(":").map(Number);
+        let newHours = hours + 1; // Ajout de 1 heure
+        let newMinutes = minutes + 30; // Ajout de 30 minutes
 
-            // Ajouter 90 minutes pour calculer `end_time`
-            reservationDateTime.setMinutes(
-              reservationDateTime.getMinutes() + 90
-            );
-
-            // Mettre à jour `end_time` en format HH:mm:ss
-            const formattedEndTime = reservationDateTime
-              .toTimeString()
-              .split(" ")[0];
-            reservation.end_time = formattedEndTime;
-          } catch (error) {
-            throw new Error("Erreur lors du calcul de l'heure de fin.");
-          }
+        if (newMinutes >= 60) {
+          newMinutes -= 60;
+          newHours += 1;
         }
+
+        // Gestion du format HH:MM
+        const formattedHours = String(newHours).padStart(2, "0");
+        const formattedMinutes = String(newMinutes).padStart(2, "0");
+
+        return `${formattedHours}:${formattedMinutes}`;
       },
     },
   }
 );
+
+export default Reservations;

@@ -6,9 +6,6 @@ DROP TABLE IF EXISTS Users CASCADE;
 DROP TABLE IF EXISTS Zones CASCADE;
 DROP TABLE IF EXISTS Roles CASCADE;
 
--- Type ENUM pour `status`
-CREATE TYPE status_enum AS ENUM ('pending', 'confirmed', 'cancelled');
-
 -- Table `Roles`
 CREATE TABLE Roles (
     "id" SERIAL PRIMARY KEY,                       
@@ -83,7 +80,7 @@ CREATE TABLE Reservations (
     ) STORED,                                     
     "end_time" TIME,                             
     "note" VARCHAR(255),                         
-    status status_enum NOT NULL DEFAULT 'pending',
+    status VARCHAR(50) NOT NULL DEFAULT 'pending', -- Utilisez VARCHAR ici
     "zone_id" INT,                               
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ DEFAULT now(),      
@@ -106,15 +103,3 @@ CREATE TRIGGER trigger_calculate_end_time
 BEFORE INSERT OR UPDATE ON Reservations
 FOR EACH ROW
 EXECUTE FUNCTION calculate_end_time();
-
--- Index pour optimiser les recherches sur les dates et heures
-CREATE INDEX idx_reservation_date_time
-ON Reservations (reservation_date, reservation_time);
-
--- Autres Index pour optimisations
-CREATE INDEX idx_reservation_status
-ON Reservations (status);
-CREATE INDEX idx_reservation_user_id
-ON Reservations (user_id);
-CREATE INDEX idx_reservation_zone_id
-ON Reservations (zone_id);
