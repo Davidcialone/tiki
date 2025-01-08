@@ -1,6 +1,6 @@
 import "dotenv/config"; // require("dotenv/config");
 
-import { Sequelize } from "sequelize"; // const { Sequelize } = require('sequelize');
+import Sequelize from "sequelize"; // alternative sans import {}
 
 // Notre client Sequelize
 export const sequelize = new Sequelize(process.env.PG_URL, {

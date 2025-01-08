@@ -18,10 +18,11 @@ export async function mailsReservations(req, res) {
     }
 
     // Vérification des informations de la réservation
-    console.log(reservation); // Ajoutez cette ligne pour afficher l'objet complet
+    console.log("Reservation details:", reservation); // Ajoutez cette ligne pour afficher l'objet complet
+    console.log("User email:", reservation.user.email); // Debug pour l'email
 
     // Envoyer l'e-mail avec les informations de la réservation et de l'utilisateur
-    await sendConfirmationEmail(reservation);
+    await sendConfirmationEmail(reservation.user.email);
 
     // Retourner les détails de la réservation dans la réponse
     res.json(reservation);

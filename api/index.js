@@ -26,6 +26,7 @@ requiredEnvVars.forEach((varName) => {
   }
 });
 
+// Création de l'application Express
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -42,7 +43,7 @@ app.use(
     ].filter(Boolean), // Filtrer les valeurs non définies
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Si vous utilisez des cookies, pensez à ajouter cette option
+    credentials: true,
   })
 );
 
@@ -52,7 +53,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // Log des requêtes entrantes
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  logger.info(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
@@ -64,7 +65,7 @@ app.get("/", (req, res) => {
 // Routes de l'API
 app.use("/api", apiRouter);
 
-// Servir les fichiers statiques en production (si le serveur est en production)
+// Servir les fichiers statiques en production
 if (process.env.NODE_ENV === "production") {
   const clientPath = path.join(process.cwd(), "client/dist");
   app.use(express.static(clientPath));
@@ -77,15 +78,10 @@ if (process.env.NODE_ENV === "production") {
 app.listen(PORT, async () => {
   try {
     await sequelize.authenticate(); // Connexion à la base de données
-    console.log("Connexion à la base de données réussie.");
+
     await sequelize.sync({ alter: true }); // Synchroniser les modèles
-    console.log("Modèles synchronisés.");
-    console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
   } catch (error) {
-    console.error(
-      "Erreur lors de la connexion à la base de données :",
-      error.message
-    );
-    process.exit(1); // Arrêter le serveur si la connexion à la base échoue
+    console.error("Erreur lors de la connexion à la base de données :", error);
+    process.exit(1);
   }
 });

@@ -26,7 +26,7 @@ import { Roles } from "./Roles.js";
 import { Zones } from "./Zones.js";
 import { MenuItems } from "./MenuItems.js";
 import { Categories } from "./Categories.js";
-import sequelize from "../../db.js";
+import { sequelize } from "./sequelizeClient.js";
 
 const models = {
   Users,

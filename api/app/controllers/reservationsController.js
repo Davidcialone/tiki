@@ -13,6 +13,8 @@ function generateRandomPassword(length = 12) {
 // Créer une réservation
 export const createReservation = async (req, res) => {
   try {
+    console.log("Données reçues :", req.body); // Logs des données reçues
+
     const {
       email,
       firstName,
@@ -24,6 +26,18 @@ export const createReservation = async (req, res) => {
       note,
       zone_id,
     } = req.body;
+
+    console.log("Données de la réservation :", {
+      email,
+      firstName,
+      lastName,
+      phone,
+      reservation_date,
+      reservation_time,
+      number_of_people,
+      note,
+      zone_id,
+    });
 
     // Validation des champs obligatoires
     if (!email || !reservation_date || !reservation_time || !number_of_people) {
@@ -39,7 +53,7 @@ export const createReservation = async (req, res) => {
     if (!user) {
       const randomPassword = generateRandomPassword();
       user = await Users.create({
-        email,
+        email: email,
         firstname: firstName,
         lastname: lastName,
         phone,
@@ -57,6 +71,8 @@ export const createReservation = async (req, res) => {
       note,
       zone_id,
     });
+
+    console.log("Réservation créée :", reservation);
 
     // Envoyer un email de confirmation
     await sendConfirmationEmail(reservation);

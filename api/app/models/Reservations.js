@@ -16,9 +16,10 @@ Reservations.init(
       type: DataTypes.TIME,
       allowNull: false,
       validate: {
-        is: /^([01]\d|2[0-3]):([0-5]\d)$/, // HH:mm
+        is: /^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$/, // Validation HH:mm
       },
     },
+
     number_of_people: {
       type: DataTypes.INTEGER,
       allowNull: false,

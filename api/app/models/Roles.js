@@ -1,6 +1,6 @@
 import pkg from "sequelize";
 const { Model, DataTypes } = pkg;
-import sequelize from "../../db.js";
+import { sequelize } from "./sequelizeClient.js";
 
 export class Roles extends Model {}
 
