@@ -6,15 +6,12 @@ DROP TABLE IF EXISTS Users CASCADE;
 DROP TABLE IF EXISTS Zones CASCADE;
 DROP TABLE IF EXISTS Roles CASCADE;
 
--- Création du type ENUM pour les statuts de réservation
-CREATE TYPE reservation_status AS ENUM ('pending', 'confirmed', 'cancelled');
-
 -- Table `Roles`
 CREATE TABLE Roles (
-    "id" SERIAL PRIMARY KEY,                       -- Identifiant unique
-    "name" VARCHAR(100) NOT NULL UNIQUE,           -- Nom du rôle (doit être unique pour éviter les doublons)
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now()        -- Date de mise à jour
+    "id" SERIAL PRIMARY KEY,                       
+    "name" VARCHAR(100) NOT NULL UNIQUE,          
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+    "updated_at" TIMESTAMPTZ DEFAULT now()        
 );
 
 -- Insertion des rôles
@@ -25,71 +22,67 @@ INSERT INTO Roles (name, created_at, updated_at) VALUES
 
 -- Table `Zones`
 CREATE TABLE Zones (
-    "id" SERIAL PRIMARY KEY,                       -- Identifiant unique
-    "name" VARCHAR(100) NOT NULL UNIQUE,           -- Nom de la zone
-    "capacity" INT NOT NULL,                      -- Capacité de la zone
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now()        -- Date de mise à jour
+    "id" SERIAL PRIMARY KEY,                       
+    "name" VARCHAR(100) NOT NULL UNIQUE,          
+    "capacity" INT NOT NULL,                      
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+    "updated_at" TIMESTAMPTZ DEFAULT now()        
 );
 
 -- Table `Users`
 CREATE TABLE Users (
-    "id" SERIAL PRIMARY KEY,                       -- Identifiant unique
-    "lastname" VARCHAR(100) NOT NULL,             -- Nom du client
-    "firstname" VARCHAR(100) NOT NULL,            -- Prénom du client
-    "email" VARCHAR(150) UNIQUE,                  -- Email du client (doit être unique)
-    "phone" VARCHAR(20),                          -- Numéro de téléphone
-    "password" VARCHAR(255),                      -- Mot de passe
-    "role_id" INT NOT NULL,                       -- Identifiant du rôle
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now(),      -- Date de mise à jour
-    CONSTRAINT phone_format CHECK (phone ~ '^\+?[0-9]*$'), -- Vérification du format téléphone
-    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES Roles(id) ON DELETE CASCADE -- Clé étrangère vers la table Roles
+    "id" SERIAL PRIMARY KEY,                       
+    "lastname" VARCHAR(100) NOT NULL,             
+    "firstname" VARCHAR(100) NOT NULL,            
+    "email" VARCHAR(150) UNIQUE,                  
+    "phone" VARCHAR(20),                          
+    "password" VARCHAR(255),                      
+    "role_id" INT NOT NULL DEFAULT 1,             
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+    "updated_at" TIMESTAMPTZ DEFAULT now(),       
+    CONSTRAINT phone_format CHECK (phone ~ '^\+?[0-9]*$'),
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES Roles(id) ON DELETE CASCADE 
 );
 
--- Ajout de la valeur par défaut pour la colonne `role_id` dans la table `Users`
-ALTER TABLE "users" ALTER COLUMN "role_id" SET DEFAULT 1;
-
--- Table `Categories` (pour catégoriser les éléments de menu)
+-- Table `Categories`
 CREATE TABLE Categories (
-    "id" SERIAL PRIMARY KEY,                      -- Identifiant unique
-    "name" VARCHAR(100) NOT NULL UNIQUE,           -- Nom de la catégorie
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now()        -- Date de mise à jour
+    "id" SERIAL PRIMARY KEY,                      
+    "name" VARCHAR(100) NOT NULL UNIQUE,          
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+    "updated_at" TIMESTAMPTZ DEFAULT now()        
 );
 
--- Table `MenuItems` (éléments du menu comme plats, desserts, boissons, etc.)
+-- Table `MenuItems`
 CREATE TABLE MenuItems (
-    "id" SERIAL PRIMARY KEY,                      -- Identifiant unique
-    "name" VARCHAR(150) NOT NULL,                 -- Nom de l'élément
-    "description" TEXT,                           -- Description de l'élément
-    "price" NUMERIC(10, 2) NOT NULL,              -- Prix
-    "category_id" INT NOT NULL,                   -- Référence à une catégorie
-    "image_url" TEXT,                             -- URL d'une image du plat
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now(),       -- Date de mise à jour
+    "id" SERIAL PRIMARY KEY,                      
+    "name" VARCHAR(150) NOT NULL,                
+    "description" TEXT,                          
+    "price" NUMERIC(10, 2) NOT NULL,             
+    "category_id" INT NOT NULL,                  
+    "image_url" TEXT,                            
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+    "updated_at" TIMESTAMPTZ DEFAULT now(),      
     CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE CASCADE
 );
 
 -- Table `Reservations`
 CREATE TABLE Reservations (
-    "id" SERIAL PRIMARY KEY,                      -- Identifiant unique
-    "user_id" INT NOT NULL,                       -- Référence au client
-    "reservation_date" DATE NOT NULL,             -- Date de la réservation
-    "reservation_time" TIME NOT NULL,             -- Heure de début de la réservation
-    "number_of_people" INT NOT NULL,              -- Nombre de personnes
+    "id" SERIAL PRIMARY KEY,                      
+    "user_id" INT NOT NULL,                      
+    "reservation_date" DATE NOT NULL,            
+    "reservation_time" TIME NOT NULL,            
+    "number_of_people" INT NOT NULL,             
     "places_used" INT GENERATED ALWAYS AS (
         CASE 
             WHEN number_of_people % 2 = 0 THEN number_of_people 
             ELSE number_of_people + 1 
         END
-    ) STORED,                                     -- Calcul automatique
-    "end_time" TIME,                              -- Heure de fin (calculée par trigger)
-    "note" VARCHAR(255),                          -- Note pour la réservation
-    "status" reservation_status NOT NULL DEFAULT 'pending', -- Utilisation du type ENUM défini plus tôt
-    "zone_id" INT,                                -- Référence à une zone
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(), -- Date de création
-    "updated_at" TIMESTAMPTZ DEFAULT now(),       -- Date de mise à jour
+    ) STORED,                                    
+    "end_time" TIME,                             
+    "note" VARCHAR(255),                         
+    "zone_id" INT,                               
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+    "updated_at" TIMESTAMPTZ DEFAULT now(),      
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
     CONSTRAINT fk_zone FOREIGN KEY (zone_id) REFERENCES Zones(id) ON DELETE SET NULL
 );
@@ -111,7 +104,5 @@ FOR EACH ROW
 EXECUTE FUNCTION calculate_end_time();
 
 -- Index pour optimiser les recherches sur les dates et heures
-CREATE INDEX idx_reservation_date ON Reservations(reservation_date);
-CREATE INDEX idx_user_id ON Reservations(user_id);
-CREATE INDEX idx_zone_id ON Reservations(zone_id);
-CREATE INDEX idx_status ON Reservations(status);
+CREATE INDEX idx_reservation_date_time
+ON Reservations (reservation_date, reservation_time);

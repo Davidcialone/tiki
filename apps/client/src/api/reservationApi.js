@@ -1,34 +1,25 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-// Validation du format de l'email en front-end
+// Validation du format de l'email
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-// Validation du format de l'heure en front-end
+// Validation du format de l'heure
 function isValidTime(time) {
   const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
   return timeRegex.test(time);
 }
 
-// Calcul de l'heure de fin en front-end
-const calculateEndTime = (reservation_time, reservation_date) => {
-  const reservationDateTime = new Date(
-    `${reservation_date}T${reservation_time}`
-  );
-  const endTime = new Date(reservationDateTime.getTime() + 90 * 60000); // 1h30 en millisecondes
-  return endTime.toISOString().split("T").join(" ").split(".")[0]; // Format : YYYY-MM-DD HH:MM:SS
-};
-
 /**
- * Fonction pour la création d'une réservation
+ * Fonction pour créer une réservation
  * @param {object} formData - Données du formulaire de réservation
  */
 export async function createReservation(formData) {
   console.log("=== Création d'une réservation ===");
 
-  // Validation des champs requis
+  // Validation des champs obligatoires
   const requiredFields = [
     "email",
     "reservation_date",
@@ -57,20 +48,12 @@ export async function createReservation(formData) {
     throw new Error("Le nombre de personnes doit être au moins 1");
   }
 
-  // Calcul de end_time
-  const end_time = calculateEndTime(
-    formData.reservation_time,
-    formData.reservation_date
-  );
-
   // Création de l'objet final à envoyer à l'API
   const reservationData = {
     ...formData,
-    end_time,
     reservation_time: formData.reservation_time + ":00", // Ajouter les secondes pour l'API
   };
 
-  // Envoyer les données à l'API
   const url = `${apiBaseUrl}/api/reservations`;
   const options = {
     method: "POST",
@@ -81,17 +64,7 @@ export async function createReservation(formData) {
   };
 
   console.log("Envoi des données :", reservationData);
-  const response = await fetchWithErrorHandling(url, options);
-
-  // Vérification de la réponse
-  if (response?.dataValues) {
-    console.log("Réservation créée avec succès, ID:", response.dataValues.id);
-    console.log("Réponse de l'API :", response);
-
-    return response.dataValues;
-  }
-
-  return response;
+  return await fetchWithErrorHandling(url, options);
 }
 
 /**
@@ -160,4 +133,27 @@ export async function getReservationsByDate(date) {
   };
 
   return await fetchWithErrorHandling(url, options);
+}
+
+/**
+ * Fonction générique pour gérer les erreurs d'appel API
+ * @param {string} url - URL de l'API
+ * @param {object} options - Options de la requête fetch
+ */
+async function fetchWithErrorHandling(url, options) {
+  try {
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur API : ${response.status} - ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API :", error);
+    throw new Error(
+      "Une erreur s'est produite lors de l'exécution de la requête."
+    );
+  }
 }

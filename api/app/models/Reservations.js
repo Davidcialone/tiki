@@ -8,14 +8,24 @@ Reservations.init(
     reservation_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,
+      validate: {
+        isDate: true, // Vérifie si c'est une date valide
+      },
     },
     reservation_time: {
       type: DataTypes.TIME,
       allowNull: false,
+      validate: {
+        is: /^([01]\d|2[0-3]):([0-5]\d)$/, // HH:mm
+      },
     },
     number_of_people: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        isInt: true,
+        min: 1,
+      },
     },
     note: {
       type: DataTypes.STRING,
@@ -38,7 +48,6 @@ Reservations.init(
       allowNull: false,
       defaultValue: "pending",
     },
-
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -55,26 +64,32 @@ Reservations.init(
     createdAt: "created_at",
     updatedAt: "updated_at",
     hooks: {
-      beforeSave: (reservation) => {
+      beforeValidate: (reservation) => {
         if (reservation.reservation_time) {
-          // Décomposer `reservation_time` (HH:mm)
-          const [hours, minutes] = reservation.reservation_time
-            .split(":")
-            .map(Number);
+          try {
+            // Décomposer l'heure `reservation_time`
+            const [hours, minutes] = reservation.reservation_time
+              .split(":")
+              .map(Number);
 
-          // Créer un objet Date pour manipulation
-          const reservationDateTime = new Date();
-          reservationDateTime.setHours(hours);
-          reservationDateTime.setMinutes(minutes);
+            // Construire une date fictive pour le calcul
+            const reservationDateTime = new Date();
+            reservationDateTime.setHours(hours);
+            reservationDateTime.setMinutes(minutes);
 
-          // Ajouter 90 minutes
-          reservationDateTime.setMinutes(reservationDateTime.getMinutes() + 90);
+            // Ajouter 90 minutes pour calculer `end_time`
+            reservationDateTime.setMinutes(
+              reservationDateTime.getMinutes() + 90
+            );
 
-          // Convertir en format TIME (HH:mm:ss)
-          const formattedEndTime = reservationDateTime
-            .toTimeString()
-            .split(" ")[0];
-          reservation.end_time = formattedEndTime;
+            // Mettre à jour `end_time` en format HH:mm:ss
+            const formattedEndTime = reservationDateTime
+              .toTimeString()
+              .split(" ")[0];
+            reservation.end_time = formattedEndTime;
+          } catch (error) {
+            throw new Error("Erreur lors du calcul de l'heure de fin.");
+          }
         }
       },
     },

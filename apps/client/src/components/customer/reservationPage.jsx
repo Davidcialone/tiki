@@ -19,42 +19,51 @@ export function ReservationPage() {
 
   const openZones = Object.keys(zonesOpened).filter((zone) => zonesOpened[zone]);
 
+  // Utilitaire : validation et formatage de la date
+  const formatReservationDate = (date) => {
+    if (date instanceof Date) {
+      return date.toISOString().split("T")[0];
+    }
+    return date;
+  };
+
+  // Utilitaire : validation et formatage de l'heure
+  const formatReservationTime = (time) => {
+    if (time.includes(":")) {
+      return time.length === 5 ? `${time}:00` : time; // Ajouter les secondes si manquantes
+    }
+    return `${time}:00`;
+  };
+
   // Fonction de soumission du formulaire dans le modal
   const handleModalSubmit = async (formData) => {
     try {
-      // Validation du format de l'heure
-      if (!formData.reservation_time.match(/^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/)) {
-        throw new Error("Le format de l'heure est invalide (ex : HH:MM:SS)");
-      }
-
       // S'assurer que la date est au bon format
       if (!(formData.reservation_date instanceof Date) && !formData.reservation_date.match(/^\d{4}-\d{2}-\d{2}$/)) {
         throw new Error("Le format de la date est invalide");
       }
-
+  
       // Créer l'objet de réservation
       const reservationData = {
         ...formData,
         reservation_date: formData.reservation_date instanceof Date 
           ? formData.reservation_date.toISOString().split('T')[0]
           : formData.reservation_date,
-        reservation_time: formData.reservation_time.includes(':') 
-          ? formData.reservation_time 
-          : `${formData.reservation_time}:00`
+        reservation_time: formData.reservation_time // Déjà au format HH:MM
       };
-
+  
       const response = await createReservation(reservationData);
       
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Erreur lors de la création de la réservation.");
       }
-
+  
       const data = await response.json();
       setReservationDetails(data);
       setIsModalOpen(false);
       setErrorMessage("");
-
+  
       await sendReservationMail(data.id);
       console.log("Email de confirmation envoyé avec succès pour la réservation:", data.id);
     } catch (error) {
@@ -62,7 +71,7 @@ export function ReservationPage() {
       setErrorMessage(error.message);
     }
   };
-
+  
   return (
     <>
       <div className="mt-20"></div>
