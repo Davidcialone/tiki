@@ -26,6 +26,8 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
     isLunch: true,
   });
 
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -42,9 +44,13 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
   };
 
   const handleTimeClick = (time) => {
+    // S'assurer que l'heure est au format HH:MM
+    const [hours, minutes] = time.split(':');
+    const formattedTime = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    
     setFormData((prev) => ({
       ...prev,
-      reservation_time: time,
+      reservation_time: formattedTime
     }));
   };
 
@@ -61,9 +67,25 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    onClose();
+    
+    try {
+      const formattedDate = formData.reservation_date.toISOString().split('T')[0];
+      
+      // Ne pas ajouter de secondes à l'heure
+      const finalData = {
+        ...formData,
+        reservation_date: formattedDate,
+        reservation_time: formData.reservation_time // Déjà au format HH:MM
+      };
+      
+      onSubmit(finalData);
+    } catch (error) {
+      alert(error.message);
+    }
   };
+
+
+  
 
   if (!isOpen) return null;
 

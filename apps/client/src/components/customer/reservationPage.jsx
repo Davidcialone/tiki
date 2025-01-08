@@ -22,19 +22,44 @@ export function ReservationPage() {
   // Fonction de soumission du formulaire dans le modal
   const handleModalSubmit = async (formData) => {
     try {
-      const response = await createReservation(formData);
-      if (!response.ok) {
-        throw new Error("Erreur lors de la création de la réservation.");
+      // Validation du format de l'heure
+      if (!formData.reservation_time.match(/^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/)) {
+        throw new Error("Le format de l'heure est invalide (ex : HH:MM:SS)");
       }
+
+      // S'assurer que la date est au bon format
+      if (!(formData.reservation_date instanceof Date) && !formData.reservation_date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        throw new Error("Le format de la date est invalide");
+      }
+
+      // Créer l'objet de réservation
+      const reservationData = {
+        ...formData,
+        reservation_date: formData.reservation_date instanceof Date 
+          ? formData.reservation_date.toISOString().split('T')[0]
+          : formData.reservation_date,
+        reservation_time: formData.reservation_time.includes(':') 
+          ? formData.reservation_time 
+          : `${formData.reservation_time}:00`
+      };
+
+      const response = await createReservation(reservationData);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur lors de la création de la réservation.");
+      }
+
       const data = await response.json();
       setReservationDetails(data);
       setIsModalOpen(false);
+      setErrorMessage("");
 
       await sendReservationMail(data.id);
       console.log("Email de confirmation envoyé avec succès pour la réservation:", data.id);
     } catch (error) {
-      console.error("Erreur lors de la soumission de la réservation:", error.message);
-      setErrorMessage(error.message); // Stocker l'erreur
+      console.error("Erreur lors de la soumission de la réservation:", error);
+      setErrorMessage(error.message);
     }
   };
 

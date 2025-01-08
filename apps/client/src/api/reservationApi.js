@@ -1,39 +1,28 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-/**
- * Valide le format de l'email
- * @param {string} email - Email à valider
- * @returns {boolean} True si l'email est valide
- */
+// Validation du format de l'email en front-end
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-/**
- * Fonction utilitaire pour les requêtes fetch
- * @param {string} url - URL de l'API
- * @param {object} options - Options pour la requête fetch
- */
-async function fetchWithErrorHandling(url, options = {}) {
-  try {
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Erreur côté serveur :", errorText);
-      throw new Error(errorText || "Requête échouée");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erreur lors de l'exécution de la requête :", error);
-    throw error;
-  }
+// Validation du format de l'heure en front-end
+function isValidTime(time) {
+  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+  return timeRegex.test(time);
 }
 
+// Calcul de l'heure de fin en front-end
+const calculateEndTime = (reservation_time, reservation_date) => {
+  const reservationDateTime = new Date(
+    `${reservation_date}T${reservation_time}`
+  );
+  const endTime = new Date(reservationDateTime.getTime() + 90 * 60000); // 1h30 en millisecondes
+  return endTime.toISOString().split("T").join(" ").split(".")[0]; // Format : YYYY-MM-DD HH:MM:SS
+};
+
 /**
- * Création d'une réservation
+ * Fonction pour la création d'une réservation
  * @param {object} formData - Données du formulaire de réservation
  */
 export async function createReservation(formData) {
@@ -58,40 +47,40 @@ export async function createReservation(formData) {
     throw new Error("Le format de l'email est invalide");
   }
 
-  // // Validation du format de la date
-  // if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.reservation_date)) {
-  //   throw new Error("Le format de la date doit être YYYY-MM-DD");
-  // }
-
-  // // Validation du format de l'heure
-  // const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
-  // if (!timeRegex.test(formData.reservation_time)) {
-  //   throw new Error("Le format de l'heure doit être HH:MM:SS");
-  // }
+  // Validation de l'heure au format HH:MM
+  if (!isValidTime(formData.reservation_time)) {
+    throw new Error("Le format de l'heure est invalide (ex : HH:MM)");
+  }
 
   // Validation du nombre de personnes
   if (formData.number_of_people < 1) {
     throw new Error("Le nombre de personnes doit être au moins 1");
   }
 
-  // Ajout de valeurs par défaut si nécessaire
-  if (!formData.role_id) {
-    console.warn(
-      "role_id est manquant. Attribution de la valeur par défaut : 1"
-    );
-    formData.role_id = 1;
-  }
+  // Calcul de end_time
+  const end_time = calculateEndTime(
+    formData.reservation_time,
+    formData.reservation_date
+  );
 
+  // Création de l'objet final à envoyer à l'API
+  const reservationData = {
+    ...formData,
+    end_time,
+    reservation_time: formData.reservation_time + ":00", // Ajouter les secondes pour l'API
+  };
+
+  // Envoyer les données à l'API
   const url = `${apiBaseUrl}/api/reservations`;
   const options = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify(reservationData),
   };
 
-  console.log("Envoi des données :", formData);
+  console.log("Envoi des données :", reservationData);
   const response = await fetchWithErrorHandling(url, options);
 
   // Vérification de la réponse
