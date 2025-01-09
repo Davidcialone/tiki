@@ -68,11 +68,26 @@ Reservation.init(
 // Nombre de personnes par table
 const PERSONS_PER_TABLE = 2;
 
-// Hook pour calculer end_time avant l'insertion
+// // Hook pour calculer places_used avant l'insertion
 Reservation.beforeCreate((reservation) => {
+  console.log("Before creating reservation:");
+  console.log("Number of people:", reservation.number_of_people);
+  console.log("Reservation time:", reservation.reservation_time);
+
+  if (!reservation.number_of_people || reservation.number_of_people <= 0) {
+    throw new Error(
+      "number_of_people must be greater than 0 to calculate places_used"
+    );
+  }
+
   if (!reservation.reservation_time) {
     throw new Error("reservation_time must be defined to calculate end_time");
   }
+
+  console.log("Calculating places_used and end_time...");
+  reservation.places_used = Math.ceil(
+    reservation.number_of_people / PERSONS_PER_TABLE
+  );
 
   const [hours, minutes] = reservation.reservation_time.split(":").map(Number);
   const date = new Date();
@@ -82,20 +97,6 @@ Reservation.beforeCreate((reservation) => {
   const endHours = date.getHours().toString().padStart(2, "0");
   const endMinutes = date.getMinutes().toString().padStart(2, "0");
   reservation.end_time = `${endHours}:${endMinutes}`;
-});
-
-// Hook pour calculer places_used avant l'insertion
-Reservation.beforeCreate((reservation) => {
-  if (!reservation.number_of_people || reservation.number_of_people <= 0) {
-    throw new Error(
-      "number_of_people must be greater than 0 to calculate places_used"
-    );
-  }
-
-  // Calcul des tables nécessaires
-  reservation.places_used = Math.ceil(
-    reservation.number_of_people / PERSONS_PER_TABLE
-  );
 });
 
 export default Reservation;
