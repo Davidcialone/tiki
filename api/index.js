@@ -51,11 +51,11 @@ app.use(
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-// Log des requêtes entrantes
-app.use((req, res, next) => {
-  logger.info(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
+// // Log des requêtes entrantes
+// app.use((req, res, next) => {
+//   logger.info(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+//   next();
+// });
 
 // Route d'état du serveur
 app.get("/", (req, res) => {

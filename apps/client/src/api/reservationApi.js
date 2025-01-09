@@ -9,7 +9,10 @@ function isValidEmail(email) {
 // Validation de l'heure au format HH:MM
 function isValidTime(time) {
   const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-  return timeRegex.test(time);
+  if (!timeRegex.test(time)) {
+    throw new Error("Le format de l'heure est invalide (ex: HH:MM)");
+  }
+  return true;
 }
 
 /**
@@ -145,15 +148,17 @@ async function fetchWithErrorHandling(url, options) {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erreur API : ${response.status} - ${errorMessage}`);
+      const errorResponse = await response.json(); // Extrait le message d'erreur du JSON
+      throw new Error(
+        `Erreur API : ${response.status} - ${errorResponse.message}`
+      );
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Erreur lors de l'appel à l'API :", error);
+    console.error("Erreur lors de l’appel à l’API :", error);
     throw new Error(
-      "Une erreur s'est produite lors de l'exécution de la requête."
+      "Une erreur s’est produite lors de l’exécution de la requête."
     );
   }
 }
