@@ -1,4 +1,4 @@
-import { Users } from "../models/index.js";
+import { User } from "../models/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -15,7 +15,7 @@ export async function login(req, res) {
     }
 
     // Recherche de l'utilisateur par email
-    const user = await Users.findOne({ email });
+    const user = await User.findOne({ email });
     console.log("Utilisateur trouvé:", user); // Loggez l'utilisateur pour vérifier le résultat de la requête
 
     if (!user) {
@@ -78,7 +78,7 @@ export async function register(req, res) {
     }
 
     // Vérification si un utilisateur existe déjà avec cet email
-    const existingUser = await Users.findOne({ where: { email } });
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res
         .status(409)
@@ -94,7 +94,7 @@ export async function register(req, res) {
     }
 
     // Création de l'utilisateur
-    await Users.create({
+    await User.create({
       lastname: lastname.trim(),
       firstname: firstname.trim(),
       email: email.toLowerCase().trim(),
@@ -120,7 +120,7 @@ export async function fetchUser(req, res) {
     const { userId } = req.params; // Récupération de l'ID de l'utilisateur depuis les paramètres de la route
 
     // Recherche de l'utilisateur en fonction de l'ID
-    const user = await Users.findOne({ where: { id: userId } });
+    const user = await User.findOne({ where: { id: userId } });
 
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });

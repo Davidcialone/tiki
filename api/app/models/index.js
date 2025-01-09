@@ -1,60 +1,60 @@
-import { Users } from "./Users.js";
-import { Reservations } from "./Reservations.js";
-import { Roles } from "./Roles.js";
-import { Zones } from "./Zones.js";
-import { MenuItems } from "./MenuItems.js";
-import { Categories } from "./Categories.js";
+import { User } from "./User.js";
+import { Reservation } from "./Reservation.js";
+import { Role } from "./Role.js";
+import { Zone } from "./Zone.js";
+import { MenuItem } from "./MenuItem.js";
+import { Categorie } from "./Categorie.js";
 import { sequelize } from "./sequelizeClient.js";
 
 const models = {
-  Users,
-  Roles,
-  Reservations,
-  Zones,
-  MenuItems,
-  Categories,
+  User,
+  Role,
+  Reservation,
+  Zone,
+  MenuItem,
+  Categorie,
 };
 
 // Association Users-Roles
-Users.belongsTo(Roles, {
+User.belongsTo(Role, {
   foreignKey: "role_id",
   as: "role",
 });
 
-Roles.hasMany(Users, {
+Role.hasMany(User, {
   foreignKey: "role_id",
   as: "users",
 });
 
 // Association Users-Reservations
-Users.hasMany(Reservations, {
+User.hasMany(Reservation, {
   foreignKey: "user_id",
   as: "userReservations",
 });
 
-Reservations.belongsTo(Users, {
+Reservation.belongsTo(User, {
   foreignKey: "user_id",
   as: "user",
 });
 
 // Association Reservations-Zones
-Reservations.belongsTo(Zones, {
+Reservation.belongsTo(Zone, {
   foreignKey: "zone_id",
   as: "reservationZone",
 });
 
-Zones.hasMany(Reservations, {
+Zone.hasMany(Reservation, {
   foreignKey: "zone_id",
   as: "zoneReservations",
 });
 
 // Association Categories-MenuItems
-MenuItems.belongsTo(Categories, {
+MenuItem.belongsTo(Categorie, {
   foreignKey: "category_id",
   as: "category",
 });
 
-Categories.hasMany(MenuItems, {
+Categorie.hasMany(MenuItem, {
   foreignKey: "category_id",
   as: "categoryItems",
 });
@@ -65,4 +65,4 @@ Object.values(models).forEach((model) => {
   }
 });
 
-export { Users, Reservations, Roles, Zones, MenuItems, Categories, sequelize };
+export { User, Reservation, Role, Zone, MenuItem, Categorie, sequelize };

@@ -1,4 +1,4 @@
-import { Reservations, Users } from "../models/index.js";
+import { Reservation, User } from "../models/index.js";
 // import { sendConfirmationEmail } from "../mails/mail.js";
 
 // Génération de mot de passe aléatoire
@@ -48,11 +48,11 @@ export const createReservation = async (req, res) => {
     }
 
     // Vérifier si l'utilisateur existe
-    let user = await Users.findOne({ where: { email } });
+    let user = await User.findOne({ where: { email } });
 
     if (!user) {
       const randomPassword = generateRandomPassword();
-      user = await Users.create({
+      user = await User.create({
         email: email,
         firstname: firstName,
         lastname: lastName,
@@ -63,7 +63,7 @@ export const createReservation = async (req, res) => {
     }
 
     // Création de la réservation
-    const reservation = await Reservations.create({
+    const reservation = await Reservation.create({
       user_id: user.id,
       reservation_date,
       reservation_time,
@@ -90,10 +90,10 @@ export const createReservation = async (req, res) => {
 // Récupérer toutes les réservations
 export const getReservations = async (req, res) => {
   try {
-    const reservations = await Reservations.findAll({
+    const reservations = await Reservation.findAll({
       include: [
         {
-          model: Users,
+          model: User,
           as: "user",
           attributes: ["id", "firstname", "lastname", "email", "phone"],
         },
@@ -119,7 +119,7 @@ export const getReservationsByClientId = async (req, res) => {
   const { clientId } = req.params;
 
   try {
-    const reservations = await Reservations.findAll({
+    const reservations = await Reservation.findAll({
       where: { user_id: clientId },
       order: [
         ["reservation_date", "DESC"],
@@ -149,7 +149,7 @@ export const getReservationsByDate = async (req, res) => {
   }
 
   try {
-    const reservations = await Reservations.findAll({
+    const reservations = await Reservation.findAll({
       where: { reservation_date: date },
       attributes: [
         "id",

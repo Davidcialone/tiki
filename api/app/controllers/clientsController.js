@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { Users } from "../models/index.js";
+import { User } from "../models/index.js";
 
 // Fonction pour récupérer les clients avec un filtre
 export async function getClients(req, res) {
@@ -21,7 +21,7 @@ export async function getClients(req, res) {
     }
 
     // Recherche des clients avec ou sans condition
-    const users = await Users.findAll({
+    const users = await User.findAll({
       where: whereCondition, // Applique la condition de recherche si elle existe
     });
 
@@ -46,7 +46,7 @@ export async function getClientById(req, res) {
       return res.status(400).json({ message: "ID invalide." });
     }
 
-    const user = await Users.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
+    const user = await User.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
 
     if (!user) {
       return res.status(404).json({ message: "Client non trouvé." });
@@ -66,7 +66,7 @@ export async function getClientById(req, res) {
 export async function createClient(clientData) {
   try {
     // Création d'un nouvel utilisateur dans la base de données
-    let newUser = await Users.create(clientData);
+    let newUser = await User.create(clientData);
 
     return newUser; // Renvoie les informations du nouvel utilisateur
   } catch (error) {
@@ -83,7 +83,7 @@ export async function updateClient(clientId, clientData) {
       return res.status(400).json({ message: "ID invalide." });
     }
 
-    const user = await Users.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
+    const user = await User.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
 
     // Si l'utilisateur n'existe pas, log et retour
     if (!user) {
@@ -109,7 +109,7 @@ export async function deleteClient(clientId) {
       return res.status(400).json({ message: "ID invalide." });
     }
 
-    const user = await Users.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
+    const user = await User.findByPk(clientId); // Sequelize attend un nombre ou une chaîne
 
     // Si l'utilisateur n'existe pas, log et retour
     if (!user) {

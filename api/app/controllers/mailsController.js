@@ -1,4 +1,4 @@
-// import { Reservations, Users } from "../models/index.js";
+// import { Reservation, User } from "../models/index.js";
 // import { sendConfirmationEmail } from "../mails/mail.js"; // Importer la fonction d'envoi d'email
 
 // export async function mailsReservations(req, res) {
@@ -36,7 +36,7 @@
 //   try {
 //     const { reservationId } = req.params;
 
-//     const reservation = await Reservations.findByPk(reservationId);
+//     const reservation = await Reservation.findByPk(reservationId);
 
 //     if (!reservation) {
 //       return res.status(404).json({ message: "Réservation non trouvée." });
@@ -56,7 +56,7 @@
 //   try {
 //     const { reservationId } = req.params;
 
-//     const reservation = await Reservations.findByPk(reservationId);
+//     const reservation = await Reservation.findByPk(reservationId);
 
 //     if (!reservation) {
 //       return res.status(404).json({ message: "Réservation non trouvée." });

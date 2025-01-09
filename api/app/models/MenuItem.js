@@ -1,9 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../../db.js";
 
-export class MenuItems extends Model {}
+export class MenuItem extends Model {}
 
-MenuItems.init(
+MenuItem.init(
   {
     name: {
       type: DataTypes.STRING,
@@ -21,14 +21,14 @@ MenuItems.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "categories",
+        model: "Categorie",
         key: "id",
       },
     },
   },
   {
     sequelize,
-    tableName: "menu_items",
+    tableName: "menuItem",
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at",

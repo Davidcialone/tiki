@@ -1,11 +1,11 @@
-import { MenuItems, Categories } from "../models/index.js";
+import { MenuItem, Categorie } from "../models/index.js";
 
 export const getMenusItems = async (req, res) => {
   try {
-    const menus = await MenuItems.findAll({
+    const menus = await MenuItem.findAll({
       include: [
         {
-          model: Categories,
+          model: Categorie,
           as: "category",
         },
       ],
@@ -19,7 +19,7 @@ export const getMenusItems = async (req, res) => {
 export const createMenuItem = async (req, res) => {
   try {
     const { name, description, price, category_id } = req.body;
-    const newMenu = await MenuItems.create({
+    const newMenu = await MenuItem.create({
       name,
       description,
       price,
@@ -35,7 +35,7 @@ export const updateMenuItem = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, price, category_id } = req.body;
-    const menuitem = await MenuItems.findByPk(id);
+    const menuitem = await MenuItem.findByPk(id);
     if (!menuitem) {
       return res.status(404).json({ message: "Menu item not found" });
     }
@@ -53,7 +53,7 @@ export const updateMenuItem = async (req, res) => {
 export const deleteMenuItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const menuitem = await MenuItems.findByPk(id);
+    const menuitem = await MenuItem.findByPk(id);
     if (!menuitem) {
       return res.status(404).json({ message: "Menu item not found" });
     }

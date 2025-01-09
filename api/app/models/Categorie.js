@@ -1,9 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../../db.js";
 
-export class Categories extends Model {}
+export class Categorie extends Model {}
 
-Categories.init(
+Categorie.init(
   {
     name: {
       type: DataTypes.STRING,
@@ -12,7 +12,7 @@ Categories.init(
   },
   {
     sequelize,
-    tableName: "categories",
+    tableName: "Categorie",
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at",
