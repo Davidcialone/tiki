@@ -51,9 +51,24 @@ export async function createReservation(formData) {
     throw new Error("Le nombre de personnes doit être au moins 1");
   }
 
-  // Création de l'objet final à envoyer à l'API
+  // Calcul de places_used et end_time
+
+  const PERSONS_PER_TABLE = 2;
+  const placesUsed = Math.ceil(formData.number_of_people / PERSONS_PER_TABLE);
+
+  const reservationDateTime = `${formData.reservation_date}T${formData.reservation_time}`;
+  const reservationDate = new Date(reservationDateTime);
+  reservationDate.setMinutes(reservationDate.getMinutes() + 90);
+
+  const endHours = reservationDate.getHours().toString().padStart(2, "0");
+  const endMinutes = reservationDate.getMinutes().toString().padStart(2, "0");
+  const endTime = `${endHours}:${endMinutes}`;
+
+  // Construction de l'objet final à envoyer à l'API
   const reservationData = {
     ...formData,
+    places_used: placesUsed,
+    end_time: endTime,
     reservation_time: formData.reservation_time, // Ne pas ajouter ":00"
   };
 
