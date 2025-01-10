@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
 import PropTypes from "prop-types";
 
+
 const lunchTimes = [
   "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30",
 ];
@@ -75,6 +76,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
     }
 
     onSubmit(finalData);
+    onClose();
   };
 
   if (!isOpen) return null;

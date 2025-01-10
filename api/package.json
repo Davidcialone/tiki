@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev:api": "dotenv -e .env.local -- node index.js",
-    "start:api": "dotenv -e .env.production -- node index.js"
+    "start:api": "node index.js"
   },
   "keywords": [],
   "author": "",

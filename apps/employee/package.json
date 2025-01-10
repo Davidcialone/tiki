@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "dev:client": "vite --mode development",
-    "build:client": "vite --mode production"
+    "dev:employee": "vite --mode development",
+    "start:employee": "vite"
   },
   "dependencies": {
     "@material-tailwind/react": "^2.1.10",

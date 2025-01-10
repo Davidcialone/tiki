@@ -5,10 +5,11 @@ import sequelize from "./db.js";
 import { router as apiRouter } from "./app/routers/index.js";
 import dotenv from "dotenv";
 
-// Charger le fichier .env approprié en fonction de l'environnement (production ou développement)
-const envFile =
-  process.env.NODE_ENV === "production" ? ".env.production" : ".env";
-dotenv.config({ path: envFile });
+// const envFile =
+//   process.env.NODE_ENV === "production"
+//     ? "/app/api/.env.production"
+//     : "/app/api/.env";
+// dotenv.config({ path: envFile });
 
 // Vérification des variables d'environnement nécessaires
 const requiredEnvVars = [
