@@ -163,13 +163,18 @@ async function fetchWithErrorHandling(url, options) {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      const errorResponse = await response.json(); // Extrait le message d'erreur du JSON
+      const errorResponse = await response.json(); // Lire le message d'erreur si possible
       throw new Error(
-        `Erreur API : ${response.status} - ${errorResponse.message}`
+        `Erreur API : ${response.status} - ${
+          errorResponse.message || "Erreur inconnue"
+        }`
       );
     }
 
-    return await response.json();
+    // Lire et retourner directement le JSON de la réponse
+    const jsonResponse = await response.json();
+    console.log("Données JSON reçues :", jsonResponse);
+    return jsonResponse; // Retourne les données parsées
   } catch (error) {
     console.error("Erreur lors de l’appel à l’API :", error);
     throw new Error(

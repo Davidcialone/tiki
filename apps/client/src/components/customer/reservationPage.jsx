@@ -19,6 +19,9 @@ export function ReservationPage() {
 
   const openZones = Object.keys(zonesOpened).filter((zone) => zonesOpened[zone]);
 
+
+
+
   // Utilitaire : validation et formatage de l'heure
   const formatReservationTime = (time) => {
     if (time.includes(":")) {
@@ -35,7 +38,7 @@ export function ReservationPage() {
       const formattedTime = formatReservationTime(formData.reservation_time);
   
       // Validation stricte
-      if (!/^\d{2}:\d{2}$/.test(formattedTime)) { 
+      if (!/^\d{2}:\d{2}$/.test(formattedTime)) {
         throw new Error("Le format de l'heure est invalide (ex : HH:MM)");
       }
   
@@ -44,24 +47,30 @@ export function ReservationPage() {
         reservation_time: formattedTime,
       };
   
-      const response = await createReservation(reservationData);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erreur lors de la création de la réservation.");
-      }
-
-      const reservation = await response.json();
-      setReservationDetails(reservation);
-
-      // Envoi de l'email après la création de la réservation
-      // await mailsReservations({ params: { reservationId: reservation.id } });
-
+      // Appel à createReservation
+      const reservationResponse = await createReservation(reservationData);
+  
+      // Compléter les données manquantes avec formData
+      const reservationDetailsComplete = {
+        ...reservationResponse,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        places_used: reservationData.places_used,
+        end_time: reservationData.end_time,
+      };
+  
+      console.log("Détails de la réservation complétés :", reservationDetailsComplete);
+      setReservationDetails(reservationDetailsComplete);
+  
     } catch (error) {
       console.error("Erreur lors de la soumission de la réservation:", error);
       setErrorMessage(error.message);
     }
   };
-
+  
+  
   return (
     <>
       <div className="mt-20"></div>
@@ -82,12 +91,13 @@ export function ReservationPage() {
         ) : (
           <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
             <h2>Récapitulatif de la réservation</h2>
-            <p><strong>Nom : </strong>{reservationDetails.lastName} {reservationDetails.firstName}</p>
-            <p><strong>Nombre de personnes : </strong>{reservationDetails.number_of_people}</p>
-            <p><strong>Téléphone : </strong>{reservationDetails.phone}</p>
-            <p><strong>Email : </strong>{reservationDetails.email}</p>
-            <p><strong>Date : </strong>{new Date(reservationDetails.reservation_date).toLocaleDateString()}</p>
-            <p><strong>Heure : </strong>{reservationDetails.reservation_time}</p>
+            <p><strong>Nom : </strong>{reservationDetails.lastName || "Non spécifié"} {reservationDetails.firstName || "Non spécifié"}</p>
+            <p><strong>Nombre de personnes : </strong>{reservationDetails.number_of_people || "Non spécifié"}</p>
+            <p><strong>Téléphone : </strong>{reservationDetails.phone || "Non spécifié"}</p>
+            <p><strong>Email : </strong>{reservationDetails.email || "Non spécifié"}</p>
+            <p><strong>Date : </strong>{reservationDetails.reservation_date ? new Date(reservationDetails.reservation_date).toLocaleDateString() : "Non spécifié"}</p>
+            <p><strong>Heure : </strong>{reservationDetails.reservation_time || "Non spécifié"}</p>
+
           </div>
         )}
 
