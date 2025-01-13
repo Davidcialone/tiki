@@ -127,11 +127,12 @@ export async function deleteClient(clientId) {
   }
 }
 
-// Fonction pour récupérer les réservations d'un client
-export async function getClientReservations(clientId) {
+export async function getClientReservations(req, res) {
   try {
+    const { clientId } = req.params;
+
     if (!clientId || isNaN(clientId)) {
-      return { status: 400, data: { message: "ID invalide." } };
+      return res.status(400).json({ message: "ID invalide." });
     }
 
     const user = await User.findByPk(clientId, {
@@ -142,10 +143,9 @@ export async function getClientReservations(clientId) {
     });
 
     if (!user) {
-      return { status: 404, data: { message: "Client non trouvé." } };
+      return res.status(404).json({ message: "Client non trouvé." });
     }
 
-    // Simplifier les réservations avant de les renvoyer
     const reservations = user.userReservations.map((reservation) => ({
       id: reservation.id,
       user_id: reservation.user_id,
@@ -158,18 +158,12 @@ export async function getClientReservations(clientId) {
       updated_at: reservation.updated_at,
     }));
 
-    return { status: 200, data: reservations }; // Retourner les données formatées avec un code de statut
+    return res.status(200).json({ data: reservations });
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des réservations du client :",
-      error.message
-    );
-    return {
-      status: 500,
-      data: {
-        message: "Erreur interne du serveur.",
-        error: error.message,
-      },
-    };
+    console.error("Erreur:", error);
+    return res.status(500).json({
+      message: "Erreur interne du serveur.",
+      error: error.message,
+    });
   }
 }

@@ -1,5 +1,4 @@
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-// || "http://localhost:5000";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 // clientApi.js
 export async function fetchClientDetails(clientId) {
@@ -29,22 +28,30 @@ export async function searchInClientsDB(searchQuery) {
 }
 
 // clientApi.js
-
-export async function fetchClientReservations(clientId) {
+export async function fetchClientReservations(id) {
   try {
-    // Utilisation de clientId pour récupérer les réservations du client
-    const response = await fetch(
-      `${apiBaseUrl}/api/reservations?user_id=${clientId}`
-    );
+    const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`; // URL complète pour la requête GET
+    const options = {
+      method: "GET", // Méthode GET
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des réservations.");
+      const errorData = await response.json();
+      throw new Error(
+        errorData.message ||
+          "Erreur lors de la récupération des détails de la réservation."
+      );
     }
 
-    // Retourne les réservations pour le client
     const data = await response.json();
-    return data;
+    return data || {};
   } catch (err) {
+    console.error("Erreur dans fetchClientReservations:", err);
     throw new Error(err.message);
   }
 }

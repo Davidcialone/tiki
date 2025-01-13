@@ -12,45 +12,49 @@ export function CustomerFile() {
   useEffect(() => {
     console.log("CustomerFile component mounted.");
     console.log("Received clientId from URL:", clientId);
-
+  
     const loadClientData = async () => {
       try {
         setLoading(true);
+        setError(null); // Réinitialiser les erreurs précédentes
         console.log("Fetching client details and reservations...");
-
-        // Récupérer les détails du client et ses réservations en parallèle
-        const [client, clientReservations] = await Promise.all([
+  
+        const [clientResponse, reservationsResponse] = await Promise.all([
           fetchClientDetails(clientId),
           fetchClientReservations(clientId),
         ]);
-
-        console.log("Client details fetched:", client);
-        console.log("Client reservations fetched:", clientReservations);
-
-        if (client) {
-          setClientDetails(client);
+  
+        console.log("Client details fetched:", clientResponse);
+        console.log("Client reservations fetched:", reservationsResponse);
+  
+        // Vérification plus précise des réponses
+        if (clientResponse && Object.keys(clientResponse).length > 0) {
+          setClientDetails(clientResponse);
         } else {
           throw new Error("Détails du client non trouvés");
         }
-
-        if (clientReservations) {
-          setReservations(clientReservations);
+  
+        // Vérification que reservationsResponse est un tableau
+        if (Array.isArray(reservationsResponse)) {
+          setReservations(reservationsResponse);
         } else {
-          throw new Error("Aucune réservation trouvée");
+          setReservations([]); // Tableau vide si pas de réservations
+          console.log("Aucune réservation trouvée pour ce client");
         }
-
+  
       } catch (err) {
-        console.error("Error during data fetching:", err.message);
+        console.error("Error during data fetching:", err);
         setError(err.message || "Une erreur est survenue lors de la récupération des données.");
       } finally {
         console.log("Finished fetching client data.");
         setLoading(false);
       }
     };
-
-    loadClientData();
+  
+    if (clientId) { // Vérification que clientId existe
+      loadClientData();
+    }
   }, [clientId]);
-
   if (loading) {
     console.log("Loading state active, showing loader...");
     return (
