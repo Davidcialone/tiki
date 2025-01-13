@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { User } from "../models/index.js";
+import { User, Reservation } from "../models/index.js";
 
 // Fonction pour récupérer les clients avec un filtre
 export async function getClients(req, res) {
@@ -124,5 +124,52 @@ export async function deleteClient(clientId) {
   } catch (error) {
     console.error("Erreur lors de la suppression du client:", error.message);
     throw error; // Propagation de l'erreur
+  }
+}
+
+// Fonction pour récupérer les réservations d'un client
+export async function getClientReservations(clientId) {
+  try {
+    if (!clientId || isNaN(clientId)) {
+      return { status: 400, data: { message: "ID invalide." } };
+    }
+
+    const user = await User.findByPk(clientId, {
+      include: {
+        model: Reservation,
+        as: "userReservations",
+      },
+    });
+
+    if (!user) {
+      return { status: 404, data: { message: "Client non trouvé." } };
+    }
+
+    // Simplifier les réservations avant de les renvoyer
+    const reservations = user.userReservations.map((reservation) => ({
+      id: reservation.id,
+      user_id: reservation.user_id,
+      reservation_date: reservation.reservation_date,
+      reservation_time: reservation.reservation_time,
+      number_of_people: reservation.number_of_people,
+      status: reservation.status,
+      note: reservation.note,
+      created_at: reservation.created_at,
+      updated_at: reservation.updated_at,
+    }));
+
+    return { status: 200, data: reservations }; // Retourner les données formatées avec un code de statut
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des réservations du client :",
+      error.message
+    );
+    return {
+      status: 500,
+      data: {
+        message: "Erreur interne du serveur.",
+        error: error.message,
+      },
+    };
   }
 }

@@ -55,6 +55,21 @@ export const ReservationsViews = () => {
     }, 0);
   };
 
+  const handleArrivalToggle = (reservationId) => {
+    setReservations((prev) =>
+      prev.map((res) =>
+        res.id === reservationId ? { ...res, arrived: !res.arrived } : res
+      )
+    );
+  };
+
+  const handleDeleteReservation = (reservationId) => {
+    if (window.confirm("Voulez-vous vraiment supprimer cette réservation ?")) {
+      setReservations((prev) => prev.filter((res) => res.id !== reservationId));
+      // Ajoutez ici l'appel API pour supprimer la réservation côté serveur.
+    }
+  };
+
   const handleDaySelect = (day) => {
     setSelectedDay(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day));
   };
@@ -103,6 +118,21 @@ export const ReservationsViews = () => {
     setTouchStart(null);
     setTouchEnd(null);
   };
+
+// Fonction pour déterminer la couleur en fonction du nombre de personnes
+const changeColorOver = (numberOfPeople) => {
+  const baseColors = {
+    small: 'bg-green-100 dark:bg-green-300',  // 1-2 personnes
+    medium: 'bg-yellow-100 dark:bg-yellow-300', // 3-4 personnes
+    large: 'bg-orange-100 dark:bg-orange-300', // 5-6 personnes
+    xlarge: 'bg-red-100 dark:bg-red-300'      // 7+ personnes
+  };
+
+  if (numberOfPeople <= 2) return baseColors.small;
+  if (numberOfPeople <= 4) return baseColors.medium;
+  if (numberOfPeople <= 6) return baseColors.large;
+  return baseColors.xlarge;
+};
 
   return (
     <div>
@@ -157,35 +187,58 @@ export const ReservationsViews = () => {
         <div className="px-4 py-2">
           {getReservationsForDay(selectedDay.getDate()).length > 0 ? (
             <div className="space-y-2">
-              <div className="grid grid-cols-4 gap-4 font-semibold text-gray-600 py-2 border-b">
-                <span className="text-sm text-center">Heure</span>
-                <span className="text-sm text-center">Nom</span>
-                <span className="text-sm text-center">Clients</span>
-                <span className="text-sm text-center">Téléphone</span>
+              <div className="flex flex-wrap items-center justify-between py-2 border-b font-semibold text-gray-600">
+                <span className="text-sm w-1/5 text-center">Heure</span>
+                <span className="text-sm w-1/5 text-center">Nom</span>
+                <span className="text-sm w-1/5 text-center">Clients</span>
+                <span className="text-sm w-1/5 text-center">Téléphone</span>
+                <span className="text-sm w-1/5 text-center">Actions</span>
               </div>
               {getReservationsForDay(selectedDay.getDate()).map((reservation) => (
-                <div
-                  key={reservation.id}
-                  className="grid grid-cols-4 gap-4 py-2 border-b last:border-0 items-center"
-                >
-                  <div className="flex items-center justify-center">
+             
+             <div
+             key={reservation.id}
+             className={`
+               flex flex-wrap items-center py-2 border-b last:border-0
+               ${changeColorOver(reservation.number_of_people)}
+               ${reservation.arrived ? 'brightness-75' : 'brightness-100'}
+             `}
+           >
+                  <div className="w-1/5 flex items-center justify-center">
                     <span className="text-sm text-gray-600">
                       <Clock className="w-4 h-4 inline mr-1" />
                       {reservation.reservation_time}
                     </span>
                   </div>
-                  <div className="flex flex-col items-center">
+                  <div className="w-1/5 flex  items-center justify-center">
                     <span className="text-sm text-black">{reservation.user.lastname}</span>
-                    <span className="text-sm text-black">{reservation.user.firstname}</span>
+                    <span className="text-sm text-black ml-2">{reservation.user.firstname}</span>
                   </div>
-                  <div className="flex items-center justify-center">
-                    <span className="text-sm text-gray-600">
-                      <Users className="w-4 h-4 inline mr-1" />
-                      {reservation.number_of_people}
-                    </span>
+                  <div className="w-1/5 flex items-center justify-center">
+                  <span className="text-sm text-gray-600">
+                    <Users className="w-4 h-4 inline mr-1" />
+                    {reservation.number_of_people}
+                  </span>
+
                   </div>
-                  <div className="flex flex-col items-center justify-end">
+                  <div className="w-1/5 flex  items-center justify-center">
                     <span className="text-sm text-gray-600">{reservation.user.phone}</span>
+                  </div>
+                  <div className="w-1/5 flex justify-end space-x-2 items-center">
+                    <button
+                      className={`p-1 rounded-full ${reservation.arrived ? 'bg-green-500' : 'bg-gray-300'}`}
+                      onClick={() => handleArrivalToggle(reservation.id)}
+                      title="Marquer comme arrivé"
+                    >
+                      ✓
+                    </button>
+                    <button
+                      className="p-1 bg-red-800 text-white rounded-full"
+                      onClick={() => handleDeleteReservation(reservation.id)}
+                      title="Supprimer la réservation"
+                    >
+                      🗑️
+                    </button>
                   </div>
                 </div>
               ))}

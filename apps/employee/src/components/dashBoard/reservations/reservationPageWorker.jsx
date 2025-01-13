@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ReservationModal } from "../../modales/reservationModal";
+import { createReservation } from "../../../api/reservationApi";
 
 export function ReservationPageWorker() {
   const [zonesOpened, setZonesOpened] = useState({
@@ -13,15 +14,57 @@ export function ReservationPageWorker() {
   const [availableDates, setAvailableDates] = useState(["2024-12-20", "2024-12-21"]);
   const [availableTimes, setAvailableTimes] = useState(["19:00", "20:00"]);
   const [reservationDetails, setReservationDetails] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const openZones = Object.keys(zonesOpened).filter((zone) => zonesOpened[zone]);
 
-  const handleModalSubmit = (formData) => {
-    console.log("Données de réservation :", formData);
-    setReservationDetails(formData);
-    alert("Réservation effectuée !");
-    setIsModalOpen(false);
+    // Utilitaire : validation et formatage de l'heure
+    const formatReservationTime = (time) => {
+      if (time.includes(":")) {
+        // Si l'heure inclut les secondes, ne garder que les minutes
+        return time.split(":").slice(0, 2).join(":");
+      }
+      return `${time}:00`;
+    };
+
+  const handleModalSubmit = async (formData) => {
+    try {
+      // Formatage de l'heure avant la soumission
+      const formattedTime = formatReservationTime(formData.reservation_time);
+  
+      // Validation stricte
+      if (!/^\d{2}:\d{2}$/.test(formattedTime)) {
+        throw new Error("Le format de l'heure est invalide (ex : HH:MM)");
+      }
+  
+      const reservationData = {
+        ...formData,
+        reservation_time: formattedTime,
+      };
+  
+      // Appel à createReservation
+      const reservationResponse = await createReservation(reservationData);
+  
+      // Compléter les données manquantes avec formData
+      const reservationDetailsComplete = {
+        ...reservationResponse,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        places_used: reservationData.places_used,
+        end_time: reservationData.end_time,
+      };
+  
+      console.log("Détails de la réservation complétés :", reservationDetailsComplete);
+      setReservationDetails(reservationDetailsComplete);
+  
+    } catch (error) {
+      console.error("Erreur lors de la soumission de la réservation:", error);
+      setErrorMessage(error.message);
+    }
   };
+  
 
   return (
     <>

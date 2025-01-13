@@ -10,22 +10,40 @@ export function CustomerFile() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log("CustomerFile component mounted.");
+    console.log("Received clientId from URL:", clientId);
+
     const loadClientData = async () => {
       try {
         setLoading(true);
+        console.log("Fetching client details and reservations...");
+
         // Récupérer les détails du client et ses réservations en parallèle
         const [client, clientReservations] = await Promise.all([
           fetchClientDetails(clientId),
           fetchClientReservations(clientId),
         ]);
-        console.log("Client détails :", client);
-        console.log("Réservations :", clientReservations);
 
-        setClientDetails(client);
-        setReservations(clientReservations);
+        console.log("Client details fetched:", client);
+        console.log("Client reservations fetched:", clientReservations);
+
+        if (client) {
+          setClientDetails(client);
+        } else {
+          throw new Error("Détails du client non trouvés");
+        }
+
+        if (clientReservations) {
+          setReservations(clientReservations);
+        } else {
+          throw new Error("Aucune réservation trouvée");
+        }
+
       } catch (err) {
-        setError("Une erreur est survenue lors de la récupération des données.");
+        console.error("Error during data fetching:", err.message);
+        setError(err.message || "Une erreur est survenue lors de la récupération des données.");
       } finally {
+        console.log("Finished fetching client data.");
         setLoading(false);
       }
     };
@@ -33,20 +51,25 @@ export function CustomerFile() {
     loadClientData();
   }, [clientId]);
 
-  if (loading)
+  if (loading) {
+    console.log("Loading state active, showing loader...");
     return (
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-6 p-6">
         <p className="text-gray-500 text-lg text-center">Chargement des données client...</p>
       </div>
     );
-  
-  if (error)
+  }
+
+  if (error) {
+    console.error("Error state active, showing error message:", error);
     return (
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-6 p-6">
         <p className="text-red-500 text-lg text-center">{error}</p>
       </div>
     );
+  }
 
+  console.log("Rendering client details and reservations...");
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-6 p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Fiche du client</h1>

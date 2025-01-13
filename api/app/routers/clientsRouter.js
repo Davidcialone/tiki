@@ -16,3 +16,6 @@ router.put("/:clientId", clientsController.updateClient);
 
 // DELETE /clients/clientId
 router.delete("/:clientId", clientsController.deleteClient);
+
+// GET /clients/clientId/reservations
+router.get("/:clientId/reservations", clientsController.getClientReservations);

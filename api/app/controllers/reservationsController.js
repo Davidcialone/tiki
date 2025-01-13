@@ -119,6 +119,11 @@ export const getReservationsByClientId = async (req, res) => {
   const { clientId } = req.params;
 
   try {
+    // Validation de l'ID
+    if (!clientId || isNaN(clientId)) {
+      return res.status(400).json({ message: "ID du client invalide." });
+    }
+
     const reservations = await Reservation.findAll({
       where: { user_id: clientId },
       order: [
@@ -136,7 +141,9 @@ export const getReservationsByClientId = async (req, res) => {
     }
   } catch (error) {
     console.error("Erreur lors de la récupération des réservations :", error);
-    res.status(500).json({ message: "Erreur interne du serveur." });
+    res.status(500).json({
+      message: "Erreur interne du serveur. Veuillez réessayer plus tard.",
+    });
   }
 };
 

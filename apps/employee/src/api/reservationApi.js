@@ -9,7 +9,10 @@ function isValidEmail(email) {
 // Validation de l'heure au format HH:MM
 function isValidTime(time) {
   const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-  return timeRegex.test(time);
+  if (!timeRegex.test(time)) {
+    throw new Error("Le format de l'heure est invalide (ex: HH:MM)");
+  }
+  return true;
 }
 
 /**
@@ -48,9 +51,24 @@ export async function createReservation(formData) {
     throw new Error("Le nombre de personnes doit être au moins 1");
   }
 
-  // Création de l'objet final à envoyer à l'API
+  // Calcul de places_used et end_time
+
+  const PERSONS_PER_TABLE = 2;
+  const placesUsed = Math.ceil(formData.number_of_people / PERSONS_PER_TABLE);
+
+  const reservationDateTime = `${formData.reservation_date}T${formData.reservation_time}`;
+  const reservationDate = new Date(reservationDateTime);
+  reservationDate.setMinutes(reservationDate.getMinutes() + 90);
+
+  const endHours = reservationDate.getHours().toString().padStart(2, "0");
+  const endMinutes = reservationDate.getMinutes().toString().padStart(2, "0");
+  const endTime = `${endHours}:${endMinutes}`;
+
+  // Construction de l'objet final à envoyer à l'API
   const reservationData = {
     ...formData,
+    places_used: placesUsed,
+    end_time: endTime,
     reservation_time: formData.reservation_time, // Ne pas ajouter ":00"
   };
 
@@ -145,15 +163,22 @@ async function fetchWithErrorHandling(url, options) {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erreur API : ${response.status} - ${errorMessage}`);
+      const errorResponse = await response.json(); // Lire le message d'erreur si possible
+      throw new Error(
+        `Erreur API : ${response.status} - ${
+          errorResponse.message || "Erreur inconnue"
+        }`
+      );
     }
 
-    return await response.json();
+    // Lire et retourner directement le JSON de la réponse
+    const jsonResponse = await response.json();
+    console.log("Données JSON reçues :", jsonResponse);
+    return jsonResponse; // Retourne les données parsées
   } catch (error) {
-    console.error("Erreur lors de l'appel à l'API :", error);
+    console.error("Erreur lors de l’appel à l’API :", error);
     throw new Error(
-      "Une erreur s'est produite lors de l'exécution de la requête."
+      "Une erreur s’est produite lors de l’exécution de la requête."
     );
   }
 }
