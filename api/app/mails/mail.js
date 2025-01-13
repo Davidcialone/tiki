@@ -1,71 +1,106 @@
 import nodemailer from "nodemailer";
+import { google } from "googleapis";
 import dotenv from "dotenv";
 dotenv.config();
 
-let transporter = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: process.env.EMAIL_ADDRESS, // Remplacez par votre adresse email
-    pass: process.env.GMAIL_PASS, // Remplacez par votre mot de passe ou token OAuth2
-  },
-  tls: {
-    rejectUnauthorized: false, // Ne pas vérifier les certificats SSL
-  },
+const OAuth2 = google.auth.OAuth2;
+
+// Création du client OAuth2
+const oauth2Client = new OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  "https://developers.google.com/oauthplayground"
+);
+
+oauth2Client.setCredentials({
+  refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
 });
 
-// Test de la configuration
-transporter.verify(function (error, success) {
-  if (error) {
-    console.log("Erreur de configuration Nodemailer :", error);
-  } else {
-    console.log("Serveur prêt à envoyer des e-mails");
+// Fonction pour créer le transporteur avec OAuth2
+const createTransporter = async () => {
+  try {
+    const accessToken = await new Promise((resolve, reject) => {
+      oauth2Client.getAccessToken((err, token) => {
+        if (err) {
+          reject(`Erreur d'accès token: ${err}`);
+        }
+        resolve(token);
+      });
+    });
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        type: "OAuth2",
+        user: process.env.EMAIL_ADDRESS,
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+    });
+
+    return transporter;
+  } catch (error) {
+    console.log("Erreur création transporteur :", error);
+    throw error;
   }
-});
+};
 
 export async function sendConfirmationEmail(reservation) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER, // Adresse email de l'envoyeur
-    to: reservation.user.email, // Adresse email du destinataire
-    subject: "Confirmation de votre réservation",
-    html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
-            <h2 style="color: #333;">Confirmation de votre réservation</h2>
-            <p>Bonjour ${reservation.user.firstName} ${
-      reservation.user.lastName
-    },</p>
-            <p>Votre réservation a été enregistrée avec succès.</p>
-            <p><strong>Détails de la réservation :</strong></p>
-            <ul style="list-style-type: none; padding-left: 0;">
-              <li><strong>Nombre de personnes :</strong> ${
-                reservation.number_of_people || "Non spécifié"
-              }</li>
-              <li><strong>Date :</strong> ${
-                reservation.reservation_date
-                  ? new Date(reservation.reservation_date).toLocaleDateString()
-                  : "Non spécifié"
-              }</li>
-              <li><strong>Heure :</strong> ${
-                reservation.reservation_time || "Non spécifié"
-              }</li>
-              <li><strong>Téléphone :</strong> ${
-                reservation.phone || "Non spécifié"
-              }</li>
-            </ul>
-            <p>Merci de votre confiance.</p>
-            <p>Cordialement,</p>
-            <p>Votre équipe</p>
-          </div>
-        `,
-  };
-
   try {
-    await transporter.sendMail(mailOptions); // Vérifiez que le transporteur est correctement configuré
+    // Créer le transporteur
+    const transporter = await createTransporter();
+
+    // Tester la configuration
+    await transporter.verify();
+
+    const mailOptions = {
+      from: process.env.EMAIL_ADDRESS, // Changé EMAIL_USER en EMAIL_ADDRESS pour cohérence
+      to: reservation.user.email,
+      subject: "Confirmation de votre réservation",
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
+          <h2 style="color: #333;">Confirmation de votre réservation</h2>
+          <p>Bonjour ${reservation.user.firstName} ${
+        reservation.user.lastName
+      },</p>
+          <p>Votre réservation a été enregistrée avec succès.</p>
+          <p><strong>Détails de la réservation :</strong></p>
+          <ul style="list-style-type: none; padding-left: 0;">
+            <li><strong>Nombre de personnes :</strong> ${
+              reservation.number_of_people || "Non spécifié"
+            }</li>
+            <li><strong>Date :</strong> ${
+              reservation.reservation_date
+                ? new Date(reservation.reservation_date).toLocaleDateString()
+                : "Non spécifié"
+            }</li>
+            <li><strong>Heure :</strong> ${
+              reservation.reservation_time || "Non spécifié"
+            }</li>
+            <li><strong>Téléphone :</strong> ${
+              reservation.phone || "Non spécifié"
+            }</li>
+          </ul>
+          <p>Merci de votre confiance.</p>
+          <p>Cordialement,</p>
+          <p>Votre équipe</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
     console.log("E-mail de confirmation envoyé avec succès");
   } catch (error) {
     console.error(
       "Erreur lors de l'envoi de l'e-mail de confirmation :",
       error
     );
-    throw error; // Propager l'erreur pour la gérer au niveau supérieur
+    throw error;
   }
 }
+
+export default createTransporter;

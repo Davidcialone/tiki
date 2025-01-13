@@ -61,14 +61,10 @@ export function ReservationPage() {
         end_time: reservationData.end_time,
       };
   
-      console.log("Détails de la réservation complétés :", reservationDetailsComplete);
+      await sendReservationMail(reservationDetailsComplete.id);
       setReservationDetails(reservationDetailsComplete);
-
-       // Envoi de la confirmation par email
-       await sendReservationMail(reservationDetailsComplete.id);
-  
     } catch (error) {
-      console.error("Erreur lors de la soumission de la réservation:", error);
+          console.error("Erreur lors de la soumission de la réservation:", error);
       setErrorMessage(error.message);
     }
   };

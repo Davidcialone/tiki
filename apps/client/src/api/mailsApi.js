@@ -4,7 +4,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 export async function sendReservationMail(reservationId) {
   try {
     console.log("reservationId:", reservationId);
-    const response = await fetch(`${apiBaseUrl}/mails/${reservationId}`, {
+    const response = await fetch(`${apiBaseUrl}/api/mails/${reservationId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,11 @@ export async function confirmReservation(reservationId) {
     );
 
     if (!response.ok) {
-      throw new Error("Erreur lors de la confirmation de la réservation.");
+      if (response.status === 404) {
+        throw new Error("Mail not found for this reservation ID.");
+      } else {
+        throw new Error("Erreur lors de l’envoi de l’email de confirmation.");
+      }
     }
 
     const data = await response.json();
