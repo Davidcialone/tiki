@@ -3,18 +3,17 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export async function sendReservationMail(reservationId) {
   try {
-    const response = await fetch(
-      `${apiBaseUrl}/mails/${reservationId}`, // Remarquez que j'ai enlevé `/api/reservations/mail/`
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    console.log("reservationId:", reservationId);
+    const response = await fetch(`${apiBaseUrl}/mails/${reservationId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
-      throw new Error("Erreur lors de l'envoi de l'email de confirmation.");
+      console.error("Réponse de l'API :", response.status, response.statusText);
+      throw new Error("Erreur lors de l’envoi de l’email de confirmation.");
     }
 
     const data = await response.json();
@@ -23,7 +22,7 @@ export async function sendReservationMail(reservationId) {
     return data;
   } catch (error) {
     console.error("Erreur :", error.message);
-    throw error;
+    throw error; // Propager l'erreur pour que le caller puisse la traiter
   }
 }
 
