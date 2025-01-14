@@ -1,44 +1,17 @@
 import nodemailer from "nodemailer";
-import { google } from "googleapis";
 import dotenv from "dotenv";
 dotenv.config();
 
-const OAuth2 = google.auth.OAuth2;
-
-// Création du client OAuth2
-const oauth2Client = new OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  "https://developers.google.com/oauthplayground"
-);
-
-oauth2Client.setCredentials({
-  refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-});
-
-// Fonction pour créer le transporteur avec OAuth2
 const createTransporter = async () => {
   try {
-    const accessToken = await new Promise((resolve, reject) => {
-      oauth2Client.getAccessToken((err, token) => {
-        if (err) {
-          reject(`Erreur d'accès token: ${err}`);
-        }
-        resolve(token);
-      });
-    });
-
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+    let transporter = nodemailer.createTransport({
+      service: "Gmail",
       auth: {
-        type: "OAuth2",
-        user: process.env.EMAIL_ADDRESS,
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-        accessToken: accessToken,
+        user: process.env.EMAIL_ADDRESS, // Remplacez par votre adresse email
+        pass: process.env.GMAIL_PASS, // Remplacez par votre mot de passe ou token OAuth2
+      },
+      tls: {
+        rejectUnauthorized: false, // Ne pas vérifier les certificats SSL
       },
     });
 

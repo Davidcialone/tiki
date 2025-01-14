@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Clock, Users, Table } from 'lucide-react';
-import { getReservations } from "../../../api/reservationApi";
+import { ChevronLeft, ChevronRight, Clock, Users, Table, Edit } from 'lucide-react';
+import { getReservations, updateReservation, deleteReservation } from "../../../api/reservationApi";
+import { ReservationModal } from "../../modales/reservationModal";
 
 export const ReservationsViews = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [reservations, setReservations] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+const [selectedReservation, setSelectedReservation] = useState(null);
+
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -66,9 +70,52 @@ export const ReservationsViews = () => {
   const handleDeleteReservation = (reservationId) => {
     if (window.confirm("Voulez-vous vraiment supprimer cette réservation ?")) {
       setReservations((prev) => prev.filter((res) => res.id !== reservationId));
-      // Ajoutez ici l'appel API pour supprimer la réservation côté serveur.
+      try{
+        if (reservationId) {
+          deleteReservation(reservationId);
+        }
+      }
+      catch (error) {
+        console.error("Erreur lors de la suppression de la réservation:", error);
+      }
     }
   };
+
+  const handleUpdateReservation = async (reservationId, updatedFormData) => {
+    const updatedReservation = reservations.find(res => res.id === reservationId);
+  
+    if (!updatedReservation) {
+      console.error("Réservation introuvable avec l'ID:", reservationId);
+      return;
+    }
+  
+    // Créez un objet contenant les nouvelles données
+    const updatedData = {
+      ...updatedReservation,
+      number_of_people: updatedFormData.number_of_people || updatedReservation.number_of_people,
+      reservation_time: updatedFormData.reservation_time || updatedReservation.reservation_time,
+      phone: updatedFormData.phone || updatedReservation.user.phone
+      // Ajoutez ici d'autres champs de votre modal si nécessaire
+    };
+  
+    // Appel API pour mettre à jour la réservation
+    try {
+      const updatedResponse = await updateReservation(reservationId, updatedData);
+      
+      // Remplace les réservations dans l'état avec les données mises à jour
+      setReservations((prev) =>
+        prev.map((res) => (res.id === reservationId ? updatedResponse : res))
+      );
+  
+      // Ferme la modal après la mise à jour
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la réservation:", error);
+      // Gérez l'affichage des erreurs ici, si nécessaire
+    }
+  };
+  
+  
 
   const handleDaySelect = (day) => {
     setSelectedDay(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day));
@@ -119,23 +166,30 @@ export const ReservationsViews = () => {
     setTouchEnd(null);
   };
 
-// Fonction pour déterminer la couleur en fonction du nombre de personnes
-const changeColorOver = (numberOfPeople) => {
-  const baseColors = {
-    small: 'bg-green-100 dark:bg-green-300',  // 1-2 personnes
-    medium: 'bg-yellow-100 dark:bg-yellow-300', // 3-4 personnes
-    large: 'bg-orange-100 dark:bg-orange-300', // 5-6 personnes
-    xlarge: 'bg-red-100 dark:bg-red-300'      // 7+ personnes
-  };
+  // Fonction pour déterminer la couleur en fonction du nombre de personnes
+  const changeColorOver = (numberOfPeople) => {
+    const baseColors = {
+      small: 'bg-green-100 dark:bg-green-300',  // 1-2 personnes
+      medium: 'bg-yellow-100 dark:bg-yellow-300', // 3-4 personnes
+      large: 'bg-orange-100 dark:bg-orange-300', // 5-6 personnes
+      xlarge: 'bg-red-100 dark:bg-red-300'      // 7+ personnes
+    };
 
-  if (numberOfPeople <= 2) return baseColors.small;
-  if (numberOfPeople <= 4) return baseColors.medium;
-  if (numberOfPeople <= 6) return baseColors.large;
-  return baseColors.xlarge;
-};
+    if (numberOfPeople <= 2) return baseColors.small;
+    if (numberOfPeople <= 4) return baseColors.medium;
+    if (numberOfPeople <= 6) return baseColors.large;
+    return baseColors.xlarge;
+  };
 
   return (
     <div>
+          {/* Modal ReservationModal */}
+    {isModalOpen && (
+      <ReservationModal
+        reservation={selectedReservation}
+        onClose={() => setIsModalOpen(false)}
+      />
+    )}
       <div className="mt-16"></div>
       <div className="w-full mx-auto bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 py-2 border-b bg-gray-50 text-black">
@@ -195,15 +249,14 @@ const changeColorOver = (numberOfPeople) => {
                 <span className="text-sm w-1/5 text-center">Actions</span>
               </div>
               {getReservationsForDay(selectedDay.getDate()).map((reservation) => (
-             
-             <div
-             key={reservation.id}
-             className={`
-               flex flex-wrap items-center py-2 border-b last:border-0
-               ${changeColorOver(reservation.number_of_people)}
-               ${reservation.arrived ? 'brightness-75' : 'brightness-100'}
-             `}
-           >
+                <div
+                  key={reservation.id}
+                  className={`
+                    flex flex-wrap items-center py-2 border-b last:border-0
+                    ${changeColorOver(reservation.number_of_people)}
+                    ${reservation.arrived ? 'brightness-75' : 'brightness-100'}
+                  `}
+                >
                   <div className="w-1/5 flex items-center justify-center">
                     <span className="text-sm text-gray-600">
                       <Clock className="w-4 h-4 inline mr-1" />
@@ -215,11 +268,10 @@ const changeColorOver = (numberOfPeople) => {
                     <span className="text-sm text-black ml-2">{reservation.user.firstname}</span>
                   </div>
                   <div className="w-1/5 flex items-center justify-center">
-                  <span className="text-sm text-gray-600">
-                    <Users className="w-4 h-4 inline mr-1" />
-                    {reservation.number_of_people}
-                  </span>
-
+                    <span className="text-sm text-gray-600">
+                      <Users className="w-4 h-4 inline mr-1" />
+                      {reservation.number_of_people}
+                    </span>
                   </div>
                   <div className="w-1/5 flex  items-center justify-center">
                     <span className="text-sm text-gray-600">{reservation.user.phone}</span>
@@ -231,6 +283,13 @@ const changeColorOver = (numberOfPeople) => {
                       title="Marquer comme arrivé"
                     >
                       ✓
+                    </button>
+                    <button
+                      className="p-1 bg-blue-500 text-white rounded-full"
+                      onClick={() => handleUpdateReservation(reservation.id)}
+                      title="Modifier la réservation"
+                    >
+                      <Edit className="w-4 h-4" />
                     </button>
                     <button
                       className="p-1 bg-red-800 text-white rounded-full"

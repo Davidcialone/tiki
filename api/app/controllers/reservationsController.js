@@ -1,14 +1,5 @@
 import { Reservation, User } from "../models/index.js";
-// import { sendConfirmationEmail } from "../mails/mail.js";
-
-// Génération de mot de passe aléatoire
-function generateRandomPassword(length = 12) {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:',.<>?";
-  return Array.from({ length })
-    .map(() => chars[Math.floor(Math.random() * chars.length)])
-    .join("");
-}
+import { generateRandomPassword } from "../services/userService.js";
 
 // Créer une réservation
 export const createReservation = async (req, res) => {
@@ -182,5 +173,49 @@ export const getReservationsByDate = async (req, res) => {
   } catch (error) {
     console.error("Erreur lors de la récupération des réservations :", error);
     res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};
+
+// Mettre à jour une réservation
+export const updateReservation = async (req, res) => {
+  const { reservationId } = req.params;
+
+  try {
+    const reservation = await Reservation.findByPk(reservationId);
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Réservation non trouvée." });
+    }
+
+    const updatedReservation = await reservation.update(req.body);
+
+    res.status(200).json(updatedReservation);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de la réservation :", error);
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la mise à jour de la réservation." });
+  }
+};
+
+// Supprimer une réservation
+export const deleteReservation = async (req, res) => {
+  const { reservationId } = req.params;
+
+  try {
+    const reservation = await Reservation.findByPk(reservationId);
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Réservation non trouvée." });
+    }
+
+    await reservation.destroy();
+
+    res.status(204).end();
+  } catch (error) {
+    console.error("Erreur lors de la suppression de la réservation :", error);
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la suppression de la réservation." });
   }
 };

@@ -1,28 +1,62 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 // || "http://localhost:5000";
 
+// mailsApi.js
 export async function sendReservationMail(reservationId) {
+  if (!reservationId) {
+    throw new Error("L'ID de réservation est requis");
+  }
+
+  const TIMEOUT_MS = 5000; // 5 secondes de timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
   try {
-    const response = await fetch(
-      `${apiBaseUrl}/mails/${reservationId}`, // Remarquez que j'ai enlevé `/api/reservations/mail/`
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+    console.log(
+      "📤 Envoi de la demande d'email pour la réservation:",
+      reservationId
     );
 
+    const response = await fetch(`${apiBaseUrl}/mails/${reservationId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
-      throw new Error("Erreur lors de l'envoi de l'email de confirmation.");
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `Erreur API (${response.status}): ${
+          errorData.message || response.statusText
+        }`
+      );
     }
 
     const data = await response.json();
-    console.log("E-mail de confirmation envoyé :", data);
+    console.log("✅ Email traité avec succès:", {
+      reservationId,
+      response: data,
+    });
 
     return data;
   } catch (error) {
-    console.error("Erreur :", error.message);
+    if (error.name === "AbortError") {
+      throw new Error(
+        `Timeout dépassé (${TIMEOUT_MS}ms) pour la réservation: ${reservationId}`
+      );
+    }
+
+    console.error("❌ Erreur lors de l'envoi de l'email:", {
+      reservationId,
+      error: error.message,
+      type: error.name,
+    });
+
     throw error;
   }
 }
@@ -40,7 +74,11 @@ export async function confirmReservation(reservationId) {
     );
 
     if (!response.ok) {
-      throw new Error("Erreur lors de la confirmation de la réservation.");
+      if (response.status === 404) {
+        throw new Error("Mail not found for this reservation ID.");
+      } else {
+        throw new Error("Erreur lors de l’envoi de l’email de confirmation.");
+      }
     }
 
     const data = await response.json();

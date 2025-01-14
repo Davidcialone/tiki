@@ -1,36 +1,27 @@
 import { Reservation, User } from "../models/index.js";
-import { sendConfirmationEmail } from "../mails/mail.js"; // Importer la fonction d'envoi d'email
+import { sendConfirmationEmail } from "../mails/mail.js";
 
-export async function mailsReservations(reservationId) {
+// mailsController.js
+export const sendReservationMail = async (req, res) => {
   try {
-    console.log("Requête reçue pour l’ID de réservation :", reservationId);
+    console.log("⚡️ sendReservationMail appelé");
+    console.log("Paramètres:", req.params);
+    console.log("Body:", req.body);
 
-    const reservation = await Reservation.findByPk(reservationId, {
-      include: [{ model: User, as: "user" }],
+    // Réponse simple pour tester
+    return res.status(200).json({
+      success: true,
+      message: "Route de test atteinte avec succès",
+      reservationId: req.params.reservationId,
     });
-
-    console.log("Détails de la réservation récupérés :", reservation);
-
-    if (!reservation || !reservation.user) {
-      throw new Error("Réservation ou utilisateur non trouvé.");
-    }
-
-    // Passer l'objet réservation complet à la fonction d'envoi d'email
-    console.log("Envoi d'email pour la réservation :", reservation);
-    await sendConfirmationEmail(reservation);
-
-    console.log(
-      "Email envoyé avec succès pour la réservation :",
-      reservationId
-    );
-
-    return { success: true, data: reservation };
   } catch (error) {
-    console.error("Erreur lors de l’envoi de l’email :", error);
-    return { success: false, message: error.message };
+    console.error("Erreur dans sendReservationMail:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
-}
-
+};
 export async function confirmReservation(reservationId) {
   try {
     const reservation = await Reservation.findByPk(reservationId);

@@ -1,19 +1,10 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-
-// Validation du format de l'email
-function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-// Validation de l'heure au format HH:MM
-function isValidTime(time) {
-  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-  if (!timeRegex.test(time)) {
-    throw new Error("Le format de l'heure est invalide (ex: HH:MM)");
-  }
-  return true;
-}
+import {
+  isValidEmail,
+  isValidTime,
+  isValidDate,
+  calculatePlacesAndEndTime,
+} from "../../services/services.js"; // Validation du format de l'email
 
 /**
  * Fonction pour créer une réservation
@@ -52,17 +43,7 @@ export async function createReservation(formData) {
   }
 
   // Calcul de places_used et end_time
-
-  const PERSONS_PER_TABLE = 2;
-  const placesUsed = Math.ceil(formData.number_of_people / PERSONS_PER_TABLE);
-
-  const reservationDateTime = `${formData.reservation_date}T${formData.reservation_time}`;
-  const reservationDate = new Date(reservationDateTime);
-  reservationDate.setMinutes(reservationDate.getMinutes() + 90);
-
-  const endHours = reservationDate.getHours().toString().padStart(2, "0");
-  const endMinutes = reservationDate.getMinutes().toString().padStart(2, "0");
-  const endTime = `${endHours}:${endMinutes}`;
+  const { placesUsed, endTime } = calculatePlacesAndEndTime(formData);
 
   // Construction de l'objet final à envoyer à l'API
   const reservationData = {
@@ -133,10 +114,7 @@ export async function getReservationsByDate(date) {
     throw new Error("La date est obligatoire pour cette requête.");
   }
 
-  // Validation du format de la date
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    throw new Error("Le format de la date doit être YYYY-MM-DD");
-  }
+  isValidDate(date); // Utilisation de la fonction de validation de la date
 
   console.log(`=== Récupération des réservations pour la date : ${date} ===`);
 
@@ -181,4 +159,81 @@ async function fetchWithErrorHandling(url, options) {
       "Une erreur s’est produite lors de l’exécution de la requête."
     );
   }
+}
+
+/**
+ * Mise à jour d'une réservation par ID
+ * @param {number} id - ID de la réservation
+ */
+export async function updateReservation(id, formData) {
+  console.log(`=== Mise à jour de la réservation avec l'ID : ${id} ===`);
+
+  // Validation des champs obligatoires
+  const requiredFields = [
+    "email",
+    "reservation_date",
+    "reservation_time",
+    "number_of_people",
+  ];
+
+  for (const field of requiredFields) {
+    if (!formData[field]) {
+      throw new Error(`Le champ '${field}' est obligatoire.`);
+    }
+  }
+
+  // Validation spécifique de l'email
+  if (!isValidEmail(formData.email)) {
+    throw new Error("Le format de l'email est invalide");
+  }
+
+  // Validation de l'heure au format HH:MM
+  if (!isValidTime(formData.reservation_time)) {
+    throw new Error("Le format de l'heure est invalide (ex : HH:MM)");
+  }
+
+  // Validation du nombre de personnes
+  if (formData.number_of_people < 1) {
+    throw new Error("Le nombre de personnes doit être au moins 1");
+  }
+
+  const { placesUsed, endTime } = calculatePlacesAndEndTime(formData);
+
+  // Construction de l'objet final à envoyer à l'API
+  const reservationData = {
+    ...formData,
+    places_used: placesUsed,
+    end_time: endTime,
+    reservation_time: formData.reservation_time, // Ne pas ajouter ":00"
+  };
+
+  const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
+  const options = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(reservationData),
+  };
+
+  console.log("Envoi des données :", reservationData);
+  return await fetchWithErrorHandling(url, options);
+}
+
+/**
+ * Suppression d'une réservation par ID
+ * @param {number} id - ID de la réservation
+ */
+export async function deleteReservation(id) {
+  console.log(`=== Suppression de la réservation avec l'ID : ${id} ===`);
+
+  const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  return await fetchWithErrorHandling(url, options);
 }

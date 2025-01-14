@@ -34,7 +34,14 @@ const PORT = process.env.PORT || 5000;
 // Configuration de CORS
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+      "http://localhost:5176",
+      "https://tiki-sigma.vercel.app",
+      "https://tiki-ermployee.vercel.app",
+    ].filter(Boolean), // Filtrer les valeurs non définies
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
