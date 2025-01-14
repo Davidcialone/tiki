@@ -25,6 +25,7 @@
     "nodemailer": "^6.9.16",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
+    "punycode2": "^1.0.1",
     "sequelize": "^6.37.5"
   },
   "devDependencies": {

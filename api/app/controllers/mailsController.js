@@ -3,18 +3,16 @@ import { sendConfirmationEmail } from "../mails/mail.js"; // Importer la fonctio
 
 export async function mailsReservations(reservationId) {
   try {
-    console.log("Requête reçue pour l’ID de réservation :", reservationId); // Log pour vérifier le paramètre envoyé
+    console.log("Requête reçue pour l’ID de réservation :", reservationId);
 
     const reservation = await Reservation.findByPk(reservationId, {
       include: [{ model: User, as: "user" }],
     });
 
-    console.log("Détails de la réservation récupérés :", reservation); // Log pour voir les données récupérées
+    console.log("Détails de la réservation récupérés :", reservation);
 
     if (!reservation || !reservation.user) {
-      return res
-        .status(404)
-        .json({ message: "Réservation ou utilisateur non trouvé." });
+      throw new Error("Réservation ou utilisateur non trouvé.");
     }
 
     // Passer l'objet réservation complet à la fonction d'envoi d'email
@@ -24,12 +22,12 @@ export async function mailsReservations(reservationId) {
     console.log(
       "Email envoyé avec succès pour la réservation :",
       reservationId
-    ); // Log après l'envoi
+    );
 
-    res.json(reservation);
+    return { success: true, data: reservation };
   } catch (error) {
-    console.error("Erreur lors de l’envoi de l’email :", error); // Log pour l'erreur
-    res.status(500).json({ message: error.message });
+    console.error("Erreur lors de l’envoi de l’email :", error);
+    return { success: false, message: error.message };
   }
 }
 
