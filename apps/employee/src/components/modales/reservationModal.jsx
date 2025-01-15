@@ -4,14 +4,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
 import PropTypes from "prop-types";
 
+const generateTimes = (startHour, endHour) => {
+  const times = [];
+  for (let hour = startHour; hour <= endHour; hour++) {
+    for (let minutes = 0; minutes < 60; minutes += 15) {
+      times.push(`${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`);
+    }
+  }
+  return times;
+};
 
-const lunchTimes = [
-  "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30",
-];
-
-const dinnerTimes = [
-  "19:00", "19:15", "19:30", "19:45", "20:00", "20:15", "20:30", "20:45", "21:00", "21:15", "21:30", "21:45", "22:00", "22:15", "22:30",
-];
+const lunchTimes = generateTimes(12, 14);
+const dinnerTimes = generateTimes(19, 22);
 
 export function ReservationModal({ isOpen, onClose, onSubmit }) {
   const today = new Date();
@@ -26,7 +30,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
     reservation_time: lunchTimes[0],
     isLunch: true,
   });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,10 +42,8 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
   };
 
   const handleTimeClick = (time) => {
-    const formattedTime = time.length === 5 ? time : time.substring(0,5); // Assurez-vous que c'est toujours HH:mm
-    setFormData((prev) => ({ ...prev, reservation_time: formattedTime }));
+    setFormData((prev) => ({ ...prev, reservation_time: time }));
   };
-  
 
   const toggleTimePeriod = () => {
     setFormData((prev) => ({
@@ -51,49 +53,62 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
     }));
   };
 
-  const handleNextStep = () => {
+  const validateStep1 = () => {
+    const newErrors = {};
     if (!formData.reservation_date) {
-      setErrorMessage("Veuillez sélectionner une date.");
-      return;
+      newErrors.reservation_date = "Veuillez sélectionner une date.";
     }
-    setErrorMessage("");
-    setStep(2);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep2 = () => {
+    const newErrors = {};
+    if (!formData.firstName) newErrors.firstName = "Prénom obligatoire.";
+    if (!formData.lastName) newErrors.lastName = "Nom obligatoire.";
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "Email invalide.";
+    if (!formData.phone || !/^\d{10}$/.test(formData.phone))
+      newErrors.phone = "Numéro de téléphone invalide.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep1()) setStep(2);
   };
 
   const handleBackStep = () => setStep(1);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formattedDate = formData.reservation_date.toISOString().split("T")[0];
-    const finalData = {
-      ...formData,
-      reservation_date: formattedDate,
-    };
-
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
-      setErrorMessage("Tous les champs sont obligatoires.");
-      return;
+    if (validateStep2()) {
+      const formattedDate = formData.reservation_date.toISOString().split("T")[0];
+      const finalData = { ...formData, reservation_date: formattedDate };
+      onSubmit(finalData);
+      onClose();
     }
-
-    onSubmit(finalData);
-    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      role="dialog"
+      aria-labelledby="modal-title"
+      aria-modal="true"
+    >
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h2 className="text-2xl font-semibold text-center mb-6">Réservation</h2>
-        {errorMessage && (
-          <div className="mb-4 text-red-600 font-semibold text-sm text-center">
-            {errorMessage}
+        <h2 id="modal-title" className="text-2xl font-semibold text-center mb-6">Réservation</h2>
+        {Object.values(errors).map((error, index) => (
+          <div key={index} className="mb-4 text-red-600 font-semibold text-sm text-center">
+            {error}
           </div>
-        )}
+        ))}
 
         {step === 1 && (
           <div>
-            {/* Étape 1 : Choix de la date et de l’heure */}
             <div className="mb-4">
               <label htmlFor="reservation_date" className="block text-sm font-medium text-gray-700 mb-1">
                 Date
@@ -177,7 +192,6 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
 
         {step === 2 && (
           <form onSubmit={handleSubmit}>
-            {/* Étape 2 : Informations personnelles */}
             <div className="mb-4">
               <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
                 Nom
@@ -189,7 +203,6 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 value={formData.lastName}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                required
               />
             </div>
             <div className="mb-4">
@@ -203,7 +216,6 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 value={formData.firstName}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                required
               />
             </div>
             <div className="mb-4">
@@ -217,7 +229,6 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                required
               />
             </div>
             <div className="mb-4">
@@ -231,7 +242,6 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                required
               />
             </div>
 
@@ -239,7 +249,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
               <button
                 type="button"
                 onClick={handleBackStep}
-                className="                px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition"
+                className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition"
               >
                 Retour
               </button>
@@ -262,4 +272,3 @@ ReservationModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
-
