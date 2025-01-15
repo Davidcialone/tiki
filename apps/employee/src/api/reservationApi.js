@@ -141,7 +141,7 @@ async function fetchWithErrorHandling(url, options) {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      const errorResponse = await response.json(); // Lire le message d'erreur si possible
+      const errorResponse = await response.json();
       throw new Error(
         `Erreur API : ${response.status} - ${
           errorResponse.message || "Erreur inconnue"
@@ -149,14 +149,18 @@ async function fetchWithErrorHandling(url, options) {
       );
     }
 
-    // Lire et retourner directement le JSON de la réponse
+    // Pour les requêtes DELETE qui renvoient 204
+    if (response.status === 204) {
+      return null;
+    }
+
     const jsonResponse = await response.json();
     console.log("Données JSON reçues :", jsonResponse);
-    return jsonResponse; // Retourne les données parsées
+    return jsonResponse;
   } catch (error) {
-    console.error("Erreur lors de l’appel à l’API :", error);
+    console.error("Erreur lors de l'appel à l'API :", error);
     throw new Error(
-      "Une erreur s’est produite lors de l’exécution de la requête."
+      "Une erreur s'est produite lors de l'exécution de la requête."
     );
   }
 }
@@ -209,7 +213,7 @@ export async function updateReservation(id, formData) {
 
   const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
   const options = {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
@@ -225,9 +229,21 @@ export async function updateReservation(id, formData) {
  * @param {number} id - ID de la réservation
  */
 export async function deleteReservation(id) {
-  console.log(`=== Suppression de la réservation avec l'ID : ${id} ===`);
+  console.log(`=== Début de la suppression de la réservation ${id} ===`);
 
-  const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
+  // Vérifier d'abord si on peut récupérer la réservation
+  const checkResponse = await fetch(`${apiBaseUrl}/api/reservations`);
+  const allReservations = await checkResponse.json();
+  const exists = allReservations.some((res) => res.id === parseInt(id));
+
+  if (!exists) {
+    console.log("La réservation n'existe pas dans la liste complète");
+    throw new Error("Réservation introuvable");
+  }
+
+  const url = `${apiBaseUrl}/api/reservations/${id}`;
+  console.log("URL de suppression:", url);
+
   const options = {
     method: "DELETE",
     headers: {
@@ -235,5 +251,13 @@ export async function deleteReservation(id) {
     },
   };
 
-  return await fetchWithErrorHandling(url, options);
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("Réponse d'erreur:", errorText);
+    throw new Error(`Erreur ${response.status}: ${errorText}`);
+  }
+
+  return response;
 }

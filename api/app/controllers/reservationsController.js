@@ -1,5 +1,6 @@
 import { Reservation, User } from "../models/index.js";
 import { generateRandomPassword } from "../services/userService.js";
+import logger from "../../logger.js";
 
 // Créer une réservation
 export const createReservation = async (req, res) => {
@@ -105,39 +106,6 @@ export const getReservations = async (req, res) => {
   }
 };
 
-// Récupérer les réservations par ID de client
-export const getReservationsByClientId = async (req, res) => {
-  const { clientId } = req.params;
-
-  try {
-    // Validation de l'ID
-    if (!clientId || isNaN(clientId)) {
-      return res.status(400).json({ message: "ID du client invalide." });
-    }
-
-    const reservations = await Reservation.findAll({
-      where: { user_id: clientId },
-      order: [
-        ["reservation_date", "DESC"],
-        ["reservation_time", "DESC"],
-      ],
-    });
-
-    if (reservations.length > 0) {
-      return res.status(200).json(reservations);
-    } else {
-      return res
-        .status(404)
-        .json({ message: "Aucune réservation trouvée pour ce client." });
-    }
-  } catch (error) {
-    console.error("Erreur lors de la récupération des réservations :", error);
-    res.status(500).json({
-      message: "Erreur interne du serveur. Veuillez réessayer plus tard.",
-    });
-  }
-};
-
 // Récupérer les réservations par date
 export const getReservationsByDate = async (req, res) => {
   const { date } = req.query;
@@ -176,6 +144,35 @@ export const getReservationsByDate = async (req, res) => {
   }
 };
 
+// Récupérer une réservation par ID
+export const getReservationById = async (req, res) => {
+  const { reservationId } = req.params;
+
+  try {
+    const reservation = await Reservation.findByPk(reservationId, {
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "firstname", "lastname", "email", "phone"],
+        },
+      ],
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Réservation non trouvée." });
+    }
+
+    res.status(200).json(reservation);
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la réservation :", error);
+    res.status(500).json({
+      message: "Erreur lors de la récupération de la réservation.",
+      error: error.message,
+    });
+  }
+};
+
 // Mettre à jour une réservation
 export const updateReservation = async (req, res) => {
   const { reservationId } = req.params;
@@ -201,21 +198,31 @@ export const updateReservation = async (req, res) => {
 // Supprimer une réservation
 export const deleteReservation = async (req, res) => {
   const { reservationId } = req.params;
+  logger.info(`Début de la suppression pour l'ID: ${reservationId}`);
 
   try {
-    const reservation = await Reservation.findByPk(reservationId);
+    const id = parseInt(reservationId, 10);
+    if (isNaN(id)) {
+      logger.error(`ID invalide détecté: ${reservationId}`);
+      return res
+        .status(400)
+        .json({ message: "L'ID de la réservation est invalide." });
+    }
+    logger.info(`ID converti: ${id}`);
 
+    const reservation = await Reservation.findByPk(id);
     if (!reservation) {
+      logger.warn(`Aucune réservation trouvée avec l'ID: ${id}`);
       return res.status(404).json({ message: "Réservation non trouvée." });
     }
 
     await reservation.destroy();
-
+    logger.info(`Suppression réussie pour l'ID: ${id}`);
     res.status(204).end();
   } catch (error) {
-    console.error("Erreur lors de la suppression de la réservation :", error);
+    logger.error(`Erreur lors de la suppression: ${error.message}`);
     res
       .status(500)
-      .json({ message: "Erreur lors de la suppression de la réservation." });
+      .json({ message: "Erreur lors de la suppression", error: error.message });
   }
 };

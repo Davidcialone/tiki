@@ -9,14 +9,14 @@ router.get("/", reservationsController.getReservations);
 // POST /reservations
 router.post("/", reservationsController.createReservation);
 
-// GET /reservations/clientId
-router.get("/:clientId", reservationsController.getReservationsByClientId);
-
 // GET /reservations?date=YYYY-MM-DD
 router.get("/by-date", reservationsController.getReservationsByDate);
 
-// PATCH /reservations/:id
-router.put("/:id", reservationsController.updateReservation);
+// GET /reservations/:reservationId
+router.get("/:reservationId", reservationsController.getReservationById);
 
-// DELETE /reservations/:id
-router.delete("/:id", reservationsController.deleteReservation);
+// PATCH /reservations/:reservationId
+router.patch("/:reservationId", reservationsController.updateReservation);
+
+// DELETE /reservations/:reservationId
+router.delete("/:reservationId", reservationsController.deleteReservation);

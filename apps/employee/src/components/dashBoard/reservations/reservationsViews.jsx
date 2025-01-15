@@ -67,19 +67,40 @@ const [selectedReservation, setSelectedReservation] = useState(null);
     );
   };
 
-  const handleDeleteReservation = (reservationId) => {
-    if (window.confirm("Voulez-vous vraiment supprimer cette réservation ?")) {
-      setReservations((prev) => prev.filter((res) => res.id !== reservationId));
-      try{
-        if (reservationId) {
-          deleteReservation(reservationId);
-        }
-      }
-      catch (error) {
-        console.error("Erreur lors de la suppression de la réservation:", error);
-      }
+  const handleDeleteReservation = async (reservationId) => {
+    if (!reservationId) {
+      console.error("ID de réservation manquant.");
+      return;
+    }
+  
+    const confirmDelete = window.confirm(
+      "Voulez-vous vraiment supprimer cette réservation ?"
+    );
+  
+    if (!confirmDelete) {
+      return; // L'utilisateur a annulé la suppression
+    }
+  
+    // Sauvegarde de l'état actuel avant modification
+    const previousReservations = [...reservations];
+  
+    // Suppression optimiste : mise à jour locale immédiate
+    setReservations((prev) => prev.filter((res) => res.id !== reservationId));
+  
+    try {
+      // Appel à l'API pour supprimer la réservation
+      await deleteReservation(reservationId);
+      console.log(`Réservation avec l'ID ${reservationId} supprimée.`);
+    } catch (error) {
+      // Gestion des erreurs et restauration de l'état en cas d'échec
+      console.error("Erreur lors de la suppression de la réservation :", error);
+      alert(
+        "Une erreur est survenue lors de la suppression de la réservation. Veuillez réessayer."
+      );
+      setReservations(previousReservations); // Restauration des données
     }
   };
+  
 
   const handleUpdateReservation = async (reservationId, updatedFormData) => {
     const updatedReservation = reservations.find(res => res.id === reservationId);

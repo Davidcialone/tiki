@@ -11,5 +11,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@heroicons/react/24/solid")],
 };

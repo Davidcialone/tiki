@@ -1,8 +1,7 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 // || "http://localhost:5000";
 
-// clientApi.js
-export async function fetchClientDetails(clientId) {
+export async function getClients(clientId) {
   try {
     const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}`);
     if (!response.ok) {
@@ -27,8 +26,6 @@ export async function searchInClientsDB(searchQuery) {
     throw new Error(err.message);
   }
 }
-
-// clientApi.js
 
 export async function fetchClientReservations(clientId) {
   try {
