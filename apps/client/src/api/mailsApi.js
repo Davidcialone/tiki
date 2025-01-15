@@ -17,7 +17,7 @@ export async function sendReservationMail(reservationId) {
       reservationId
     );
 
-    const response = await fetch(`${apiBaseUrl}/mails/${reservationId}`, {
+    const response = await fetch(`${apiBaseUrl}/api/mails/${reservationId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

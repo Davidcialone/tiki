@@ -6,6 +6,7 @@ import { ClientSearch } from "../../employee/src/components/dashBoard/clients/cl
 import { CustomerFile } from "../../employee/src/components/dashBoard/clients/customerFile";
 import { PlanningPage } from "../../employee/src/components/dashBoard/worker/plannigPage";
 import { ReservationsViews } from "../../employee/src/components/dashBoard/reservations/reservationsViews";
+import { SearchDashboard } from "../../employee/src/components/dashBoard/serachDashboard";
 
 
 
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePageEmployee />} />
           <Route path="/reservations" element={<ReservationsDashboard />} />
+          <Route path="/search" element={<SearchDashboard />} />
           <Route path="/clients" element={<ClientSearch />} />
           <Route path="/clients/:clientId" element={<CustomerFile />} />
           <Route path="/dashboard" element={<ReservationsViews/>} />

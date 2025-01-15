@@ -98,17 +98,11 @@ useEffect(() => {
           {/* Menu pour grands écrans */}
           <div className="hidden sm:block sm:ml-6">
             <div className="flex space-x-4">
-              <Link
+            <Link
                 to="/reservations"
                 className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
               >
-                Réservations
-              </Link>
-              <Link
-                to="/plannings"
-                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Plannings
+                réservation
               </Link>
               <Link
                 to="/dashboard"
@@ -116,6 +110,20 @@ useEffect(() => {
               >
                 Gestion
               </Link>
+              <Link
+                to="/search"
+                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Recherches
+              </Link>
+              <Link
+                to="/plannings"
+                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Plannings
+              </Link>
+             
+           
               <Link
                 to="/login"
                 className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
