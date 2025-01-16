@@ -110,6 +110,12 @@ export function NavBarClient() {
                 Carte
               </Link>
               <Link
+                to="/events"
+                className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Evenements
+              </Link>
+              <Link
                 to="/opening"
                 className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
               >
@@ -144,6 +150,9 @@ export function NavBarClient() {
           </Link>
           <Link to="/menus" className="text-white text-lg hover:text-gray-300">
             Carte
+          </Link>
+          <Link to="/events" className="text-white text-lg hover:text-gray-300">
+            Evenements
           </Link>
           <Link to="/opening" className="text-white text-lg hover:text-gray-300">
             Ouverture

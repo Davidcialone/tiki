@@ -9,6 +9,7 @@ import { MenuDisplay } from './components/interface/menuDisplay';
 import { Contact } from './components/interface/contact';
 import { Location } from './components/interface/localisation';
 import { OpeningView } from './components/interface/openingView';
+import { Events } from './components/interface/events';
 
 
 
@@ -22,6 +23,7 @@ function App() {
         <Routes> {/* Define the Routes */}
           <Route path="/" element={<RestaurantHomePage />} /> {/* Home Page route */}
           <Route path="/reservations" element={<ReservationPage />} /> {/* Reservation Page route */}
+          <Route path="/events" element={<Events />} /> {/* Events route */}
           <Route path="/menus" element={<MenuDisplay />} /> {/* Restaurant Layout route */}
           <Route path="/opening" element={<OpeningView />} /> {/* Opening route */}
           <Route path="/location" element={<Location />} /> {/* Location route */}
