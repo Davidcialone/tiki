@@ -1,19 +1,8 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*\\.(?:js|mjs|cjs))",
-      "dest": "/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)\\.js",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        }
-      ]
+      "source": "/:path*",
+      "destination": "/index.html"
     }
   ]
 }

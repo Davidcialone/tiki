@@ -1,10 +1,4 @@
 {
-  "routes": [
-    {
-      "src": "/(.*\\.(?:js|mjs|cjs))",
-      "dest": "/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)\\.js",
