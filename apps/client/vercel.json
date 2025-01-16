@@ -1,11 +1,19 @@
 {
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "headers": {
-        "cache-control": "s-maxage=0"
-      }
+      "src": "/(.*\\.(?:js|mjs|cjs))",
+      "dest": "/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.js",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        }
+      ]
     }
   ]
 }
