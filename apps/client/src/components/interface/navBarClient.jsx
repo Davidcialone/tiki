@@ -56,7 +56,7 @@ export function NavBarClient() {
         backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})`, // Opacité dynamique
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="relative flex items-center justify-between h-16">
           {/* Bouton du menu mobile */}
           <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
@@ -95,7 +95,7 @@ export function NavBarClient() {
           </div>
 
           {/* Liens pour grand écran */}
-          <div className="hidden sm:block sm:ml-6">
+          <div className="hidden sm:block sm:ml-6 ">
             <div className="flex space-x-4">
               <Link
                 to="/reservations"
