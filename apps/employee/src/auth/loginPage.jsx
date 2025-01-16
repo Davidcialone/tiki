@@ -1,9 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 import Cookies from "js-cookie";
 import { AuthContext } from "../auth/authContext";
 import { Login } from "../api/userApi";
+import { Link } from "react-router-dom";
 
 export function LoginPage() {
   const { login } = useContext(AuthContext);
@@ -14,6 +15,10 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    return () => setLoading(false); // Reset loading state on component unmount
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +68,6 @@ export function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">
               Email
@@ -78,7 +82,6 @@ export function LoginPage() {
             />
           </div>
 
-          {/* Mot de passe */}
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">
               Mot de passe
@@ -93,7 +96,6 @@ export function LoginPage() {
             />
           </div>
 
-          {/* Option pour afficher ou masquer les mots de passe */}
           <div className="mt-4">
             <div className="flex items-center">
               <input
@@ -109,13 +111,13 @@ export function LoginPage() {
             </div>
           </div>
 
-          {/* Bouton de soumission */}
           <button
             type="submit"
             className={`w-full py-3 ${
               loading ? "bg-gray-400" : "bg-green-600"
             } text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500`}
             disabled={loading}
+            aria-label="Submit Login Form"
           >
             {loading ? "Connexion en cours..." : "Se connecter"}
           </button>
@@ -123,9 +125,9 @@ export function LoginPage() {
 
         <p className="text-center text-gray-600 mt-4">
           Vous n'avez pas de compte ?{" "}
-          <a href="/register" className="text-green-600 hover:text-green-700 font-medium">
-            Inscrivez-vous ici
-          </a>
+          <Link to="/register" className="text-green-600 hover:text-green-700 font-medium">
+            créer un compte
+          </Link>
         </p>
       </div>
     </div>
