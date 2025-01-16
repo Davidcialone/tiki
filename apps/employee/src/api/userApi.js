@@ -1,5 +1,4 @@
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-// || "http://localhost:5000";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 // Utility function for validation
 const validateEmail = (email) => {
@@ -9,6 +8,10 @@ const validateEmail = (email) => {
 
 const validatePhone = (phone) => {
   return !phone || /^\d{10,15}$/.test(phone);
+};
+
+const validatePassword = (password) => {
+  return password && password.length >= 8;
 };
 
 // Custom error class for API errors
@@ -21,63 +24,69 @@ class ApiError extends Error {
   }
 }
 
+// Fonction utilitaire pour la validation des champs requis
+const validateRequiredFields = (data, requiredFields) => {
+  const missingFields = requiredFields.filter((field) => !data[field]?.trim());
+  if (missingFields.length > 0) {
+    throw new ApiError(`Champs manquants: ${missingFields.join(", ")}`, 400);
+  }
+};
+
+// Fonction pour obtenir les messages d'erreur par défaut
+function getDefaultErrorMessage(status) {
+  const messages = {
+    400: "Données invalides",
+    401: "Non autorisé",
+    403: "Accès refusé",
+    404: "Ressource non trouvée",
+    409: "Un utilisateur existe déjà avec cet email",
+    500: "Erreur serveur, veuillez réessayer plus tard",
+  };
+  return messages[status] || "Une erreur est survenue";
+}
+
 export async function Register({
   lastname,
   firstname,
   email,
   phone,
   password,
-  passwordConfirm,
   role_id = 1,
 }) {
-  // Log des données reçues
-  console.log("=== DEBUG REGISTER START ===");
-  console.log("1. Données reçues:", {
-    lastname,
-    firstname,
-    email,
-    phone,
-    role_id,
-    hasPassword: !!password,
-    hasPasswordConfirm: !!passwordConfirm,
-  });
-
-  // Validation des champs requis
-  const requiredFields = { lastname, firstname, email, password };
-  const missingFields = Object.entries(requiredFields)
-    .filter(([_, value]) => !value)
-    .map(([key]) => key);
-
-  if (missingFields.length > 0) {
-    console.log("2. Champs manquants:", missingFields);
-    throw new Error(`Champs manquants: ${missingFields.join(", ")}`);
-  }
-
-  // Préparation du payload
-  const payload = {
-    lastname: lastname?.trim(),
-    firstname: firstname?.trim(),
-    email: email?.toLowerCase().trim(),
-    phone: phone?.trim() || "",
-    password,
-    role_id: 1, // Forcer role_id à 1
-  };
-
-  console.log("3. Payload préparé:", {
-    ...payload,
-    password: "[MASQUÉ]",
-  });
-
   try {
-    // Log de la requête complète
-    console.log("4. Envoi de la requête:", {
-      url: `${apiBaseUrl}/api/auth/register`,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
+    // Validation des champs requis
+    validateRequiredFields({ lastname, firstname, email, password }, [
+      "lastname",
+      "firstname",
+      "email",
+      "password",
+    ]);
+
+    // Validations spécifiques
+    if (!validateEmail(email)) {
+      throw new ApiError("Format d'email invalide", 400);
+    }
+
+    if (!validatePassword(password)) {
+      throw new ApiError(
+        "Le mot de passe doit contenir au moins 8 caractères",
+        400
+      );
+    }
+
+    if (phone && !validatePhone(phone)) {
+      throw new ApiError("Format de téléphone invalide", 400);
+    }
+
+    // Préparation du payload
+    const payload = {
+      lastname: lastname.trim(),
+      firstname: firstname.trim(),
+      email: email.toLowerCase().trim(),
+      phone: phone?.trim() || "",
+      password,
+      role_id,
+    };
 
     const response = await fetch(`${apiBaseUrl}/api/auth/register`, {
       method: "POST",
@@ -88,50 +97,32 @@ export async function Register({
       body: JSON.stringify(payload),
     });
 
-    console.log("5. Status de la réponse:", response.status);
-    console.log(
-      "6. Headers de la réponse:",
-      Object.fromEntries(response.headers)
-    );
-
-    // Récupérer et logger le texte brut de la réponse
-    const responseText = await response.text();
-    console.log("7. Réponse brute:", responseText);
-
-    // Tenter de parser la réponse JSON
-    let data;
-    try {
-      data = JSON.parse(responseText);
-      console.log("8. Données parsées:", data);
-    } catch (e) {
-      console.error("9. Erreur de parsing JSON:", e);
-      throw new Error("Réponse invalide du serveur");
-    }
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      console.error("10. Erreur de réponse:", data);
-      throw new Error(data.message || "Erreur lors de l'inscription");
+      throw new ApiError(
+        data?.message || getDefaultErrorMessage(response.status),
+        response.status,
+        data
+      );
     }
 
-    console.log("=== DEBUG REGISTER SUCCESS ===");
     return data;
   } catch (error) {
-    console.error("=== DEBUG REGISTER ERROR ===");
-    console.error("Erreur complète:", error);
-    throw error;
+    if (error instanceof ApiError) throw error;
+    throw new ApiError(error.message || "Erreur lors de l'inscription", 500);
   }
 }
 
 export async function Login({ email, password }) {
-  if (!email?.trim() || !password) {
-    throw new ApiError("Email et mot de passe requis", 400);
-  }
-
-  if (!validateEmail(email)) {
-    throw new ApiError("Format d'email invalide", 400);
-  }
-
   try {
+    // Validation des champs requis
+    validateRequiredFields({ email, password }, ["email", "password"]);
+
+    if (!validateEmail(email)) {
+      throw new ApiError("Format d'email invalide", 400);
+    }
+
     const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
       method: "POST",
       headers: {
@@ -157,43 +148,39 @@ export async function Login({ email, password }) {
     return data;
   } catch (error) {
     if (error instanceof ApiError) throw error;
-
-    if (error instanceof TypeError) {
-      throw new ApiError("Erreur de connexion au serveur", 503);
-    }
-
     throw new ApiError("Erreur lors de la connexion", 500);
   }
 }
 
 export async function fetchUserDetails(userId) {
   try {
-    const response = await fetch(`${apiBaseUrl}/api/users/${userId}`);
+    const token = Cookies ? Cookies.get("token") : null;
+
+    if (!token) {
+      throw new ApiError("Token d'authentification manquant", 401);
+    }
+
+    const response = await fetch(`${apiBaseUrl}/api/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+
     if (!response.ok) {
       throw new ApiError(
-        "Erreur lors de la récupération des détails de l'utilisateur",
+        getDefaultErrorMessage(response.status),
         response.status
       );
     }
+
     const data = await response.json();
     return data;
   } catch (error) {
+    if (error instanceof ApiError) throw error;
     throw new ApiError(
-      error.message ||
-        "Erreur lors de la récupération des détails de l'utilisateur",
+      "Erreur lors de la récupération des détails de l'utilisateur",
       500
     );
   }
-}
-
-function getDefaultErrorMessage(status) {
-  const messages = {
-    400: "Données invalides",
-    401: "Non autorisé",
-    403: "Accès refusé",
-    404: "Ressource non trouvée",
-    409: "Un utilisateur existe déjà avec cet email",
-    500: "Erreur serveur, veuillez réessayer plus tard",
-  };
-  return messages[status] || "Une erreur est survenue";
 }
