@@ -138,33 +138,31 @@ export function NavBarClient() {
         </div>
       </div>
 
-      {/* Menu mobile */}
-      {mobileMenuOpen && (
-        <div
-          className="sm:hidden fixed top-16 left-0 w-full bg-black bg-opacity-30 flex flex-col items-center justify-start space-y-4 py-4 transition-all duration-300"
-          onClick={toggleMenu}
-        >
-          
-          <Link to="/reservations" className="text-white text-lg hover:text-gray-300">
-            Réserver
-          </Link>
-          <Link to="/menus" className="text-white text-lg hover:text-gray-300">
-            Carte
-          </Link>
-          <Link to="/events" className="text-white text-lg hover:text-gray-300">
-            Evenements
-          </Link>
-          <Link to="/opening" className="text-white text-lg hover:text-gray-300">
-            Ouverture
-          </Link>
-          <Link to="/location" className="text-white text-lg hover:text-gray-300">
-            Localisation
-          </Link>
-          <Link to="/contact" className="text-white text-lg hover:text-gray-300">
-            Nous contacter
-          </Link>
-        </div>
-      )}
+          {mobileMenuOpen && (
+      <div
+        className="fixed inset-0 w-full min-h-screen bg-black bg-opacity-90 flex flex-col items-center justify-start space-y-4 py-4 transition-all duration-300 z-50"
+        onClick={toggleMenu}
+      >
+        <Link to="/reservations" className="text-white text-lg hover:text-gray-300">
+          Réserver
+        </Link>
+        <Link to="/menus" className="text-white text-lg hover:text-gray-300">
+          Carte
+        </Link>
+        <Link to="/events" className="text-white text-lg hover:text-gray-300">
+          Evenements
+        </Link>
+        <Link to="/opening" className="text-white text-lg hover:text-gray-300">
+          Ouverture
+        </Link>
+        <Link to="/location" className="text-white text-lg hover:text-gray-300">
+          Localisation
+        </Link>
+        <Link to="/contact" className="text-white text-lg hover:text-gray-300">
+          Nous contacter
+        </Link>
+      </div>
+    )}
     </nav>
   );
 }

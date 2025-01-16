@@ -67,7 +67,7 @@ export function Events() {
                   alt={event.title}
                   className="w-full h-64 object-cover transform group-hover:scale-105 transition duration-300"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center p-4 opacity-0 group-hover:opacity-100 transition duration-300">
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center p-4 opacity-80 group-hover:opacity-100 transition duration-300">
                   <h3 className="text-white text-2xl font-bold mb-2">{event.title}</h3>
                   <p className="text-gray-300 text-sm mb-2">
                     <strong>Date : </strong>
