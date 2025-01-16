@@ -37,24 +37,26 @@ export function Events() {
 
   return (
     <div className="relative font-sans text-gray-800 min-h-screen space-y-0">
-      {/* Hero Section */}
-      <div className="relative w-full h-screen bg-[url('/events-hero.jpg')] bg-center bg-cover bg-no-repeat z-0">
-        <div className="absolute inset-0 bg-black opacity-40"></div>
-        <div className="relative z-10 flex items-center justify-center w-full h-full text-center">
-          <div className="text-[var(--text-color-secondary)] px-8 py-6">
-            <h1 className="text-4xl font-bold">Événements Chez O Resto</h1>
-            <p className="mt-4 text-lg">
-              Découvrez nos événements spéciaux qui rendent chaque moment mémorable.
-            </p>
-          </div>
+    {/* Hero Section */}
+    <div className="relative w-full h-screen bg-[url('/event5.png')] bg-center bg-cover bg-no-repeat z-0">
+      <div className="absolute inset-0 bg-black opacity-40"></div>
+      <div className="relative z-10 flex items-center justify-center w-full h-full text-center">
+        <div className="text-[var(--text-color-secondary)] px-8 py-6">
+          <h1 className="text-4xl font-bold">Événements Chez O Resto</h1>
+          <p className="mt-4 text-lg">
+            Découvrez nos événements spéciaux qui rendent chaque moment mémorable.
+          </p>
         </div>
       </div>
+    </div>
+
+  
 
       {/* Events List Section */}
       <section className="bg-black bg-opacity-90 py-12 p-4">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl text-white font-semibold mb-6 text-center">À venir</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {events.map((event) => (
               <div
                 key={event.id}
