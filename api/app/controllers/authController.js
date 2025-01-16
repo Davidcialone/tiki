@@ -2,6 +2,8 @@ import { User } from "../models/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// console.log("JWT_SECRET:", process.env.JWT_SECRET);
+
 export async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -29,9 +31,10 @@ export async function login(req, res) {
     }
 
     // Génération du token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+
     console.log("Token généré:", token);
     return res.status(200).json({ token });
   } catch (err) {

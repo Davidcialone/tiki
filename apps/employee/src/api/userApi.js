@@ -123,13 +123,7 @@ export async function Register({
 }
 
 export async function Login({ email, password }) {
-  if (!email?.trim() || !password) {
-    throw new ApiError("Email et mot de passe requis", 400);
-  }
-
-  if (!validateEmail(email)) {
-    throw new ApiError("Format d'email invalide", 400);
-  }
+  console.log("=== DEBUG LOGIN START ===");
 
   try {
     const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
@@ -144,25 +138,34 @@ export async function Login({ email, password }) {
       }),
     });
 
-    const data = await response.json().catch(() => ({}));
+    // Log de la réponse brute
+    const responseText = await response.text();
+    console.log("Réponse brute du serveur:", responseText);
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+      console.log("Données parsées:", data);
+    } catch (e) {
+      console.error("Erreur parsing JSON:", e);
+      throw new Error("Format de réponse invalide");
+    }
 
     if (!response.ok) {
       throw new ApiError(
         data?.message || getDefaultErrorMessage(response.status),
-        response.status,
-        data
+        response.status
       );
+    }
+
+    if (!data.token) {
+      throw new Error("Token manquant dans la réponse");
     }
 
     return data;
   } catch (error) {
-    if (error instanceof ApiError) throw error;
-
-    if (error instanceof TypeError) {
-      throw new ApiError("Erreur de connexion au serveur", 503);
-    }
-
-    throw new ApiError("Erreur lors de la connexion", 500);
+    console.error("Erreur Login:", error);
+    throw error;
   }
 }
 

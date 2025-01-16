@@ -19,28 +19,39 @@ export function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
-    if (!email.trim() || !password.trim()) {
-      setError("Veuillez entrer un email et un mot de passe valides.");
-      setLoading(false);
-      return;
-    }
-
+  
     try {
       const response = await Login({ email, password });
+      console.log("Réponse complète:", response); // Ajout de ce log
+  
+      if (!response) {
+        throw new Error("Aucune réponse du serveur");
+      }
+  
+      // Vérification explicite du token
+      if (!response.token) {
+        console.error("Réponse sans token:", response);
+        throw new Error("Token manquant dans la réponse");
+      }
+  
       const token = response.token;
-      const user = jwtDecode(token);
-
-      login(token, user);
-      Cookies.set("token", token, { expires: 7 });
-      navigate(location.state?.from || "/");
+      try {
+        const user = jwtDecode(token);
+        console.log("User décodé:", user); // Ajout de ce log
+        login(token, user);
+        Cookies.set("token", token, { expires: 7 });
+        navigate(location.state?.from || "/");
+      } catch (decodeError) {
+        console.error("Erreur décodage token:", decodeError);
+        throw new Error("Token invalide");
+      }
     } catch (error) {
-      setError(error.message || "Erreur lors de la connexion.");
+      console.error("Erreur complète:", error);
+      setError(error.message || "Erreur lors de la connexion");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
