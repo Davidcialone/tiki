@@ -12,14 +12,17 @@ export const sendReservationMail = async (req, res) => {
     const reservation = await Reservation.findByPk(reservationId, {
       include: {
         model: User, // Inclut les informations sur l'utilisateur
+        as: "user", // Alias correct
         attributes: ["id", "email", "firstname", "lastname", "phone"],
       },
     });
 
-    if (!reservation) {
+    console.log("SQL Query : ", reservation.query); // Ajouté ici pour voir la requête SQL
+
+    if (!reservation || !reservation.user) {
       return res.status(404).json({
         success: false,
-        message: "Réservation non trouvée.",
+        message: "Réservation ou utilisateur non trouvés.",
       });
     }
 
@@ -56,6 +59,7 @@ export const sendReservationMail = async (req, res) => {
     });
   }
 };
+
 // const reservationMock = {
 //   id: 94,
 //   reservation_date: "2025-01-18",

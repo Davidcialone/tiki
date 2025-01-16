@@ -42,12 +42,12 @@ export function LoginPage() {
       const token = response.token;
       try {
         const user = jwtDecode(token);
-        console.log("User décodé:", user); // Ajout de ce log
+        // console.log("User décodé:", user); // Ajout de ce log
         login(token, user);
         Cookies.set("token", token, { expires: 7 });
         navigate(location.state?.from || "/");
       } catch (decodeError) {
-        console.error("Erreur décodage token:", decodeError);
+        // console.error("Erreur décodage token:", decodeError);
         throw new Error("Token invalide");
       }
     } catch (error) {
