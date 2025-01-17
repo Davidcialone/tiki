@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ReservationModal } from "../../../../client/src/components/modales/reservationModal";
 import { createReservation } from "../../api/reservationApi";
-import { sendReservationMail } from "../../api/mailsApi";
+import { sendConfirmationEmail } from "../../api/mailsApi";
 
 export function ReservationPage() {
   const [zonesOpened, setZonesOpened] = useState({
@@ -61,13 +61,15 @@ export function ReservationPage() {
         end_time: reservationData.end_time,
       };
   
-      await sendReservationMail(reservationDetailsComplete.id);
+      // Envoi du mail avec les bonnes données
+      await sendConfirmationEmail(reservationDetailsComplete);  // Utilisation correcte de reservationDetailsComplete
       setReservationDetails(reservationDetailsComplete);
     } catch (error) {
-          console.error("Erreur lors de la soumission de la réservation:", error);
+      console.error("Erreur lors de la soumission de la réservation:", error);
       setErrorMessage(error.message);
     }
   };
+  
   
   
   return (

@@ -10,25 +10,22 @@ export async function sendConfirmationEmail(emailData) {
   const TIMEOUT_MS = 5000; // 5 secondes de timeout
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
+  console.log("emailData", emailData);
   try {
     console.log(
       "📤 Envoi de la demande d'email pour la réservation :",
-      emailData.reservation.id
+      emailData.id
     );
 
-    const response = await fetch(
-      `${apiBaseUrl}/api/mails/${emailData.reservation.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(emailData),
-        signal: controller.signal,
-      }
-    );
+    const response = await fetch(`${apiBaseUrl}/api/mails/${emailData.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(emailData),
+      signal: controller.signal,
+    });
 
     clearTimeout(timeoutId);
 
@@ -43,7 +40,7 @@ export async function sendConfirmationEmail(emailData) {
 
     const data = await response.json();
     console.log("✅ Email traité avec succès:", {
-      reservationId: emailData.reservation.id,
+      reservationId: emailData.reservationId,
       response: data,
     });
 
@@ -51,16 +48,16 @@ export async function sendConfirmationEmail(emailData) {
   } catch (error) {
     if (error.name === "AbortError") {
       throw new Error(
-        `Timeout dépassé (${TIMEOUT_MS}ms) pour la réservation: ${emailData.reservation.id}`
+        `Timeout dépassé (${TIMEOUT_MS}ms) pour la réservation: ${emailData.reservationId}`
       );
     } else if (response && response.status === 500) {
       throw new Error(
-        `Erreur interne du serveur (500) lors de la réservation ${emailData.reservation.id}`
+        `Erreur interne du serveur (500) lors de la réservation ${emailData.reservationId}`
       );
     }
 
     console.error("❌ Erreur lors de l'envoi de l'email:", {
-      reservationId: emailData.reservation.id,
+      reservationId: emailData.reservationId,
       error: error.message,
       type: error.name,
     });

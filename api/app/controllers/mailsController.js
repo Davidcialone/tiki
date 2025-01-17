@@ -25,16 +25,16 @@ export const sendReservationMail = async (req, res) => {
       throw new Error("Réservation non trouvée.");
     }
 
-    if (!reservation.user) {
-      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
-    }
-
     const { email, firstname, lastname } = reservation.user;
     console.log("Données utilisateur extraites:", {
       email,
       firstname,
       lastname,
     });
+
+    if (!reservation.user) {
+      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
+    }
 
     // Collecte des informations de la réservation avec des valeurs par défaut
     const reservationData = {
