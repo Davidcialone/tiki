@@ -40,7 +40,7 @@ export async function sendConfirmationEmail(emailData) {
 
     const data = await response.json();
     console.log("✅ Email traité avec succès:", {
-      reservationId: emailData.reservationId,
+      reservationId: emailData.id,
       response: data,
     });
 

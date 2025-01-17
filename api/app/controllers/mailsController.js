@@ -40,51 +40,58 @@ export const sendReservationMail = async (req, res) => {
   }
 };
 
-// const reservationMock = {
-//   id: 94,
-//   reservation_date: "2025-01-18",
-//   reservation_time: "12:30",
-//   number_of_people: 4,
-//   places_used: 2,
-//   phone: "0609858307",
-//   User: {
-//     email: "cialonedavid@gmail.com",
-//     firstname: "David",
-//     lastname: "Cialone",
-//   },
-// };
-// sendConfirmationEmail(reservationMock);
-
-export async function confirmReservation(reservationId) {
+export async function confirmReservation(req, res) {
   try {
+    const { reservationId } = req.params;
+
     const reservation = await Reservation.findByPk(reservationId);
 
     if (!reservation) {
-      throw new Error("Réservation non trouvée.");
+      return res.status(404).send(`
+        <h1>Erreur</h1>
+        <p>Réservation non trouvée.</p>
+      `);
     }
 
     reservation.status = "confirmed";
     await reservation.save();
 
-    return { message: "Réservation confirmée avec succès." };
+    res.send(`
+      <h1>Confirmation réussie !</h1>
+      <p>Votre réservation a été confirmée avec succès.</p>
+    `);
   } catch (error) {
-    throw error;
+    res.status(500).send(`
+      <h1>Erreur</h1>
+      <p>Une erreur est survenue : ${error.message}</p>
+    `);
   }
 }
 
-export async function cancelReservation(reservationId) {
+export async function cancelReservation(req, res) {
   try {
+    const { reservationId } = req.params;
+
     const reservation = await Reservation.findByPk(reservationId);
 
     if (!reservation) {
-      throw new Error("Réservation non trouvée.");
+      return res.status(404).send(`
+        <h1>Erreur</h1>
+        <p>Réservation non trouvée.</p>
+      `);
     }
 
     reservation.status = "cancelled";
     await reservation.save();
 
-    return { message: "Réservation annulée avec succès." };
+    res.send(`
+      <h1>Réservation annulée</h1>
+      <p>Votre réservation a été annulée avec succès.</p>
+    `);
   } catch (error) {
-    throw error;
+    res.status(500).send(`
+      <h1>Erreur</h1>
+      <p>Une erreur est survenue : ${error.message}</p>
+    `);
   }
 }
