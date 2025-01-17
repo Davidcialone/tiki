@@ -1,10 +1,10 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 // || "http://localhost:5000";
 
-// mailsApi.js
-export async function sendReservationMail(reservationId) {
-  if (!reservationId) {
-    throw new Error("L'ID de réservation est requis");
+// Dans mail.js
+export async function sendConfirmationEmail(emailData) {
+  if (!emailData) {
+    throw new Error("Les données de l'email sont requises");
   }
 
   const TIMEOUT_MS = 5000; // 5 secondes de timeout
@@ -13,18 +13,22 @@ export async function sendReservationMail(reservationId) {
 
   try {
     console.log(
-      "📤 Envoi de la demande d'email pour la réservation:",
-      reservationId
+      "📤 Envoi de la demande d'email pour la réservation :",
+      emailData.reservation.id
     );
 
-    const response = await fetch(`${apiBaseUrl}/api/mails/${reservationId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      signal: controller.signal,
-    });
+    const response = await fetch(
+      `${apiBaseUrl}/api/mails/${emailData.reservation.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(emailData),
+        signal: controller.signal,
+      }
+    );
 
     clearTimeout(timeoutId);
 
@@ -39,7 +43,7 @@ export async function sendReservationMail(reservationId) {
 
     const data = await response.json();
     console.log("✅ Email traité avec succès:", {
-      reservationId,
+      reservationId: emailData.reservation.id,
       response: data,
     });
 
@@ -47,12 +51,16 @@ export async function sendReservationMail(reservationId) {
   } catch (error) {
     if (error.name === "AbortError") {
       throw new Error(
-        `Timeout dépassé (${TIMEOUT_MS}ms) pour la réservation: ${reservationId}`
+        `Timeout dépassé (${TIMEOUT_MS}ms) pour la réservation: ${emailData.reservation.id}`
+      );
+    } else if (response && response.status === 500) {
+      throw new Error(
+        `Erreur interne du serveur (500) lors de la réservation ${emailData.reservation.id}`
       );
     }
 
     console.error("❌ Erreur lors de l'envoi de l'email:", {
-      reservationId,
+      reservationId: emailData.reservation.id,
       error: error.message,
       type: error.name,
     });

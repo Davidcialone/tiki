@@ -29,34 +29,32 @@ export const sendReservationMail = async (req, res) => {
       throw new Error("L'utilisateur associé à la réservation n'existe pas.");
     }
 
-    console.log("User object:", reservation.user);
     const { email, firstname, lastname } = reservation.user;
-    console.log("Extracted user data:", {
+    console.log("Données utilisateur extraites:", {
       email,
       firstname,
       lastname,
     });
 
-    // Log plus détaillé après la requête
-    console.log("Type de reservation:", typeof reservation);
-    console.log("Type de user:", typeof reservation.user);
-
-    // Collecte des informations de la réservation avec vérification des propriétés
+    // Collecte des informations de la réservation avec des valeurs par défaut
     const reservationData = {
-      reservation_date: reservation.reservation_date,
-      reservation_time: reservation.reservation_time,
-      number_of_people: reservation.number_of_people,
-      status: reservation.status,
+      reservation_date: reservation.reservation_date || "Inconnu",
+      reservation_time: reservation.reservation_time || "Inconnu",
+      number_of_people: reservation.number_of_people || "Inconnu",
+      places_used: reservation.places_used || "Inconnu",
+      phone: reservation.phone || "Inconnu",
     };
 
-    console.log("Reservation data:", reservationData);
+    console.log("Données de réservation:", reservationData);
 
-    // Début de l'envoi d'email avec les informations utilisateur et de réservation
-    console.log("Début de l'envoi d'email...");
+    // Création du `emailData` pour envoyer dans l'email
     const emailData = {
-      user: reservation.user,
-      ...reservationData,
+      reservation: reservationData,
+      user: { email, firstname, lastname },
     };
+
+    console.log("emailData:", emailData);
+
     const result = await sendConfirmationEmail(emailData);
     console.log("Résultat de l'envoi d'email :", result);
 
