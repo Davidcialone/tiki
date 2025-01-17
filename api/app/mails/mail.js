@@ -2,22 +2,30 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
+console.log("Email address:", process.env.EMAIL_ADDRESS);
+console.log("Gmail pass:", process.env.EMAIL_PASS);
+
 const createTransporter = async () => {
   try {
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: process.env.EMAIL_ADDRESS,
-        pass: process.env.GMAIL_PASS,
+        user: process.env.EMAIL_ADDRESS, // Doit être défini dans .env
+        pass: process.env.EMAIL_PASS, // Doit être défini dans .env
       },
       tls: {
         rejectUnauthorized: false,
       },
     });
 
+    await transporter.verify();
+    console.log("Transporteur prêt à envoyer des emails.");
     return transporter;
   } catch (error) {
-    console.log("Erreur création transporteur :", error);
+    console.error(
+      "Erreur lors de la création ou de la vérification du transporteur :",
+      error
+    );
     throw error;
   }
 };
@@ -31,16 +39,12 @@ export const sendConfirmationEmail = async (emailData) => {
       throw new Error("Données d'email incomplètes");
     }
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    // Utilisation du transporteur existant
+    const transporter = await createTransporter();
+    const emailresto = process.env.EMAIL_ADDRESS;
 
     const emailTemplate = {
-      from: process.env.EMAIL_USER,
+      from: emailresto,
       to: emailData.user.email,
       subject: "Confirmation de réservation - Restaurant TIKI",
       text: `
@@ -63,10 +67,12 @@ export const sendConfirmationEmail = async (emailData) => {
     console.log("Template email préparé:", emailTemplate);
 
     const info = await transporter.sendMail(emailTemplate);
+    console.log("Email envoyé avec succès:", info);
     return info;
   } catch (error) {
-    console.error("Erreur détaillée :", error);
+    console.error("Erreur détaillée lors de l'envoi d'email :", error);
     throw error;
   }
 };
+
 export default createTransporter;
