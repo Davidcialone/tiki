@@ -25,37 +25,53 @@ const createTransporter = async () => {
 export async function sendConfirmationEmail(reservation) {
   try {
     console.log("Début de l'envoi d'email...");
+    // Déstructurons directement les valeurs dont nous avons besoin
+    const { user } = reservation;
+
+    // Log de débogage
+    console.log("User object:", user);
+    console.log("User dataValues:", user?.dataValues);
+
+    const userData = {
+      email: user?.dataValues?.email,
+      firstname: user?.dataValues?.firstname,
+      lastname: user?.dataValues?.lastname,
+      phone: user?.dataValues?.phone,
+    };
+
+    console.log("Extracted user data:", userData);
+
+    if (!userData.email) {
+      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
+    }
+
     const transporter = await createTransporter();
     console.log("Transporteur créé");
 
     const verifyResult = await transporter.verify();
     console.log("Vérification du transporteur :", verifyResult);
 
-    // Utilise l'association user pour récupérer l'email et le nom
-    const user = reservation.User; // assumption: `User` est l'association qui contient l'utilisateur
-    if (!user) {
-      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
-    }
-
     const mailOptions = {
       from: process.env.EMAIL_ADDRESS,
-      to: user.email, // Utilisation de l'email de l'utilisateur
+      to: userData.email,
       subject: "Confirmation de votre réservation",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
           <h2 style="color: #333;">Confirmation de votre réservation</h2>
-          <p>Bonjour ${user.firstname} ${user.lastname},</p>
+          <p>Bonjour ${userData.firstname} ${userData.lastname},</p>
           <p>Votre réservation a été enregistrée avec succès.</p>
           <p><strong>Détails de la réservation :</strong></p>
           <ul style="list-style-type: none; padding-left: 0;">
             <li><strong>Nombre de personnes :</strong> ${
-              reservation.number_of_people
+              reservation.dataValues.number_of_people
             }</li>
             <li><strong>Date :</strong> ${new Date(
-              reservation.reservation_date
+              reservation.dataValues.reservation_date
             ).toLocaleDateString()}</li>
-            <li><strong>Heure :</strong> ${reservation.reservation_time}</li>
-            <li><strong>Téléphone :</strong> ${reservation.phone}</li>
+            <li><strong>Heure :</strong> ${
+              reservation.dataValues.reservation_time
+            }</li>
+            <li><strong>Téléphone :</strong> ${userData.phone}</li>
           </ul>
           <p>Merci de votre confiance.</p>
           <p>Cordialement,</p>
@@ -65,7 +81,7 @@ export async function sendConfirmationEmail(reservation) {
     };
 
     const result = await transporter.sendMail(mailOptions);
-    console.log("Résultat de l’envoi :", result);
+    console.log("Résultat de l'envoi :", result);
 
     return result;
   } catch (error) {
@@ -73,5 +89,4 @@ export async function sendConfirmationEmail(reservation) {
     throw error;
   }
 }
-
 export default createTransporter;
