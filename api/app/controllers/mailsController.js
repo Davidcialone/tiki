@@ -41,24 +41,21 @@ export const sendReservationMail = async (req, res) => {
     console.log("Type de reservation:", typeof reservation);
     console.log("Type de user:", typeof reservation.user);
 
-    // Collecte des informations de la réservation
-    const { reservation_date, reservation_time, number_of_people, status } =
-      reservation;
-    console.log("Reservation data:", {
-      reservation_date,
-      reservation_time,
-      number_of_people,
-      status,
-    });
+    // Collecte des informations de la réservation avec vérification des propriétés
+    const reservationData = {
+      reservation_date: reservation.reservation_date,
+      reservation_time: reservation.reservation_time,
+      number_of_people: reservation.number_of_people,
+      status: reservation.status,
+    };
+
+    console.log("Reservation data:", reservationData);
 
     // Début de l'envoi d'email avec les informations utilisateur et de réservation
     console.log("Début de l'envoi d'email...");
     const emailData = {
       user: reservation.user,
-      reservation_date,
-      reservation_time,
-      number_of_people,
-      status,
+      ...reservationData,
     };
     const result = await sendConfirmationEmail(emailData);
     console.log("Résultat de l'envoi d'email :", result);
