@@ -56,8 +56,10 @@ export const sendConfirmationEmail = async (emailData) => {
     );
 
     // Liens pour confirmer ou annuler la réservation
-    const confirmLink = `${process.env.API_BASE_URL}/mails/${emailData.reservation.id}/confirm`;
-    const cancelLink = `${process.env.API_BASE_URL}/mails/${emailData.reservation.id}/cancel`;
+    const confirmLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/confirm`;
+    console.log("confirmLink", confirmLink);
+    const cancelLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/cancel`;
+    console.log("cancelLink", cancelLink);
 
     const emailTemplate = {
       from: emailresto,
