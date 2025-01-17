@@ -7,10 +7,10 @@ export async function sendConfirmationEmail(emailData) {
     throw new Error("Les données de l'email sont requises");
   }
 
-  const TIMEOUT_MS = 5000;
+  const TIMEOUT_MS = 5000; // 5 secondes de timeout
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
+  console.log("emailData", emailData);
   try {
     console.log(
       "📤 Envoi de la demande d'email pour la réservation :",
@@ -40,17 +40,19 @@ export async function sendConfirmationEmail(emailData) {
 
     const data = await response.json();
     console.log("✅ Email traité avec succès:", {
-      reservationId: emailData.id,
+      reservationId: emailData.reservationId,
       response: data,
     });
 
     return data;
   } catch (error) {
-    clearTimeout(timeoutId);
-
     if (error.name === "AbortError") {
       throw new Error(
         `Timeout dépassé (${TIMEOUT_MS}ms) pour la réservation: ${emailData.id}`
+      );
+    } else if (response && response.status === 500) {
+      throw new Error(
+        `Erreur interne du serveur (500) lors de la réservation ${emailData.id}`
       );
     }
 

@@ -5,9 +5,6 @@ import { fr } from "date-fns/locale";
 
 dotenv.config();
 
-console.log("Email address:", process.env.EMAIL_ADDRESS);
-console.log("Gmail pass:", process.env.EMAIL_PASS);
-
 const createTransporter = async () => {
   try {
     const transporter = nodemailer.createTransport({
