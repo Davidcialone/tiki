@@ -29,10 +29,11 @@ export const sendReservationMail = async (req, res) => {
     }
 
     console.log("User object:", reservation.user);
+    const user = reservation.user;
     console.log("Extracted user data:", {
-      email: reservation.user.email,
-      firstname: reservation.user.firstname,
-      lastname: reservation.user.lastname,
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
     });
 
     // Log plus détaillé après la requête
