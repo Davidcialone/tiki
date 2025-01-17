@@ -20,11 +20,25 @@ export const sendReservationMail = async (req, res) => {
         },
       ],
     });
+    if (!reservation) {
+      throw new Error("Réservation non trouvée.");
+    }
+
+    if (!reservation.user) {
+      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
+    }
+
+    console.log("User object:", reservation.user);
+    console.log("Extracted user data:", {
+      email: reservation.user.email,
+      firstname: reservation.user.firstname,
+      lastname: reservation.user.lastname,
+    });
 
     // Log plus détaillé après la requête
     console.log("Type de reservation:", typeof reservation);
-    console.log("Type de user:", typeof reservation?.user);
-    console.log("User data:", reservation?.user?.get({ plain: true }));
+    console.log("Type de user:", typeof reservation.user);
+    console.log("User data:", reservation.user.get({ plain: true }));
 
     if (!reservation) {
       throw new Error("Réservation non trouvée.");
