@@ -1,5 +1,8 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+
 dotenv.config();
 
 console.log("Email address:", process.env.EMAIL_ADDRESS);
@@ -30,6 +33,12 @@ const createTransporter = async () => {
   }
 };
 
+// Fonction pour formater la date en français
+const formatDateFrench = (dateStr) => {
+  const date = new Date(dateStr);
+  return format(date, "EEEE d MMMM yyyy", { locale: fr });
+};
+
 export const sendConfirmationEmail = async (emailData) => {
   try {
     console.log("Début de l'envoi d'email...");
@@ -43,24 +52,58 @@ export const sendConfirmationEmail = async (emailData) => {
     const transporter = await createTransporter();
     const emailresto = process.env.EMAIL_ADDRESS;
 
+    // Conversion de la date au format français
+    const formattedDate = formatDateFrench(
+      emailData.reservation.reservation_date
+    );
+
+    // Liens pour confirmer ou annuler la réservation
+    const confirmLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/confirm`;
+    const cancelLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/cancel`;
+
     const emailTemplate = {
       from: emailresto,
       to: emailData.user.email,
-      subject: "Confirmation de réservation - Restaurant TIKI",
+      subject: "✨ Confirmation de votre réservation - Restaurant TIKI ✨",
       text: `
         Bonjour ${emailData.user.firstname} ${emailData.user.lastname},
-        Votre réservation a été confirmée pour le ${emailData.reservation.reservation_date} à ${emailData.reservation.reservation_time}.
-        Nombre de personnes : ${emailData.reservation.number_of_people}
-        À bientôt!
-        L'équipe TIKI
+
+        Nous sommes ravis de vous confirmer votre réservation au Restaurant TIKI !
+
+        📅 Date : ${formattedDate}
+        🕛 Heure : ${emailData.reservation.reservation_time}
+        👥 Nombre de personnes : ${emailData.reservation.number_of_people}
+
+        Vous pouvez :
+        - Confirmer votre réservation ici : ${confirmLink}
+        - Annuler votre réservation ici : ${cancelLink}
+
+        Nous vous attendons avec impatience pour partager un moment délicieux et convivial.
+
+        À très bientôt !
+        🍹 L'équipe TIKI
       `,
       html: `
-        <h2>Confirmation de réservation - Restaurant TIKI</h2>
-        <p>Bonjour ${emailData.user.firstname} ${emailData.user.lastname},</p>
-        <p>Votre réservation a été confirmée pour le ${emailData.reservation.reservation_date} à ${emailData.reservation.reservation_time}.</p>
-        <p>Nombre de personnes : ${emailData.reservation.number_of_people}</p>
-        <p>À bientôt!</p>
-        <p>L'équipe TIKI</p>
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2 style="color: #FF6347;">✨ Confirmation de votre réservation - Restaurant TIKI ✨</h2>
+          <p>Bonjour <strong>${emailData.user.firstname} ${emailData.user.lastname}</strong>,</p>
+          <p>Nous sommes ravis de vous confirmer votre réservation au <strong>Restaurant TIKI</strong> !</p>
+          <ul>
+            <li><strong>📅 Date :</strong> ${formattedDate}</li>
+            <li><strong>🕛 Heure :</strong> ${emailData.reservation.reservation_time}</li>
+            <li><strong>👥 Nombre de personnes :</strong> ${emailData.reservation.number_of_people}</li>
+          </ul>
+          <p>Vous pouvez :</p>
+          <p>
+            <a href="${confirmLink}" style="color: #28a745; text-decoration: none; font-weight: bold;">✔️ Confirmer votre réservation</a>
+          </p>
+          <p>
+            <a href="${cancelLink}" style="color: #dc3545; text-decoration: none; font-weight: bold;">❌ Annuler votre réservation</a>
+          </p>
+          <p>Nous vous attendons avec impatience pour partager un moment délicieux et convivial.</p>
+          <p>À très bientôt !</p>
+          <p style="color: #FF6347;"><strong>🍹 L'équipe TIKI</strong></p>
+        </div>
       `,
     };
 
