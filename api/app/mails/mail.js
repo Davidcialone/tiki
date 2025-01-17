@@ -2,17 +2,22 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-const apiBaseUrl = process.env.API_BASE_URL;
 
+// Charger les variables d'environnement avant de les utiliser
 dotenv.config();
+
+const apiBaseUrl = process.env.API_BASE_URL;
+if (!apiBaseUrl) {
+  throw new Error("API_BASE_URL n'est pas défini dans le fichier .env");
+}
 
 const createTransporter = async () => {
   try {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: process.env.EMAIL_ADDRESS, // Doit être défini dans .env
-        pass: process.env.EMAIL_PASS, // Doit être défini dans .env
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASS,
       },
       tls: {
         rejectUnauthorized: false,
@@ -31,7 +36,6 @@ const createTransporter = async () => {
   }
 };
 
-// Fonction pour formater la date en français
 const formatDateFrench = (dateStr) => {
   const date = new Date(dateStr);
   return format(date, "EEEE d MMMM yyyy", { locale: fr });
@@ -46,20 +50,23 @@ export const sendConfirmationEmail = async (emailData) => {
       throw new Error("Données d'email incomplètes");
     }
 
-    // Utilisation du transporteur existant
+    if (!emailData.reservation.id) {
+      throw new Error("ID de réservation manquant");
+    }
+
     const transporter = await createTransporter();
     const emailresto = process.env.EMAIL_ADDRESS;
 
-    // Conversion de la date au format français
     const formattedDate = formatDateFrench(
       emailData.reservation.reservation_date
     );
 
-    // Liens pour confirmer ou annuler la réservation
+    // Construction des liens avec vérification
     const confirmLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/confirm`;
-    console.log("confirmLink", confirmLink);
     const cancelLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/cancel`;
-    console.log("cancelLink", cancelLink);
+
+    console.log("confirmLink:", confirmLink);
+    console.log("cancelLink:", cancelLink);
 
     const emailTemplate = {
       from: emailresto,
@@ -74,7 +81,7 @@ export const sendConfirmationEmail = async (emailData) => {
         🕛 Heure : ${emailData.reservation.reservation_time}
         👥 Nombre de personnes : ${emailData.reservation.number_of_people}
 
-         Vous pouvez :
+        Vous pouvez :
         - Confirmer votre réservation ici : ${confirmLink}
         - Annuler votre réservation ici : ${cancelLink}
 
