@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+const apiBaseUrl = process.env.API_BASE_URL;
 
 dotenv.config();
 
@@ -71,7 +72,7 @@ export const sendConfirmationEmail = async (emailData) => {
         🕛 Heure : ${emailData.reservation.reservation_time}
         👥 Nombre de personnes : ${emailData.reservation.number_of_people}
 
-        Vous pouvez :
+         Vous pouvez :
         - Confirmer votre réservation ici : ${confirmLink}
         - Annuler votre réservation ici : ${cancelLink}
 
