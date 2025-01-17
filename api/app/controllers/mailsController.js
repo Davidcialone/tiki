@@ -20,6 +20,7 @@ export const sendReservationMail = async (req, res) => {
         },
       ],
     });
+
     if (!reservation) {
       throw new Error("Réservation non trouvée.");
     }
@@ -29,29 +30,37 @@ export const sendReservationMail = async (req, res) => {
     }
 
     console.log("User object:", reservation.user);
-    const user = reservation.user;
+    const { email, firstname, lastname } = reservation.user;
     console.log("Extracted user data:", {
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
+      email,
+      firstname,
+      lastname,
     });
 
     // Log plus détaillé après la requête
     console.log("Type de reservation:", typeof reservation);
     console.log("Type de user:", typeof reservation.user);
-    console.log("User data:", reservation.user.get({ plain: true }));
 
-    if (!reservation) {
-      throw new Error("Réservation non trouvée.");
-    }
+    // Collecte des informations de la réservation
+    const { reservation_date, reservation_time, number_of_people, status } =
+      reservation;
+    console.log("Reservation data:", {
+      reservation_date,
+      reservation_time,
+      number_of_people,
+      status,
+    });
 
-    // Convertir l'instance Sequelize en objet plain JavaScript
-    const plainReservation = reservation.get({ plain: true });
-    console.log("Plain reservation:", plainReservation);
-
-    // Début de l'envoi d'email avec l'objet plain
+    // Début de l'envoi d'email avec les informations utilisateur et de réservation
     console.log("Début de l'envoi d'email...");
-    const result = await sendConfirmationEmail(plainReservation);
+    const emailData = {
+      user: reservation.user,
+      reservation_date,
+      reservation_time,
+      number_of_people,
+      status,
+    };
+    const result = await sendConfirmationEmail(emailData);
     console.log("Résultat de l'envoi d'email :", result);
 
     return res.status(200).json({
