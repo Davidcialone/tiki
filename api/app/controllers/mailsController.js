@@ -4,70 +4,38 @@ import { sendConfirmationEmail } from "../mails/mail.js";
 export const sendReservationMail = async (req, res) => {
   try {
     console.log("⚡️ sendReservationMail appelé");
-    console.log("Paramètres:", req.params);
-    console.log("Body:", req.body);
+    const reservationData = req.body;
 
-    const reservationId = req.params.reservationId;
-
-    // Récupération de la réservation avec l'inclusion de l'utilisateur
-    const reservation = await Reservation.findOne({
-      where: { id: reservationId },
-      include: [
-        {
-          model: User, // Relation avec le modèle User
-          as: "user", // Alias pour le modèle User
-          attributes: ["id", "email", "firstname", "lastname"], // Sélectionnez les champs nécessaires
-        },
-      ],
-    });
-
-    if (!reservation) {
-      throw new Error("Réservation non trouvée.");
-    }
-
-    const { email, firstname, lastname } = reservation.user;
-    console.log("Données utilisateur extraites:", {
-      email,
-      firstname,
-      lastname,
-    });
-
-    if (!reservation.user) {
-      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
-    }
-
-    // Collecte des informations de la réservation avec des valeurs par défaut
-    const reservationData = {
-      reservation_date: reservation.reservation_date || "Inconnu",
-      reservation_time: reservation.reservation_time || "Inconnu",
-      number_of_people: reservation.number_of_people || "Inconnu",
-      places_used: reservation.places_used || "Inconnu",
-      phone: reservation.phone || "Inconnu",
-    };
-
-    console.log("Données de réservation:", reservationData);
-
-    // Création du `emailData` pour envoyer dans l'email
     const emailData = {
-      reservation: reservationData,
-      user: { email, firstname, lastname },
+      reservation: {
+        reservation_date: reservationData.reservation_date,
+        reservation_time: reservationData.reservation_time,
+        number_of_people: reservationData.number_of_people,
+        places_used: reservationData.places_used || "Inconnu",
+        phone: reservationData.phone,
+      },
+      user: {
+        email: reservationData.email,
+        firstname: reservationData.firstName.toLowerCase(), // Conversion en minuscules
+        lastname: reservationData.lastName.toLowerCase(), // Conversion en minuscules
+        phone: reservationData.phone,
+      },
     };
 
-    console.log("emailData:", emailData);
+    console.log("Données préparées pour l'envoi:", emailData);
 
     const result = await sendConfirmationEmail(emailData);
-    console.log("Résultat de l'envoi d'email :", result);
 
     return res.status(200).json({
       success: true,
-      message: "Email envoyé avec succès.",
-      reservationId: reservation.id,
+      message: "Email envoyé avec succès",
+      result,
     });
   } catch (error) {
-    console.error("❌ Erreur dans sendReservationMail :", error);
+    console.error("❌ Erreur dans sendReservationMail:", error);
     return res.status(500).json({
       success: false,
-      error: error.message,
+      message: error.message,
     });
   }
 };

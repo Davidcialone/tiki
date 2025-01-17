@@ -22,27 +22,27 @@ const createTransporter = async () => {
   }
 };
 
-export async function sendConfirmationEmail(reservation) {
+export const sendConfirmationEmail = async (emailData) => {
+  console.log("Début de l'envoi d'email...");
   try {
-    console.log("Début de l'envoi d'email...");
-    // Déstructurons directement les valeurs dont nous avons besoin
-    const { user } = reservation;
-
-    // Log de débogage
+    const user = emailData.user;
     console.log("User object:", user);
-    console.log("User dataValues:", user?.dataValues);
+
+    if (!user || !user.email) {
+      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
+    }
 
     const userData = {
-      email: user?.dataValues?.email,
-      firstname: user?.dataValues?.firstname,
-      lastname: user?.dataValues?.lastname,
-      phone: user?.dataValues?.phone,
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      phone: emailData.reservation.phone,
     };
 
     console.log("Extracted user data:", userData);
-
-    if (!userData.email) {
-      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
+    // Vérification des données requises
+    if (!userData.email || !userData.firstname || !userData.lastname) {
+      throw new Error("Données utilisateur incomplètes");
     }
 
     const transporter = await createTransporter();
@@ -88,5 +88,5 @@ export async function sendConfirmationEmail(reservation) {
     console.error("Erreur détaillée :", error);
     throw error;
   }
-}
+};
 export default createTransporter;
