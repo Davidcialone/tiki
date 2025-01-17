@@ -23,67 +23,47 @@ const createTransporter = async () => {
 };
 
 export const sendConfirmationEmail = async (emailData) => {
-  console.log("Début de l'envoi d'email...");
   try {
-    const user = emailData.user;
-    console.log("User object:", user);
+    console.log("Début de l'envoi d'email...");
+    console.log("Données d'email reçues :", emailData);
 
-    if (!user || !user.email) {
-      throw new Error("L'utilisateur associé à la réservation n'existe pas.");
+    if (!emailData?.user || !emailData?.reservation) {
+      throw new Error("Données d'email incomplètes");
     }
 
-    const userData = {
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      phone: emailData.reservation.phone,
-    };
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
 
-    console.log("Extracted user data:", userData);
-    // Vérification des données requises
-    if (!userData.email || !userData.firstname || !userData.lastname) {
-      throw new Error("Données utilisateur incomplètes");
-    }
-
-    const transporter = await createTransporter();
-    console.log("Transporteur créé");
-
-    const verifyResult = await transporter.verify();
-    console.log("Vérification du transporteur :", verifyResult);
-
-    const mailOptions = {
-      from: process.env.EMAIL_ADDRESS,
-      to: userData.email,
-      subject: "Confirmation de votre réservation",
+    const emailTemplate = {
+      from: process.env.EMAIL_USER,
+      to: emailData.user.email,
+      subject: "Confirmation de réservation - Restaurant TIKI",
+      text: `
+        Bonjour ${emailData.user.firstname} ${emailData.user.lastname},
+        Votre réservation a été confirmée pour le ${emailData.reservation.reservation_date} à ${emailData.reservation.reservation_time}.
+        Nombre de personnes : ${emailData.reservation.number_of_people}
+        À bientôt!
+        L'équipe TIKI
+      `,
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
-          <h2 style="color: #333;">Confirmation de votre réservation</h2>
-          <p>Bonjour ${userData.firstname} ${userData.lastname},</p>
-          <p>Votre réservation a été enregistrée avec succès.</p>
-          <p><strong>Détails de la réservation :</strong></p>
-          <ul style="list-style-type: none; padding-left: 0;">
-            <li><strong>Nombre de personnes :</strong> ${
-              reservation.dataValues.number_of_people
-            }</li>
-            <li><strong>Date :</strong> ${new Date(
-              reservation.dataValues.reservation_date
-            ).toLocaleDateString()}</li>
-            <li><strong>Heure :</strong> ${
-              reservation.dataValues.reservation_time
-            }</li>
-            <li><strong>Téléphone :</strong> ${userData.phone}</li>
-          </ul>
-          <p>Merci de votre confiance.</p>
-          <p>Cordialement,</p>
-          <p>Votre équipe</p>
-        </div>
+        <h2>Confirmation de réservation - Restaurant TIKI</h2>
+        <p>Bonjour ${emailData.user.firstname} ${emailData.user.lastname},</p>
+        <p>Votre réservation a été confirmée pour le ${emailData.reservation.reservation_date} à ${emailData.reservation.reservation_time}.</p>
+        <p>Nombre de personnes : ${emailData.reservation.number_of_people}</p>
+        <p>À bientôt!</p>
+        <p>L'équipe TIKI</p>
       `,
     };
 
-    const result = await transporter.sendMail(mailOptions);
-    console.log("Résultat de l'envoi :", result);
+    console.log("Template email préparé:", emailTemplate);
 
-    return result;
+    const info = await transporter.sendMail(emailTemplate);
+    return info;
   } catch (error) {
     console.error("Erreur détaillée :", error);
     throw error;
