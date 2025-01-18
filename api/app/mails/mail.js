@@ -50,7 +50,7 @@ export const sendConfirmationEmail = async (emailData) => {
       throw new Error("Données d'email incomplètes");
     }
 
-    if (!emailData.reservation.id) {
+    if (!emailData.id) {
       throw new Error("ID de réservation manquant");
     }
 
@@ -62,8 +62,8 @@ export const sendConfirmationEmail = async (emailData) => {
     );
 
     // Construction des liens avec vérification
-    const confirmLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/confirm`;
-    const cancelLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/cancel`;
+    const confirmLink = `${apiBaseUrl}/mails/${emailData.id}/confirm`;
+    const cancelLink = `${apiBaseUrl}/mails/${emailData.id}/cancel`;
 
     console.log("confirmLink:", confirmLink);
     console.log("cancelLink:", cancelLink);
