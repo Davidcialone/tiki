@@ -33,45 +33,44 @@ export const sendReservationMail = async (req, res) => {
   try {
     console.log("⚡️ sendReservationMail appelé");
     const reservationData = req.body;
-    const time = reservationData.reservation_time;
+    const time = reservationData.reservation.reservation_time; // Corrigé ici
+
     console.log("time", time);
     const typeOfTime = typeof time;
     console.log("typeOfTime", typeOfTime);
-    const formattedTime = formatTime(time);
-    console.log("formattedTime", formattedTime);
 
-    console.log("Données reçues:", reservationData);
-
-    // Vérification des données requises
-    if (!reservationData) {
-      throw new Error("Données de réservation manquantes");
-    }
-
-    // Vérification et validation de l'heure de réservation
-    if (!reservationData.reservation_time) {
+    // Vérification si time est défini et une chaîne
+    if (!time) {
       throw new Error("L'heure de réservation est requise");
     }
 
-    // // Formatage et validation de l'heure
-    // const formattedTime = formatTime(reservationData.reservation_time);
-    // if (!formattedTime) {
-    //   throw new Error("L'heure de réservation est requise");
-    // }
+    if (typeOfTime !== "string") {
+      throw new Error("L'heure de réservation doit être sous forme de chaîne");
+    }
+
+    const formattedTime = formatTime(time);
+    console.log("formattedTime", formattedTime);
+
+    if (!formattedTime) {
+      throw new Error("Format de l'heure de réservation invalide");
+    }
+
+    console.log("Données reçues:", reservationData);
 
     const emailData = {
       reservation: {
-        id: reservationData.id,
-        reservation_date: reservationData.reservation_date,
+        id: reservationData.reservation.id,
+        reservation_date: reservationData.reservation.reservation_date,
         reservation_time: formattedTime, // Utilisation de l'heure formatée
-        number_of_people: reservationData.number_of_people,
-        places_used: reservationData.places_used || "Inconnu",
-        phone: reservationData.phone || "",
+        number_of_people: reservationData.reservation.number_of_people,
+        places_used: reservationData.reservation.places_used || "Inconnu",
+        phone: reservationData.reservation.phone || "",
       },
       user: {
-        email: reservationData.email,
-        firstname: (reservationData.firstName || "").toLowerCase(),
-        lastname: (reservationData.lastName || "").toLowerCase(),
-        phone: reservationData.phone || "",
+        email: reservationData.user.email,
+        firstname: (reservationData.user.firstname || "").toLowerCase(),
+        lastname: (reservationData.user.lastname || "").toLowerCase(),
+        phone: reservationData.user.phone || "",
       },
     };
 
@@ -85,7 +84,7 @@ export const sendReservationMail = async (req, res) => {
       result,
     });
   } catch (error) {
-    console.error("❌ Erreur dans sendReservationMail:", error);
+    console.error("❌ Erreur dans sendReservationMail:", error.message);
     return res.status(500).json({
       success: false,
       message: error.message,
