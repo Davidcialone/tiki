@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
-// Charger les variables d'environnement avant de les utiliser
 dotenv.config();
 
 const apiBaseUrl = process.env.API_BASE_URL;
@@ -50,8 +49,8 @@ export const sendConfirmationEmail = async (emailData) => {
       throw new Error("Données d'email incomplètes");
     }
 
-    if (!emailData.id) {
-      throw new Error("ID de réservation manquant");
+    if (!emailData.reservation.id) {
+      throw new Error("ID de réservation manquant dans l'objet reservation");
     }
 
     const transporter = await createTransporter();
@@ -61,9 +60,9 @@ export const sendConfirmationEmail = async (emailData) => {
       emailData.reservation.reservation_date
     );
 
-    // Construction des liens avec vérification
-    const confirmLink = `${apiBaseUrl}/mails/${emailData.id}/confirm`;
-    const cancelLink = `${apiBaseUrl}/mails/${emailData.id}/cancel`;
+    // Construction des liens avec l'ID de la réservation
+    const confirmLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/confirm`;
+    const cancelLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/cancel`;
 
     console.log("confirmLink:", confirmLink);
     console.log("cancelLink:", cancelLink);
