@@ -33,6 +33,12 @@ export const sendReservationMail = async (req, res) => {
   try {
     console.log("⚡️ sendReservationMail appelé");
     const reservationData = req.body;
+    const time = reservationData.reservation_time;
+    console.log("time", time);
+    const typeOfTime = typeof time;
+    console.log("typeOfTime", typeOfTime);
+    const formattedTime = formatTime(time);
+    console.log("formattedTime", formattedTime);
 
     console.log("Données reçues:", reservationData);
 
@@ -41,11 +47,16 @@ export const sendReservationMail = async (req, res) => {
       throw new Error("Données de réservation manquantes");
     }
 
-    // Formatage et validation de l'heure
-    const formattedTime = formatTime(reservationData.reservation_time);
-    if (!formattedTime) {
+    // Vérification et validation de l'heure de réservation
+    if (!reservationData.reservation_time) {
       throw new Error("L'heure de réservation est requise");
     }
+
+    // // Formatage et validation de l'heure
+    // const formattedTime = formatTime(reservationData.reservation_time);
+    // if (!formattedTime) {
+    //   throw new Error("L'heure de réservation est requise");
+    // }
 
     const emailData = {
       reservation: {

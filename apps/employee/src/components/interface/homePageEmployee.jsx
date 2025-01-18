@@ -27,7 +27,7 @@ export function HomePageEmployee() {
           clearInterval(simulateProgress);
           return 100;
         }
-        return prev + 3;
+        return prev + 1;
       });
     }, 500); // Simule la progression toutes les 500ms
 
