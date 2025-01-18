@@ -3,26 +3,28 @@ import { sendConfirmationEmail } from "../mails/mail.js";
 
 // Fonction utilitaire pour formater l'heure
 const formatTime = (timeString) => {
+  console.log("formatTime appelé avec :", timeString);
   if (!timeString) return null;
 
-  // Si l'heure est déjà au format HH:MM:SS, on la retourne telle quelle
   if (/^\d{2}:\d{2}:\d{2}$/.test(timeString)) {
+    console.log("L'heure est au format HH:MM:SS");
     return timeString;
   }
 
-  // Si l'heure est au format HH:MM, on ajoute les secondes
   if (/^\d{2}:\d{2}$/.test(timeString)) {
+    console.log("L'heure est au format HH:MM, ajout des secondes");
     return `${timeString}:00`;
   }
 
-  // Essaie de créer un objet Date valide
   try {
     const date = new Date(`2000-01-01T${timeString}`);
     if (isNaN(date.getTime())) {
+      console.error("Valeur d'heure invalide :", timeString);
       throw new Error("Invalid time value");
     }
     return date.toTimeString().split(" ")[0];
   } catch (error) {
+    console.error("Erreur dans formatTime :", error.message);
     throw new Error("Invalid time value");
   }
 };
