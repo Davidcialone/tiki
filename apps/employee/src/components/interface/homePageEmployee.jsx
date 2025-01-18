@@ -6,6 +6,7 @@ export function HomePageEmployee() {
   const [totalReservations, setTotalReservations] = useState(0);
   const [totalCovers, setTotalCovers] = useState(0);
   const [loading, setLoading] = useState(true); // État pour l'animation de chargement
+  const [progress, setProgress] = useState(0); // État pour la progression
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -20,15 +21,37 @@ export function HomePageEmployee() {
       }
     };
 
+    const simulateProgress = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(simulateProgress);
+          return 100;
+        }
+        return prev + 3;
+      });
+    }, 500); // Simule la progression toutes les 500ms
+
     fetchReservations();
+
+    return () => clearInterval(simulateProgress);
   }, []);
 
   return (
     <div className="bg-gray-300 min-h-screen mt-16 p-4">
       {/* Animation de chargement */}
       {loading ? (
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          {/* Barre de chargement */}
+          <div className="relative w-64 h-4 bg-gray-400 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-500"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          {/* Texte personnalisé */}
+          <p className="mt-4 text-lg font-medium text-gray-700">
+            Chargement en cours... {progress}%
+          </p>
         </div>
       ) : (
         <>

@@ -13,6 +13,10 @@ router.use("/menus", menusRouter);
 router.use("/auth", authRouter);
 router.use("/mails", mailRouter);
 
+router.post("/activate", (req, res) => {
+  res.status(200).json({ message: "Base de données activée" });
+});
+
 // Middleware 404 (API)
 router.use((req, res) => {
   res.status(404).json({ error: "Ressource not found" });
