@@ -6,19 +6,25 @@ export const sendReservationMail = async (req, res) => {
     console.log("⚡️ sendReservationMail appelé");
     const reservationData = req.body;
 
+    // Vérification des données requises
+    if (!reservationData) {
+      throw new Error("Données de réservation manquantes");
+    }
+
     const emailData = {
       reservation: {
+        id: reservationData.id, // Ajout de l'ID de réservation
         reservation_date: reservationData.reservation_date,
         reservation_time: reservationData.reservation_time,
         number_of_people: reservationData.number_of_people,
         places_used: reservationData.places_used || "Inconnu",
-        phone: reservationData.phone,
+        phone: reservationData.phone || "",
       },
       user: {
         email: reservationData.email,
-        firstname: reservationData.firstName.toLowerCase(), // Conversion en minuscules
-        lastname: reservationData.lastName.toLowerCase(), // Conversion en minuscules
-        phone: reservationData.phone,
+        firstname: (reservationData.firstName || "").toLowerCase(), // Gestion sécurisée
+        lastname: (reservationData.lastName || "").toLowerCase(), // Gestion sécurisée
+        phone: reservationData.phone || "",
       },
     };
 

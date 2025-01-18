@@ -1,30 +1,39 @@
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL; // || "http://localhost:5000";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export async function sendConfirmationEmail(emailData) {
   if (!emailData) {
     throw new Error("Les données de l'email sont requises");
   }
 
-  // Restructuration des données pour correspondre au format attendu par le serveur
+  // Assurons-nous que toutes les chaînes de caractères sont définies
   const formattedData = {
-    id: emailData.id, // On garde l'ID au niveau racine pour la route
+    id: emailData.id,
     reservation: {
       id: emailData.id,
-      reservation_date: emailData.reservation_date,
-      reservation_time: emailData.reservation_time,
-      number_of_people: emailData.number_of_people,
-      places_used: emailData.places_used,
-      phone: emailData.phone,
+      reservation_date: emailData.reservation_date || "",
+      reservation_time: emailData.reservation_time || "",
+      number_of_people: emailData.number_of_people || 1,
+      places_used: emailData.places_used || "Non spécifié",
+      phone: emailData.phone || "",
     },
     user: {
-      email: emailData.email,
-      firstname: emailData.firstName,
-      lastname: emailData.lastName,
-      phone: emailData.phone,
+      email: emailData.email || "",
+      firstname: (emailData.firstName || "").trim(),
+      lastname: (emailData.lastName || "").trim(),
+      phone: emailData.phone || "",
     },
   };
 
-  const TIMEOUT_MS = 5000; // 5 secondes de timeout
+  // Validation des données essentielles
+  if (
+    !formattedData.user.email ||
+    !formattedData.user.firstname ||
+    !formattedData.user.lastname
+  ) {
+    throw new Error("Les informations de l'utilisateur sont incomplètes");
+  }
+
+  const TIMEOUT_MS = 5000;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
