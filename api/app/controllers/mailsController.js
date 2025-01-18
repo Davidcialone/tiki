@@ -1,29 +1,63 @@
 import { Reservation, User } from "../models/index.js";
 import { sendConfirmationEmail } from "../mails/mail.js";
 
+// Fonction utilitaire pour formater l'heure
+const formatTime = (timeString) => {
+  if (!timeString) return null;
+
+  // Si l'heure est déjà au format HH:MM:SS, on la retourne telle quelle
+  if (/^\d{2}:\d{2}:\d{2}$/.test(timeString)) {
+    return timeString;
+  }
+
+  // Si l'heure est au format HH:MM, on ajoute les secondes
+  if (/^\d{2}:\d{2}$/.test(timeString)) {
+    return `${timeString}:00`;
+  }
+
+  // Essaie de créer un objet Date valide
+  try {
+    const date = new Date(`2000-01-01T${timeString}`);
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid time value");
+    }
+    return date.toTimeString().split(" ")[0];
+  } catch (error) {
+    throw new Error("Invalid time value");
+  }
+};
+
 export const sendReservationMail = async (req, res) => {
   try {
     console.log("⚡️ sendReservationMail appelé");
     const reservationData = req.body;
+
+    console.log("Données reçues:", reservationData);
 
     // Vérification des données requises
     if (!reservationData) {
       throw new Error("Données de réservation manquantes");
     }
 
+    // Formatage et validation de l'heure
+    const formattedTime = formatTime(reservationData.reservation_time);
+    if (!formattedTime) {
+      throw new Error("L'heure de réservation est requise");
+    }
+
     const emailData = {
       reservation: {
-        id: reservationData.id, // Ajout de l'ID de réservation
+        id: reservationData.id,
         reservation_date: reservationData.reservation_date,
-        reservation_time: reservationData.reservation_time,
+        reservation_time: formattedTime, // Utilisation de l'heure formatée
         number_of_people: reservationData.number_of_people,
         places_used: reservationData.places_used || "Inconnu",
         phone: reservationData.phone || "",
       },
       user: {
         email: reservationData.email,
-        firstname: (reservationData.firstName || "").toLowerCase(), // Gestion sécurisée
-        lastname: (reservationData.lastName || "").toLowerCase(), // Gestion sécurisée
+        firstname: (reservationData.firstName || "").toLowerCase(),
+        lastname: (reservationData.lastName || "").toLowerCase(),
         phone: reservationData.phone || "",
       },
     };
@@ -45,6 +79,8 @@ export const sendReservationMail = async (req, res) => {
     });
   }
 };
+
+// Le reste du code reste inchangé...
 
 export async function confirmReservation(req, res) {
   try {
