@@ -7,7 +7,7 @@ export const router = Router();
 router.post("/:reservationId", mailsController.sendReservationMail);
 
 // post /mails/:reservationId/confirm
-router.post("/:reservationId/confirm", mailsController.confirmReservation);
+router.put("/:reservationId/confirm", mailsController.confirmReservation);
 
 // post /mails/:reservationId/cancel
-router.post("/:reservationId/cancel", mailsController.cancelReservation);
+router.put("/:reservationId/cancel", mailsController.cancelReservation);
