@@ -42,6 +42,7 @@ export function RestaurantHomePage() {
               ></div>
             </div>
             <p className="text-white mt-4 text-lg text-center">
+              <p>J'active la base de données gratuite, désolé c'est un peu long</p>
               Chargement en cours... {progress}%
             </p>
           </div>

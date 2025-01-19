@@ -96,28 +96,40 @@ export const sendConfirmationEmail = async (emailData) => {
       to: emailData.user.email,
       subject: "✨ Confirmation de votre réservation - Restaurant TIKI ✨",
       html: `
-        <div style="font-family: Arial, sans-serif; color: #333;">
-          <h2 style="color: #FF6347;">✨ Confirmation de votre réservation - Restaurant TIKI ✨</h2>
+        <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #FF6347; text-align: center;">✨ Confirmation de votre réservation - Restaurant TIKI ✨</h2>
+          
           <p>Bonjour <strong>${emailData.user.firstname} ${emailData.user.lastname}</strong>,</p>
+          
           <p>Nous sommes ravis de vous confirmer votre réservation au <strong>Restaurant TIKI</strong> !</p>
-          <ul>
-            <li><strong>📅 Date :</strong> ${formattedDate}</li>
-            <li><strong>🕛 Heure :</strong> ${emailData.reservation.reservation_time}</li>
-            <li><strong>👥 Nombre de personnes :</strong> ${emailData.reservation.number_of_people}</li>
-          </ul>
-          <p>Veuillez cliquer sur l'un des boutons ci-dessous pour confirmer ou annuler votre réservation :</p>
-          <div style="margin: 20px 0;">
+          
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin: 10px 0;"><strong>📅 Date :</strong> ${formattedDate}</li>
+              <li style="margin: 10px 0;"><strong>🕛 Heure :</strong> ${emailData.reservation.reservation_time}</li>
+              <li style="margin: 10px 0;"><strong>👥 Nombre de personnes :</strong> ${emailData.reservation.number_of_people}</li>
+            </ul>
+          </div>
+    
+          <p style="text-align: center; margin: 30px 0;">Veuillez confirmer ou annuler votre réservation :</p>
+          
+          <div style="display: flex; flex-direction: column; gap: 15px; text-align: center;">
             <a href="${confirmLink}" 
-               style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;">
+               style="display: block; background-color: #28a745; color: white; padding: 15px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-bottom: 15px;">
                ✔️ Confirmer la réservation
             </a>
+            
             <a href="${cancelLink}" 
-               style="background-color: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+               style="display: block; background-color: #dc3545; color: white; padding: 15px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
                ❌ Annuler la réservation
             </a>
           </div>
-          <p>À très bientôt !</p>
-          <p style="color: #FF6347;"><strong>🍹 L'équipe TIKI</strong></p>
+    
+          <div style="margin-top: 40px; text-align: center; color: #666;">
+            <p>Nous vous attendons avec impatience pour partager un moment délicieux et convivial.</p>
+            <p>À très bientôt !</p>
+            <p style="color: #FF6347; margin-top: 20px;"><strong>🍹 L'équipe TIKI</strong></p>
+          </div>
         </div>
       `,
     };

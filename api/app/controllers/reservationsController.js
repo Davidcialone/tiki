@@ -229,10 +229,9 @@ export const deleteReservation = async (req, res) => {
 };
 
 export const handleReservationStatus = async (req, res) => {
-  const { token } = req.query;
-  logger.info("Traitement du changement de statut de réservation");
-
   try {
+    const { token } = req.query;
+
     if (!token) {
       logger.warn("Tentative de changement de statut sans token");
       return res.status(400).json({ message: "Token manquant" });
@@ -242,23 +241,41 @@ export const handleReservationStatus = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const { reservationId, action } = decoded;
 
-    // Trouver la réservation
-    const reservation = await Reservation.findByPk(reservationId);
+    // Vérifier que reservationId est un nombre
+    const id = parseInt(reservationId, 10);
+    if (isNaN(id)) {
+      logger.error(`ID de réservation invalide: ${reservationId}`);
+      return res.status(400).json({
+        message: "ID de réservation invalide",
+        error: "L'ID doit être un nombre",
+      });
+    }
+
+    // Trouver la réservation avec l'ID numérique
+    const reservation = await Reservation.findByPk(id, {
+      include: [
+        {
+          model: User,
+          attributes: ["firstname", "lastname", "email"],
+        },
+      ],
+    });
 
     if (!reservation) {
-      logger.warn(`Réservation non trouvée pour l'ID: ${reservationId}`);
-      return res.status(404).json({ message: "Réservation non trouvée." });
+      logger.warn(`Réservation non trouvée pour l'ID: ${id}`);
+      return res.status(404).json({
+        message: "Réservation non trouvée",
+        error: `Aucune réservation trouvée avec l'ID: ${id}`,
+      });
     }
 
     // Mettre à jour le statut
     const newStatus = action === "confirm" ? "CONFIRMED" : "CANCELLED";
     await reservation.update({ status: newStatus });
 
-    logger.info(
-      `Statut de la réservation ${reservationId} mis à jour: ${newStatus}`
-    );
+    logger.info(`Statut de la réservation ${id} mis à jour: ${newStatus}`);
 
-    // Préparer la page de réponse HTML
+    // Rendre la page HTML de confirmation
     const responseHtml = `
       <!DOCTYPE html>
       <html>
@@ -296,12 +313,7 @@ export const handleReservationStatus = async (req, res) => {
                     : "❌ Réservation annulée"
                 }
               </h2>
-              <p>Merci de votre réponse.</p>
-              ${
-                action === "confirm"
-                  ? "<p>Nous avons hâte de vous accueillir !</p>"
-                  : "<p>N'hésitez pas à réserver pour une autre date.</p>"
-              }
+              <p>Merci ${reservation.User.firstname} pour votre réponse.</p>
             </div>
           </div>
         </body>
@@ -313,48 +325,16 @@ export const handleReservationStatus = async (req, res) => {
     logger.error("Erreur lors du traitement du statut:", error);
 
     if (error.name === "TokenExpiredError") {
-      return res.status(400).send(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Erreur - TIKI</title>
-            <meta charset="UTF-8">
-            <style>
-              body { 
-                font-family: Arial, sans-serif; 
-                text-align: center; 
-                padding: 50px;
-                background-color: #f5f5f5;
-              }
-              .error-container {
-                background-color: white;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                max-width: 600px;
-                margin: 0 auto;
-              }
-              .error-message { 
-                color: #dc3545;
-                margin: 20px 0;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="error-container">
-              <h1>Restaurant TIKI</h1>
-              <div class="error-message">
-                <h2>⚠️ Ce lien a expiré</h2>
-                <p>Veuillez contacter le restaurant pour mettre à jour votre réservation.</p>
-              </div>
-            </div>
-          </body>
-        </html>
-      `);
+      return res.status(400).json({
+        message: "Le lien a expiré",
+        error:
+          "Veuillez contacter le restaurant pour mettre à jour votre réservation",
+      });
     }
 
-    res
-      .status(500)
-      .send("Une erreur est survenue lors du traitement de votre demande.");
+    res.status(500).json({
+      message: "Erreur lors du traitement de la demande",
+      error: error.message,
+    });
   }
 };
