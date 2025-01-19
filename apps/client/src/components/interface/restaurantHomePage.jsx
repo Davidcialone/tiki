@@ -41,10 +41,15 @@ export function RestaurantHomePage() {
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-white mt-4 text-lg text-center">
-              <span>J'active la base de données gratuite, désolé c'est un peu long</span>
-              Chargement en cours... {progress}%
+            <div className="flex flex-col items-center justify-center mt-8 space-y-2 text-gray-700">
+            <p className="text-lg font-medium">
+              J'active la base de données gratuite, désolé c'est un peu long
             </p>
+            <div className="flex items-center space-x-2">
+              <span>Chargement en cours...</span>
+              <span className="font-semibold">{progress}%</span>
+            </div>
+          </div>
           </div>
         </div>
       ) : (

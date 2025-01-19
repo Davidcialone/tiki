@@ -49,10 +49,16 @@ export function HomePageEmployee() {
             ></div>
           </div>
           {/* Texte personnalisé */}
-          <p className="mt-4 text-lg font-medium text-gray-700">
-          <span>J'active la base de données gratuite, désolé c'est un peu long</span>
-            Chargement en cours... {progress}%
-          </p>
+          <div className="flex flex-col items-center justify-center mt-8 space-y-2 text-gray-700">
+            <p className="text-lg font-medium">
+              J'active la base de données gratuite, désolé c'est un peu long
+            </p>
+            <div className="flex items-center space-x-2">
+              <span>Chargement en cours...</span>
+              <span className="font-semibold">{progress}%</span>
+            </div>
+          </div>
+
         </div>
       ) : (
         <>

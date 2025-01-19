@@ -23,6 +23,6 @@ router.delete("/:reservationId", reservationsController.deleteReservation);
 
 // GET /reservations/status
 router.put(
-  "/reservations/:id/status",
+  "/:reservationId/status",
   reservationsController.handleReservationStatus
 );
