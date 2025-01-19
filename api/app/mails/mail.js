@@ -80,9 +80,9 @@ export const sendConfirmationEmail = async (emailData) => {
       "cancel"
     );
 
-    // Création des URLs avec les tokens
-    const confirmLink = `${apiBaseUrl}/api/reservations/status?token=${confirmToken}`;
-    const cancelLink = `${apiBaseUrl}/api/reservations/status?token=${cancelToken}`;
+    // Création des URLs avec les tokens selon la nouvelle structure
+    const confirmLink = `${apiBaseUrl}/api/reservations/${emailData.reservation.id}/status?token=${confirmToken}`;
+    const cancelLink = `${apiBaseUrl}/api/reservations/${emailData.reservation.id}/status?token=${cancelToken}`;
 
     const formattedDate = formatDateFrench(
       emailData.reservation.reservation_date

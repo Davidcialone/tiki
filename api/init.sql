@@ -70,7 +70,12 @@ CREATE TABLE "MenuItem" (
 );
 
 -- Table `Reservations`
-CREATE TYPE enum_Reservation_status AS ENUM ('pending', 'reserved', 'cancelled'); -- Définir un type ENUM pour `status`
+CREATE TYPE enum_Reservation_status AS ENUM (
+    'pending',    -- En attente de confirmation
+    'confirmed',  -- Réservation confirmée par le client
+    'present',    -- Clients présents
+    'cancelled'   -- Annulée par le client ou le restaurant
+);
 
 CREATE TABLE "Reservation" (
     "id" SERIAL PRIMARY KEY,                      

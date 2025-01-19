@@ -230,6 +230,7 @@ export const deleteReservation = async (req, res) => {
 
 export const handleReservationStatus = async (req, res) => {
   try {
+    const { id } = req.params; // Récupérer l'ID depuis l'URL
     const { token } = req.query;
 
     if (!token) {
@@ -237,22 +238,20 @@ export const handleReservationStatus = async (req, res) => {
       return res.status(400).json({ message: "Token manquant" });
     }
 
-    // Vérifier et décoder le token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { reservationId, action } = decoded;
+    const { action } = decoded; // On n'a plus besoin de reservationId du token
 
-    // Vérifier que reservationId est un nombre
-    const id = parseInt(reservationId, 10);
-    if (isNaN(id)) {
-      logger.error(`ID de réservation invalide: ${reservationId}`);
+    // Validation de l'ID
+    const reservationId = parseInt(id, 10);
+    if (isNaN(reservationId)) {
+      logger.error(`ID de réservation invalide: ${id}`);
       return res.status(400).json({
         message: "ID de réservation invalide",
         error: "L'ID doit être un nombre",
       });
     }
 
-    // Trouver la réservation avec l'ID numérique
-    const reservation = await Reservation.findByPk(id, {
+    const reservation = await Reservation.findByPk(reservationId, {
       include: [
         {
           model: User,
@@ -269,13 +268,12 @@ export const handleReservationStatus = async (req, res) => {
       });
     }
 
-    // Mettre à jour le statut
-    const newStatus = action === "confirm" ? "CONFIRMED" : "CANCELLED";
+    // Mise à jour avec les nouveaux statuts ENUM
+    const newStatus = action === "confirm" ? "confirmed" : "cancelled";
     await reservation.update({ status: newStatus });
 
     logger.info(`Statut de la réservation ${id} mis à jour: ${newStatus}`);
 
-    // Rendre la page HTML de confirmation
     const responseHtml = `
       <!DOCTYPE html>
       <html>

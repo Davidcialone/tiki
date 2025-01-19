@@ -50,7 +50,7 @@ export function HomePageEmployee() {
           </div>
           {/* Texte personnalisé */}
           <p className="mt-4 text-lg font-medium text-gray-700">
-          <p>J'active la base de données gratuite, désolé c'est un peu long</p>
+          <span>J'active la base de données gratuite, désolé c'est un peu long</span>
             Chargement en cours... {progress}%
           </p>
         </div>
