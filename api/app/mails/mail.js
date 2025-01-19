@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -9,6 +10,19 @@ const apiBaseUrl = process.env.API_BASE_URL;
 if (!apiBaseUrl) {
   throw new Error("API_BASE_URL n'est pas défini dans le fichier .env");
 }
+const JWT_SECRET = process.env.JWT_SECRET; // Ajoutez cette clé dans votre .env
+
+// Fonction pour générer un token sécurisé
+const generateReservationToken = (reservationId, action) => {
+  return jwt.sign(
+    {
+      reservationId,
+      action,
+      exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // Expire dans 24h
+    },
+    JWT_SECRET
+  );
+};
 
 const createTransporter = async () => {
   try {
@@ -56,13 +70,23 @@ export const sendConfirmationEmail = async (emailData) => {
     const transporter = await createTransporter();
     const emailresto = process.env.EMAIL_ADDRESS;
 
+    // Générer des tokens sécurisés pour la confirmation et l'annulation
+    const confirmToken = generateReservationToken(
+      emailData.reservation.id,
+      "confirm"
+    );
+    const cancelToken = generateReservationToken(
+      emailData.reservation.id,
+      "cancel"
+    );
+
+    // Création des URLs avec les tokens
+    const confirmLink = `${apiBaseUrl}/api/reservations/status?token=${confirmToken}`;
+    const cancelLink = `${apiBaseUrl}/api/reservations/status?token=${cancelToken}`;
+
     const formattedDate = formatDateFrench(
       emailData.reservation.reservation_date
     );
-
-    // Construction des liens avec l'ID de la réservation
-    const confirmLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/confirm`;
-    const cancelLink = `${apiBaseUrl}/mails/${emailData.reservation.id}/cancel`;
 
     console.log("confirmLink:", confirmLink);
     console.log("cancelLink:", cancelLink);
@@ -71,24 +95,6 @@ export const sendConfirmationEmail = async (emailData) => {
       from: emailresto,
       to: emailData.user.email,
       subject: "✨ Confirmation de votre réservation - Restaurant TIKI ✨",
-      text: `
-        Bonjour ${emailData.user.firstname} ${emailData.user.lastname},
-
-        Nous sommes ravis de vous confirmer votre réservation au Restaurant TIKI !
-
-        📅 Date : ${formattedDate}
-        🕛 Heure : ${emailData.reservation.reservation_time}
-        👥 Nombre de personnes : ${emailData.reservation.number_of_people}
-
-        Vous pouvez :
-        - Confirmer votre réservation ici : ${confirmLink}
-        - Annuler votre réservation ici : ${cancelLink}
-
-        Nous vous attendons avec impatience pour partager un moment délicieux et convivial.
-
-        À très bientôt !
-        🍹 L'équipe TIKI
-      `,
       html: `
         <div style="font-family: Arial, sans-serif; color: #333;">
           <h2 style="color: #FF6347;">✨ Confirmation de votre réservation - Restaurant TIKI ✨</h2>
@@ -99,14 +105,17 @@ export const sendConfirmationEmail = async (emailData) => {
             <li><strong>🕛 Heure :</strong> ${emailData.reservation.reservation_time}</li>
             <li><strong>👥 Nombre de personnes :</strong> ${emailData.reservation.number_of_people}</li>
           </ul>
-          <p>Vous pouvez :</p>
-          <p>
-            <a href="${confirmLink}" style="color: #28a745; text-decoration: none; font-weight: bold;">✔️ Confirmer votre réservation</a>
-          </p>
-          <p>
-            <a href="${cancelLink}" style="color: #dc3545; text-decoration: none; font-weight: bold;">❌ Annuler votre réservation</a>
-          </p>
-          <p>Nous vous attendons avec impatience pour partager un moment délicieux et convivial.</p>
+          <p>Veuillez cliquer sur l'un des boutons ci-dessous pour confirmer ou annuler votre réservation :</p>
+          <div style="margin: 20px 0;">
+            <a href="${confirmLink}" 
+               style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;">
+               ✔️ Confirmer la réservation
+            </a>
+            <a href="${cancelLink}" 
+               style="background-color: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+               ❌ Annuler la réservation
+            </a>
+          </div>
           <p>À très bientôt !</p>
           <p style="color: #FF6347;"><strong>🍹 L'équipe TIKI</strong></p>
         </div>

@@ -20,3 +20,6 @@ router.patch("/:reservationId", reservationsController.updateReservation);
 
 // DELETE /reservations/:reservationId
 router.delete("/:reservationId", reservationsController.deleteReservation);
+
+// GET /reservations/status
+router.get("/status", reservationsController.handleReservationStatus);
