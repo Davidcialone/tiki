@@ -1,5 +1,5 @@
 import { Reservation, User } from "../models/index.js";
-import { sendConfirmationEmail } from "../mails/mail.js";
+import { sendConfirmationEmail, sendContactEmail } from "../mails/mail.js";
 
 // Fonction utilitaire pour formater l'heure
 const formatTime = (timeString) => {
