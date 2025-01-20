@@ -18,7 +18,7 @@ export function Contact() {
 
     try {
       // Appel à la fonction d'API pour envoyer l'email
-      const response = await sendContactEmail({ email, message });
+      const response = await sendContactEmail({ emailData: { email, message } });
 
       // Vérifiez si l'envoi est un succès
       if (response.success) {
