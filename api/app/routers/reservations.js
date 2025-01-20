@@ -22,7 +22,7 @@ router.patch("/:reservationId", reservationsController.updateReservation);
 router.delete("/:reservationId", reservationsController.deleteReservation);
 
 // GET /reservations/status
-router.put(
+router.get(
   "/:reservationId/status",
   reservationsController.handleReservationStatus
 );

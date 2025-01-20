@@ -31,27 +31,27 @@ export function RestaurantHomePage() {
   }, []);
 
   return (
-    <div className="relative font-sans text-gray-800 min-h-screen space-y-0">
-      {isFetching ? (
-        <div className="flex items-center justify-center h-screen bg-black bg-opacity-80">
-          <div>
-            <div className="relative w-64 h-4 bg-gray-400 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-blue-500 transition-all duration-200"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <div className="flex flex-col items-center justify-center mt-8 space-y-2 text-gray-700">
-            <p className="text-lg font-medium">
-              J'active la base de données gratuite, désolé c'est un peu long
-            </p>
-            <div className="flex items-center space-x-2">
-              <span>Chargement en cours...</span>
-              <span className="font-semibold">{progress}%</span>
+          <div className="relative font-sans text-gray-800 min-h-screen">
+        {isFetching ? (
+          <div className="flex items-center justify-center h-screen bg-black bg-opacity-80">
+            <div className="flex flex-col items-center space-y-6">
+              <div className="relative w-64 h-4 bg-gray-400 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-500 transition-all duration-200"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+              <div className="flex flex-col items-center justify-center mt-4 space-y-2 text-gray-700">
+                <p className="text-lg font-medium">
+                  J'active la base de données gratuite, désolé c'est un peu long
+                </p>
+                <div className="flex items-center space-x-2">
+                  <span>Chargement en cours...</span>
+                  <span className="font-semibold">{progress}%</span>
+                </div>
+              </div>
             </div>
           </div>
-          </div>
-        </div>
       ) : (
         <>
           <div className="relative w-full h-screen bg-[url('/restaurant2.png')] bg-center bg-cover bg-no-repeat z-0">

@@ -111,10 +111,16 @@ export async function getReservationById(id) {
  */
 export async function getReservationsByDate(date) {
   if (!date) {
-    throw new Error("La date est obligatoire pour cette requête.");
+    console.warn("Aucune date fournie, retour des réservations vides.");
+    return []; // Retourner une liste vide si aucune date n'est fournie
   }
 
-  isValidDate(date); // Utilisation de la fonction de validation de la date
+  try {
+    isValidDate(date); // Validation de la date
+  } catch (error) {
+    console.error("La date fournie est invalide :", error.message);
+    return []; // Retourner une liste vide si la date est invalide
+  }
 
   console.log(`=== Récupération des réservations pour la date : ${date} ===`);
 
@@ -128,7 +134,13 @@ export async function getReservationsByDate(date) {
     },
   };
 
-  return await fetchWithErrorHandling(url, options);
+  try {
+    const response = await fetchWithErrorHandling(url, options);
+    return response;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des réservations :", error);
+    return []; // Retourner une liste vide en cas d'erreur de requête
+  }
 }
 
 /**
@@ -234,6 +246,30 @@ export async function deleteReservation(id) {
       "Content-Type": "application/json",
     },
   };
-
-  return await fetchWithErrorHandling(url, options);
 }
+
+export async function statusReservation(reservationId, token) {
+  const response = await fetch(
+    `${apiBaseUrl}/api/reservations/${reservationId}/status?token=${token}`,
+    {
+      method: "GET", // Explicitement défini comme GET
+    }
+  );
+  try {
+    if (!response.ok) {
+      throw new Error(
+        "Erreur lors de la récupération du statut de la réservation."
+      );
+    }
+
+    const data = await response.json();
+    console.log("Statut de la réservation récupéré avec succès :", data);
+
+    return data;
+  } catch (error) {
+    console.error("Erreur :", error.message);
+    throw error;
+  }
+}
+
+// return await fetchWithErrorHandling(url, options);
