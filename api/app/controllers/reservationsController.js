@@ -230,10 +230,10 @@ export const deleteReservation = async (req, res) => {
 
 export const handleReservationStatus = async (req, res) => {
   try {
-    const { id } = req.params; // Récupérer l'ID depuis l'URL
+    const { reservationId } = req.params; // Récupérer l'ID depuis l'URL
     const { token } = req.query;
 
-    if (!id) {
+    if (!reservationId) {
       logger.error("ID de réservation manquant dans l'URL");
       return res.status(400).send("ID de réservation manquant");
     }
@@ -247,16 +247,16 @@ export const handleReservationStatus = async (req, res) => {
     const { action } = decoded; // On n'a plus besoin de reservationId du token
 
     // Validation de l'ID
-    const reservationId = parseInt(id, 10);
-    if (isNaN(reservationId)) {
-      logger.error(`ID de réservation invalide: ${id}`);
+    const parsedReservationId = parseInt(reservationId, 10);
+    if (isNaN(parsedReservationId)) {
+      logger.error(`ID de réservation invalide: ${reservationId}`);
       return res.status(400).json({
         message: "ID de réservation invalide",
         error: "L'ID doit être un nombre",
       });
     }
 
-    const reservation = await Reservation.findByPk(reservationId, {
+    const reservation = await Reservation.findByPk(parsedReservationId, {
       include: [
         {
           model: User,
@@ -266,10 +266,10 @@ export const handleReservationStatus = async (req, res) => {
     });
 
     if (!reservation) {
-      logger.warn(`Réservation non trouvée pour l'ID: ${id}`);
+      logger.warn(`Réservation non trouvée pour l'ID: ${reservationId}`);
       return res.status(404).json({
         message: "Réservation non trouvée",
-        error: `Aucune réservation trouvée avec l'ID: ${id}`,
+        error: `Aucune réservation trouvée avec l'ID: ${reservationId}`,
       });
     }
 
@@ -277,7 +277,9 @@ export const handleReservationStatus = async (req, res) => {
     const newStatus = action === "confirm" ? "confirmed" : "cancelled";
     await reservation.update({ status: newStatus });
 
-    logger.info(`Statut de la réservation ${id} mis à jour: ${newStatus}`);
+    logger.info(
+      `Statut de la réservation ${reservationId} mis à jour: ${newStatus}`
+    );
 
     const responseHtml = `
       <!DOCTYPE html>
