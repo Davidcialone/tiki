@@ -145,7 +145,7 @@ export const sendConfirmationEmail = async (emailData) => {
   }
 };
 
-export const sendContactMail = async (emailData) => {
+export const sendContactEmail = async (emailData) => {
   try {
     console.log("Début de l'envoi d'email...");
     console.log("Données d'email reçues :", emailData);
