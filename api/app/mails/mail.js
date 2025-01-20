@@ -150,7 +150,7 @@ export const sendContactMail = async (emailData) => {
     console.log("Début de l'envoi d'email...");
     console.log("Données d'email reçues :", emailData);
 
-    if (!emailData?.name || !emailData?.email || !emailData?.message) {
+    if (!emailData?.email || !emailData?.message) {
       throw new Error("Données d'email incomplètes");
     }
 
@@ -160,12 +160,12 @@ export const sendContactMail = async (emailData) => {
     const emailTemplate = {
       from: emailData.email,
       to: emailresto,
-      subject: `📧 Nouveau message de ${emailData.name} - Restaurant TIKI 📧`,
+      subject: `📧 Nouveau message de ${emailData.email} - Restaurant TIKI 📧`,
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #FF6347; text-align: center;">📧 Nouveau message de ${emailData.name} - Restaurant TIKI 📧</h2>
+          <h2 style="color: #FF6347; text-align: center;">📧 Nouveau message de ${emailData.email} - Restaurant TIKI 📧</h2>
           
-          <p><strong>${emailData.name}</strong> vous a envoyé un message :</p>
+          <p><strong>${emailData.email}</strong> vous a envoyé un message :</p>
           
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <p>${emailData.message}</p>
@@ -175,7 +175,7 @@ export const sendContactMail = async (emailData) => {
           
           <a href="mailto:${emailData.email}" 
              style="display: block; background-color: #007bff; color: white; padding: 15px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">
-             📧 Répondre à ${emailData.name}
+             📧 Répondre à ${emailData.email}
           </a>
     
           <div style="margin-top: 40px; text-align: center; color: #666;">
