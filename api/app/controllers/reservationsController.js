@@ -230,8 +230,13 @@ export const deleteReservation = async (req, res) => {
 
 export const handleReservationStatus = async (req, res) => {
   try {
-    const { reservationId } = req.params; // Récupérer l'ID depuis l'URL
+    const { reservationId } = req.params; // Utilisation de reservationId
     const { token } = req.query;
+
+    logger.info("Requête reçue pour mise à jour du statut de réservation", {
+      reservationId,
+      token: token ? "présent" : "absent",
+    });
 
     if (!reservationId) {
       logger.error("ID de réservation manquant dans l'URL");
@@ -243,44 +248,74 @@ export const handleReservationStatus = async (req, res) => {
       return res.status(400).json({ message: "Token manquant" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { action } = decoded; // On n'a plus besoin de reservationId du token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+      logger.info("Token décodé avec succès", { decoded });
+    } catch (error) {
+      logger.error("Erreur lors de la vérification du token", { error });
+      throw error;
+    }
+
+    const { action } = decoded;
+    logger.info("Action extraite du token", { action });
 
     // Validation de l'ID
-    const parsedReservationId = parseInt(reservationId, 10);
-    if (isNaN(parsedReservationId)) {
+    const id = parseInt(reservationId, 10);
+    if (isNaN(id)) {
       logger.error(`ID de réservation invalide: ${reservationId}`);
       return res.status(400).json({
         message: "ID de réservation invalide",
         error: "L'ID doit être un nombre",
       });
     }
+    logger.info("ID de réservation validé", { id });
 
-    const reservation = await Reservation.findByPk(parsedReservationId, {
+    // Récupération de la réservation et de l'utilisateur associé
+    const reservation = await Reservation.findByPk(id, {
       include: [
         {
           model: User,
-          as: "user",
+          as: "user", // Utilisation de l'alias correct
           attributes: ["firstname", "lastname", "email"],
         },
       ],
     });
 
     if (!reservation) {
-      logger.warn(`Réservation non trouvée pour l'ID: ${reservationId}`);
+      logger.warn(`Réservation non trouvée pour l'ID: ${id}`);
       return res.status(404).json({
         message: "Réservation non trouvée",
-        error: `Aucune réservation trouvée avec l'ID: ${reservationId}`,
+        error: `Aucune réservation trouvée avec l'ID: ${id}`,
       });
     }
+
+    logger.info("Réservation trouvée", { reservation });
+
+    if (!reservation.user) {
+      logger.warn(`Utilisateur non trouvé pour la réservation ID: ${id}`);
+      return res.status(404).json({
+        message: "Utilisateur associé non trouvé",
+        error: "Aucun utilisateur n'est associé à cette réservation.",
+      });
+    }
+
+    logger.info("Utilisateur associé trouvé", { user: reservation.user });
 
     // Mise à jour avec les nouveaux statuts ENUM
     const newStatus = action === "confirm" ? "confirmed" : "cancelled";
     await reservation.update({ status: newStatus });
 
-    logger.info(
-      `Statut de la réservation ${reservationId} mis à jour: ${newStatus}`
-    );
+    logger.info(`Statut de la réservation ${id} mis à jour`, { newStatus });
+
+    // Utilisation des données utilisateur avec valeurs par défaut
+    const userFirstName = reservation.user.firstname || "Cher client";
+    const userLastName = reservation.user.lastname || "";
+
+    logger.info("Données utilisateur pour le rendu HTML", {
+      userFirstName,
+      userLastName,
+    });
 
     const responseHtml = `
       <!DOCTYPE html>
@@ -319,7 +354,7 @@ export const handleReservationStatus = async (req, res) => {
                     : "❌ Réservation annulée"
                 }
               </h2>
-              <p>Merci ${reservation.User.firstname} pour votre réponse.</p>
+              <p>Merci ${userFirstName} ${userLastName} pour votre réponse.</p>
             </div>
           </div>
         </body>
@@ -328,7 +363,7 @@ export const handleReservationStatus = async (req, res) => {
 
     res.send(responseHtml);
   } catch (error) {
-    logger.error("Erreur lors du traitement du statut:", error);
+    logger.error("Erreur lors du traitement du statut", { error });
 
     if (error.name === "TokenExpiredError") {
       return res.status(400).json({
