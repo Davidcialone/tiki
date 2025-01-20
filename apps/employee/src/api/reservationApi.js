@@ -178,58 +178,35 @@ async function fetchWithErrorHandling(url, options) {
  * @param {number} id - ID de la réservation
  */
 export async function updateReservation(id, formData) {
-  console.log(`=== Mise à jour de la réservation avec l'ID : ${id} ===`);
+  console.log(
+    `=== Mise à jour partielle de la réservation avec l'ID : ${id} ===`
+  );
 
-  // Validation des champs obligatoires
-  const requiredFields = [
-    "email",
-    "reservation_date",
-    "reservation_time",
-    "number_of_people",
-  ];
+  try {
+    if (formData.status !== undefined) {
+      const reservationData = { status: formData.status }; // Seul le statut est envoyé
 
-  for (const field of requiredFields) {
-    if (!formData[field]) {
-      throw new Error(`Le champ '${field}' est obligatoire.`);
+      const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
+      const options = {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reservationData),
+      };
+
+      console.log("Envoi des données :", reservationData);
+      return await fetchWithErrorHandling(url, options);
+    } else {
+      throw new Error("Aucune modification détectée pour le statut.");
     }
+  } catch (error) {
+    console.error(
+      "Erreur lors de la mise à jour partielle de la réservation :",
+      error
+    );
+    throw error; // Propager l'erreur pour être capturée côté React
   }
-
-  // Validation spécifique de l'email
-  if (!isValidEmail(formData.email)) {
-    throw new Error("Le format de l'email est invalide");
-  }
-
-  // Validation de l'heure au format HH:MM
-  if (!isValidTime(formData.reservation_time)) {
-    throw new Error("Le format de l'heure est invalide (ex : HH:MM)");
-  }
-
-  // Validation du nombre de personnes
-  if (formData.number_of_people < 1) {
-    throw new Error("Le nombre de personnes doit être au moins 1");
-  }
-
-  const { placesUsed, endTime } = calculatePlacesAndEndTime(formData);
-
-  // Construction de l'objet final à envoyer à l'API
-  const reservationData = {
-    ...formData,
-    places_used: placesUsed,
-    end_time: endTime,
-    reservation_time: formData.reservation_time, // Ne pas ajouter ":00"
-  };
-
-  const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
-  const options = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(reservationData),
-  };
-
-  console.log("Envoi des données :", reservationData);
-  return await fetchWithErrorHandling(url, options);
 }
 
 /**

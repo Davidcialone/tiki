@@ -185,7 +185,54 @@ export const updateReservation = async (req, res) => {
       return res.status(404).json({ message: "Réservation non trouvée." });
     }
 
-    const updatedReservation = await reservation.update(req.body);
+    // Filtrer les champs à mettre à jour
+    const updateFields = [
+      "email",
+      "reservation_date",
+      "reservation_time",
+      "number_of_people",
+      "status",
+    ];
+    const updateData = {};
+
+    // Ajouter uniquement les champs présents dans le formulaire
+    updateFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
+
+    // Validation des champs
+    if (updateData.email && !isValidEmail(updateData.email)) {
+      return res
+        .status(400)
+        .json({ message: "Le format de l'email est invalide." });
+    }
+
+    if (
+      updateData.reservation_time &&
+      !isValidTime(updateData.reservation_time)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Le format de l'heure est invalide (ex: HH:MM)." });
+    }
+
+    if (updateData.number_of_people < 1) {
+      return res
+        .status(400)
+        .json({ message: "Le nombre de personnes doit être au moins 1." });
+    }
+
+    // Si aucune des modifications n'a été faite, renvoyer une erreur
+    if (Object.keys(updateData).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Aucune modification n'a été apportée." });
+    }
+
+    // Mettre à jour la réservation
+    const updatedReservation = await reservation.update(updateData);
 
     res.status(200).json(updatedReservation);
   } catch (error) {
