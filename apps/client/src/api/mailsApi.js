@@ -109,7 +109,7 @@ export async function sendContactEmail(emailData) {
     throw new Error("Les informations de l'utilisateur sont incomplètes");
   }
 
-  const TIMEOUT_MS = 5000;
+  const TIMEOUT_MS = 50000;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
