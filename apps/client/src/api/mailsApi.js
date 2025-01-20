@@ -92,3 +92,69 @@ export async function sendConfirmationEmail(emailData) {
     throw error;
   }
 }
+
+export async function sendContactEmail(emailData) {
+  if (!emailData) {
+    throw new Error("Les données de l'email sont requises");
+  }
+
+  // Assurons-nous que toutes les chaînes de caractères sont définies
+  const formattedData = {
+    email: emailData.email || "",
+    message: emailData.message || "",
+  };
+
+  // Validation des données essentielles
+  if (!formattedData.email || !formattedData.message) {
+    throw new Error("Les informations de l'utilisateur sont incomplètes");
+  }
+
+  const TIMEOUT_MS = 5000;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  console.log("Données formatées pour l'envoi:", formattedData);
+
+  try {
+    console.log("📤 Envoi de la demande d'email pour le contact");
+
+    const response = await fetch(`${apiBaseUrl}/api/mails/contact`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(formattedData),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `Erreur API (${response.status}): ${
+          errorData.message || response.statusText
+        }`
+      );
+    }
+
+    const data = await response.json();
+    console.log("✅ Email traité avec succès:", {
+      response: data,
+    });
+
+    return data;
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error(`Timeout dépassé (${TIMEOUT_MS}ms) pour le contact`);
+    }
+
+    console.error("❌ Erreur lors de l'envoi de l'email:", {
+      error: error.message,
+      type: error.name,
+    });
+
+    throw error;
+  }
+}

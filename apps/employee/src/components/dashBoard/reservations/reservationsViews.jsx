@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Clock, Users, Table, Edit, Trash2 } from 'lucide-react';
 import { getReservations, updateReservation, deleteReservation } from "../../../api/reservationApi";
 import { ReservationModal } from "../../modales/reservationModal";
-import { isValidTime } from "../../../../services/services";
 
 export const ReservationsViews = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -59,21 +58,32 @@ export const ReservationsViews = () => {
 
   const handleArrivalToggle = async (reservationId) => {
     try {
-      // Assurez-vous de passer toutes les données nécessaires, pas seulement le statut.
+      const reservation = reservations.find((res) => res.id === reservationId);
+      if (!reservation) return;
+  
+      // Déterminer le nouveau statut
+      const newStatus = reservation.status === 'present' ? 'confirmed' : 'present';
+  
+      // Préparer les données à envoyer
       const dataToUpdate = {
-        status: 'present'  // Ce peut être le statut, mais assurez-vous que les champs essentiels sont aussi inclus
+        status: newStatus,
       };
   
       const updatedReservation = await updateReservation(reservationId, dataToUpdate);
   
-      // Update UI ou local state
+      // Fusionner les données existantes avec la mise à jour
       setReservations((prev) =>
-        prev.map((res) => (res.id === reservationId ? updatedReservation : res))
+        prev.map((res) =>
+          res.id === reservationId
+            ? { ...res, ...updatedReservation } // Garde les données existantes et ajoute/remplace avec les nouvelles
+            : res
+        )
       );
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
     }
   };
+  
 
   const handleDeleteReservation = async (reservationId) => {
     if (!reservationId) {
@@ -250,50 +260,48 @@ export const ReservationsViews = () => {
                 <span className="text-sm text-center">Actions</span>
               </div>
               {getReservationsForDay(selectedDay.getDate()).map((reservation) => (
-              <div
-                key={reservation.id}
-                className={`grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 items-center justify-between py-2 border-b last:border-0 ${
-                  changeColorOver(reservation.number_of_people)} ${
-                  reservation.arrived ? 'brightness-75' : 'brightness-100'
-                }`}
-              >
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-gray-600">
-                    <Clock className="w-4 h-4 inline mr-1" />
-                    {reservation.reservation_time}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-black">{reservation.user?.lastname || 'N/A'}</span>
-                  <span className="text-sm text-black ml-2">{reservation.user?.firstname || 'N/A'}</span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-gray-600">
-                    <Users className="w-4 h-4 inline mr-1" />
-                    {reservation.number_of_people}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-black">{reservation.user?.phone || 'N/A'}</span>
-                </div>
-                <div className="flex items-center justify-center space-x-3">
-                  <button
-                    className={`flex items-center space-x-2 text-sm text-white px-2 py-1 rounded-lg ${
-                      reservation.status === 'present' ? 'bg-gray-500' : 'bg-green-500'
-                    }`}
-                    onClick={() => handleArrivalToggle(reservation.id)}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={reservation.status === 'present'}
-                      readOnly
-                      className="w-4 h-4"
-                    />
-                    <span>{reservation.status === 'present' ? 'présent' : 'En attente'}</span>
-                  </button>
-
-
+                <div
+                  key={reservation.id}
+                  className={`grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 items-center justify-between py-2 border-b last:border-0 ${
+                    changeColorOver(reservation.number_of_people)} ${
+                    reservation.arrived ? 'brightness-75' : 'brightness-100'
+                  }`}
+                >
+                  <div className="flex items-center justify-center">
+                    <span className="text-sm text-gray-600">
+                      <Clock className="w-4 h-4 inline mr-1" />
+                      {reservation.reservation_time || 'Heure non spécifiée'}  {/* Message alternatif si aucune heure */}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span className="text-sm text-black">{reservation.user?.lastname || 'Nom non spécifié'}</span>
+                    <span className="text-sm text-black ml-2">{reservation.user?.firstname || 'Prénom non spécifié'}</span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span className="text-sm text-gray-600">
+                      <Users className="w-4 h-4 inline mr-1" />
+                      {reservation.number_of_people || 'Nombre de personnes non spécifié'}  {/* Message alternatif si aucune valeur */}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span className="text-sm text-black">{reservation.user?.phone || 'Téléphone non spécifié'}</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-3">
                     <button
+                      className={`flex items-center space-x-2 text-sm text-white px-2 py-1 rounded-lg ${
+                        reservation.status === 'present' ? 'bg-gray-500' : 'bg-green-500'
+                      }`}
+                      onClick={() => handleArrivalToggle(reservation.id)}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={reservation.status === 'present'}
+                        readOnly
+                        className="w-4 h-4"
+                      />
+                      <span>{reservation.status === 'present' ? 'présent' : 'En attente'}</span>
+                    </button>
+                     <button
                       className="bg-blue-500 text-white text-sm px-2 py-1 rounded-lg"
                       onClick={() => openEditModal(reservation)}
                     >

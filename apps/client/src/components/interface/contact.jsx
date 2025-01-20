@@ -37,7 +37,7 @@ export function Contact() {
             {success && <p style={{ color: "green" }}>Merci pour votre message. Nous reviendrons vers vous sous peu !</p>}
 
             <form onSubmit={handleSubmit} style={{ maxWidth: "500px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "15px" }}>
-                <label htmlFor="name">Nom :</label>
+                {/* <label htmlFor="name">Nom :</label>
                 <input
                     type="text"
                     id="name"
@@ -45,7 +45,7 @@ export function Contact() {
                     onChange={(e) => setName(e.target.value)}
                     required
                     style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
-                />
+                /> */}
 
                 <label htmlFor="email">Email :</label>
                 <input

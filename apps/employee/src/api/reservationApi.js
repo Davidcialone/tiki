@@ -184,7 +184,18 @@ export async function updateReservation(id, formData) {
 
   try {
     if (formData.status !== undefined) {
-      const reservationData = { status: formData.status }; // Seul le statut est envoyé
+      // Créez un nouvel objet où seules les valeurs modifiées sont incluses
+      const reservationData = {
+        status: formData.status, // Seul le statut sera envoyé en modification
+        reservation_time: formData.reservation_time,
+        number_of_people: formData.number_of_people,
+        email: formData.email,
+        reservation_date: formData.reservation_date,
+        phone: formData.phone,
+        // Garder intactes toutes les autres données qui ne sont pas modifiées
+        places_used: formData.places_used,
+        end_time: formData.end_time,
+      };
 
       const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
       const options = {

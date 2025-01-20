@@ -91,3 +91,33 @@ export const sendReservationMail = async (req, res) => {
     });
   }
 };
+
+export const sendContactMail = async (req, res) => {
+  try {
+    console.log("⚡️ sendContactMail appelé");
+    const contactData = req.body;
+
+    console.log("Données reçues:", contactData);
+
+    const emailData = {
+      email: contactData.email,
+      message: contactData.message,
+    };
+
+    console.log("Données préparées pour l'envoi:", emailData);
+
+    const result = await sendContactEmail(emailData);
+
+    return res.status(200).json({
+      success: true,
+      message: "Email envoyé avec succès",
+      result,
+    });
+  } catch (error) {
+    console.error("❌ Erreur dans sendContactMail:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

@@ -145,4 +145,57 @@ export const sendConfirmationEmail = async (emailData) => {
   }
 };
 
+export const sendContactMail = async (emailData) => {
+  try {
+    console.log("Début de l'envoi d'email...");
+    console.log("Données d'email reçues :", emailData);
+
+    if (!emailData?.name || !emailData?.email || !emailData?.message) {
+      throw new Error("Données d'email incomplètes");
+    }
+
+    const transporter = await createTransporter();
+    const emailresto = process.env.EMAIL_ADDRESS;
+
+    const emailTemplate = {
+      from: emailData.email,
+      to: emailresto,
+      subject: `📧 Nouveau message de ${emailData.name} - Restaurant TIKI 📧`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #FF6347; text-align: center;">📧 Nouveau message de ${emailData.name} - Restaurant TIKI 📧</h2>
+          
+          <p><strong>${emailData.name}</strong> vous a envoyé un message :</p>
+          
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p>${emailData.message}</p>
+          </div>
+    
+          <p style="text-align: center; margin: 30px 0;">Pour répondre, voici son adresse email :</p>
+          
+          <a href="mailto:${emailData.email}" 
+             style="display: block; background-color: #007bff; color: white; padding: 15px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">
+             📧 Répondre à ${emailData.name}
+          </a>
+    
+          <div style="margin-top: 40px; text-align: center; color: #666;">
+            <p>Ne tardez pas à répondre à ce message !</p>
+            <p style="color: #FF6347; margin-top: 20px;"><strong>🍹 L'équipe TIKI</strong></p>
+          </div>
+        </div>
+      `,
+    };
+
+    console.log("Template email préparé:", emailTemplate);
+
+    // Envoi de l'email
+    const result = await transporter.sendMail(emailTemplate);
+    console.log("Email envoyé avec succès:", result);
+    return result;
+  } catch (error) {
+    console.error("Erreur détaillée lors de l'envoi d'email :", error);
+    throw error;
+  }
+};
+
 export default createTransporter;
