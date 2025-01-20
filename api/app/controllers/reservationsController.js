@@ -260,6 +260,7 @@ export const handleReservationStatus = async (req, res) => {
       include: [
         {
           model: User,
+          as: "user",
           attributes: ["firstname", "lastname", "email"],
         },
       ],
