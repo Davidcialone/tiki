@@ -233,6 +233,11 @@ export const handleReservationStatus = async (req, res) => {
     const { id } = req.params; // Récupérer l'ID depuis l'URL
     const { token } = req.query;
 
+    if (!id) {
+      logger.error("ID de réservation manquant dans l'URL");
+      return res.status(400).send("ID de réservation manquant");
+    }
+
     if (!token) {
       logger.warn("Tentative de changement de statut sans token");
       return res.status(400).json({ message: "Token manquant" });
