@@ -12,10 +12,10 @@ import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 // Composants dashboard
-import { ClientSearch } from '../components/dashboard/clients/clientSearch';
-import { CustomerFile } from '../components/dashboard/clients/customerFile';
-import { ReservationsDashboard } from '../components/dashBoard/reservationsDashboard';
-import { PlanningPage } from '../components/dashBoard/worker/planningPage';
+import { ClientSearch } from '../components/dashboard/clients/clientSearch.jsx';
+import { CustomerFile } from '../components/dashboard/clients/customerFile.jsx';
+import { ReservationsDashboard } from '../components/dashboard/reservationsDashboard.jsx';
+import { PlanningPage } from '../components/dashboard/worker/planningPage.jsx';
 
 const AppRoutes = () => {
   const { user, isAuthenticated } = useAuth();

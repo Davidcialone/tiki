@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ReservationSearch } from "./reservations/reservationsSearch";
+import { ReservationSearch } from "./reservations/reservationsearch";
 import { ReservationPageWorker } from "./reservations/reservationPageWorker";
-import { ClientSearch } from "../dashBoard/clients/clientSearch";
+import { ClientSearch } from "../dashboard/clients/clientSearch";
 
 export function ReservationsDashboard() {
 
@@ -19,5 +19,3 @@ export function ReservationsDashboard() {
         </div>
     );
 }
-
-
