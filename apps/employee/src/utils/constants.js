@@ -1,0 +1,27 @@
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
+export const RESERVATION_STATUS = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED'
+};
+
+export const TABLE_ZONES = {
+  INSIDE: 'INSIDE',
+  TERRACE: 'TERRACE',
+  HERB: 'HERB',
+  GRAVEL: 'GRAVEL'
+};
+
+export const USER_ROLES = {
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
+  WORKER: 'WORKER'
+};
+
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
+  EMPLOYEE: 'EMPLOYEE'
+};

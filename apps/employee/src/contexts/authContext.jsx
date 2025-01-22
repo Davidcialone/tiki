@@ -1,17 +1,9 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode"; // Correction : import direct sans accolades
-import { fetchUserDetails } from "../api/userApi"; // Correction : import direct sans accolades
+import {jwtDecode} from "jwt-decode";
+import { fetchUserDetails } from "../api/userApi";
 
 export const AuthContext = createContext();
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,10 +16,10 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        const currentTime = Date.now() / 1000; // Temps actuel en secondes
+        const currentTime = Date.now() / 1000;
 
         if (decodedToken.exp < currentTime) {
-          logout(); // Déconnexion si le token est expiré
+          logout();
         } else {
           setIsAuthenticated(true);
           fetchUserDetails()
@@ -57,15 +49,21 @@ export const AuthProvider = ({ children }) => {
     Cookies.remove("token");
     setIsAuthenticated(false);
     setUser(null);
-    // Redirection à gérer dans un composant consommateur, pas ici
   };
 
   if (loading) {
-    return null; // Affichez un loader si nécessaire
+    return <div>Loading...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
