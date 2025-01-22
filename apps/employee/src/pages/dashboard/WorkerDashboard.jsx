@@ -6,6 +6,26 @@ import { DashboardStats } from '../../features/dashboard/components/DashboardSta
 const WorkerDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [totalReservations, setTotalReservations] = useState(0);
+  const [totalCovers, setTotalCovers] = useState(0);
+  const [loading, setLoading] = useState(true); // État pour l'animation de chargement
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const reservations = await getReservationsByDate(new Date().toISOString().split("T")[0]);
+        setTotalReservations(reservations.length);  // Met à jour le nombre de réservations
+        setTotalCovers(reservations.reduce((total, res) => total + res.number_of_people, 0));  // Calcule le total des couverts
+      } catch (error) {
+        console.error("Erreur lors du chargement des réservations", error);
+      } finally {
+        setLoading(false); // Fin du chargement
+      }
+    };
+
+    fetchReservations();
+  }, []);
+
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">

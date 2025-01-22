@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ReservationPageWorker } from "./reservations/reservationPageWorker";
 
-
 export function ReservationsDashboard() {
 
     return (

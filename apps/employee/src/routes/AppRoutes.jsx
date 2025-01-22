@@ -19,8 +19,9 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 // Dashboard Components
 import {ClientSearch} from '../components/dashboard/clients/clientSearch';
 import {CustomerFile} from '../components/dashboard/clients/customerFile';
-import {ReservationsDashboard} from '../components/dashboard/reservationsDashboard.jsx';
+import {ReservationPageWorker} from '../components/dashboard/reservations/reservationPageWorker';
 import { PlanningPage } from "../components/dashboard/worker/planningPage.jsx";
+import { ReservationsViews } from '../components/dashboard/reservations/reservationsViews.jsx';
 
 
 const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
@@ -71,9 +72,16 @@ const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
 
         <Route path="/reservations" element={
           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            <ReservationsDashboard />
+            <ReservationPageWorker />
           </ProtectedRoute>
         } />
+         <Route path="/reservations/management" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+            <ReservationsViews/>
+          </ProtectedRoute>
+        } />
+
+
 
         <Route path="/planning" element={
           <ProtectedRoute allowedRoles={[ROLES.WORKER]} userRole={user?.role}>
