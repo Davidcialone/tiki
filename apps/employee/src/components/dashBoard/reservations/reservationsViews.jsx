@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Clock, Users, Table, Edit, Trash2 } from 'lu
 import { getReservations, updateReservation, deleteReservation } from "../../../api/reservationApi";
 import { ReservationModal } from "../../modales/reservationModal";
 
-export const ReservationsViews = () => {
+export function ReservationsViews () {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [reservations, setReservations] = useState([]);
