@@ -3,7 +3,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Context and Utils
-import { useAuth } from '../auth/authContext';
+import { useAuth } from "../auth/authContext.jsx";
 import { ROLES } from '../utils/constants';
 
 // Layout Components
@@ -17,13 +17,13 @@ import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 // Dashboard Components
-import ClientSearch from '../components/dashboard/clients/clientSearch';
-import CustomerFile from '../components/dashboard/clients/customerFile';
-import ReservationsDashboard from '../components/dashboard/reservationsDashboard';
-import PlanningPage from '../components/dashboard/worker/planningPage';
+import {ClientSearch} from '../components/dashboard/clients/clientSearch';
+import {CustomerFile} from '../components/dashboard/clients/customerFile';
+import {ReservationsDashboard} from '../components/dashboard/reservationsDashboard.jsx';
+import { PlanningPage } from "../components/dashboard/worker/planningPage.jsx";
 
-const AppRoutes = () => {
-  const { user, isAuthenticated } = useAuth();
+
+const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
 
   // Redirection basée sur le rôle si l'utilisateur est authentifié
   const getDefaultRoute = () => {
