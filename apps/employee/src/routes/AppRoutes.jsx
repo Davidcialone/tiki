@@ -17,11 +17,12 @@ import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 // Dashboard Components
-import ClientSearch from '../pages/clients/ClientSearch';
-import CustomerFile from '../pages/clients/CustomerFile';
-import ReservationPageWorker from '../pages/reservations/ReservationPageWorker';
-import PlanningPage from '../pages/planning/PlanningPage';
-import ReservationsViews from '../pages/reservations/ReservationsViews';
+import ClientSearch from '../components/dashboard/clients/clientSearch.jsx';
+import CustomerFile from '../components/dashboard/clients/customerFile.jsx';
+import ReservationPageWorker from '../components/dashboard/reservations/reservationPageWorker.jsx';
+import PlanningPage from '../components/dashboard/planning/planningPage.jsx';
+import ReservationsViews from '../components/dashboard/reservations/reservationsViews.jsx';
+
 
 const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
 
