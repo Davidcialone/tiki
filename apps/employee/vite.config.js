@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
-import path from 'path';
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
@@ -13,19 +13,19 @@ export default defineConfig({
   resolve: {
     preserveSymlinks: true,
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      "@": path.resolve(__dirname, "./src"),
+    },
   },
   server: {
     port: 5174,
     proxy: {
-      '/api': {
-        target: 'https://tiki-ew5j.onrender.com',
+      "/api": {
+        target: "https://tiki-ew5j.onrender.com",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
+      },
+    },
   },
   define: {
     "process.env.VITE_API_BASE_URL": JSON.stringify(
@@ -35,6 +35,11 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [tailwindcss(), autoprefixer()],
+    },
+  },
+  build: {
+    rollupOptions: {
+      external: ["react", "react-dom"], // Exclure React si nécessaire
     },
   },
 });
