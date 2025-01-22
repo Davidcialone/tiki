@@ -19,7 +19,7 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 // Dashboard Components
 import { ClientSearch } from "../components/dashboard/clients/clientSearch";
 import {CustomerFile} from '../components/dashboard/clients/customerFile';
-import {ReservationPageWorker} from '../components/dashboard/reservations/reservationPageWorker.jsx';
+import { ReservationPageWorker } from "../components/dashboard/reservations/reservationPageWorker";
 import { PlanningPage } from "../components/dashboard/worker/planningPage.jsx";
 import { ReservationsViews } from '../components/dashboard/reservations/reservationsViews.jsx';
 
@@ -63,7 +63,7 @@ const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
           </ProtectedRoute>
         } />
 
-        <Route path="/clients/:id" element={
+        <Route path="/clients/:clientId" element={
           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
             <CustomerFile />
           </ProtectedRoute>
