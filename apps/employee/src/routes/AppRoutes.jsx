@@ -1,7 +1,12 @@
+// Core imports
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+
+// Context and Utils
 import { useAuth } from '../auth/authContext';
 import { ROLES } from '../utils/constants';
+
+// Layout Components
 import Navigation from '../components/common/Navigation';
 import ProtectedRoute from '../auth/protectedRoute';
 
@@ -11,11 +16,11 @@ import { RegisterPage } from '../auth/registerPage';
 import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
-// Composants dashboard
-import ClientSearch from '../components/dashboard/clients/clientSearch.jsx';
-import CustomerFile from '../components/dashboard/clients/customerFile.jsx';
-import ReservationsDashboard from '../components/dashboard/reservationsDashboard.jsx';
-import PlanningPage  from '../components/dashboard/worker/planningPage.jsx';
+// Dashboard Components
+import ClientSearch from '../components/dashboard/clients/clientSearch';
+import CustomerFile from '../components/dashboard/clients/customerFile';
+import ReservationsDashboard from '../components/dashboard/reservationsDashboard';
+import PlanningPage from '../components/dashboard/worker/planningPage';
 
 const AppRoutes = () => {
   const { user, isAuthenticated } = useAuth();
