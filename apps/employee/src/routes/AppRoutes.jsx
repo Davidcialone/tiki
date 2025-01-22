@@ -20,24 +20,47 @@ import { PlanningPage } from '../components/dashBoard/worker/plannigPage';
 const AppRoutes = () => {
   const { user, isAuthenticated } = useAuth();
 
+  // Redirection basée sur le rôle si l'utilisateur est authentifié
+  const getDefaultRoute = () => {
+    if (!isAuthenticated) return '/login';
+    return user?.role === ROLES.MANAGER ? '/manager/dashboard' : '/worker/dashboard';
+  };
+
   return (
     <>
       {isAuthenticated && <Navigation />}
       <Routes>
         {/* Routes publiques */}
-        <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" replace />} />
-        <Route path="/register" element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/" replace />} />
+        <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={getDefaultRoute()} replace />} />
+        <Route path="/register" element={!isAuthenticated ? <RegisterPage /> : <Navigate to={getDefaultRoute()} replace />} />
         
-        {/* Routes protégées */}
-        <Route path="/" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            {user?.role === ROLES.MANAGER ? <HomePageManager /> : <HomePageEmployee />}
+        {/* Route racine avec redirection */}
+        <Route path="/" element={<Navigate to={getDefaultRoute()} replace />} />
+
+        {/* Routes du Manager */}
+        <Route path="/manager/dashboard" element={
+          <ProtectedRoute allowedRoles={[ROLES.MANAGER]} userRole={user?.role}>
+            <ManagerDashboard />
           </ProtectedRoute>
         } />
 
-        <Route path="/dashboard" element={
+        {/* Routes du Worker */}
+        <Route path="/worker/dashboard" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER]} userRole={user?.role}>
+            <WorkerDashboard />
+          </ProtectedRoute>
+        } />
+
+        {/* Autres routes protégées */}
+        <Route path="/clients/search" element={
           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            {user?.role === ROLES.MANAGER ? <ManagerDashboard /> : <WorkerDashboard />}
+            <ClientSearch />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/clients/:id" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+            <CustomerFile />
           </ProtectedRoute>
         } />
 
@@ -47,39 +70,14 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
 
-        <Route path="/clients" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            <ClientSearch />
-          </ProtectedRoute>
-        } />
-
-        <Route path="/clients/:clientId" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            <CustomerFile />
-          </ProtectedRoute>
-        } />
-
-        <Route path="/plannings" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+        <Route path="/planning" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER]} userRole={user?.role}>
             <PlanningPage />
           </ProtectedRoute>
         } />
 
-        {/* Routes Manager uniquement */}
-        <Route path="/employees" element={
-          <ProtectedRoute allowedRoles={[ROLES.MANAGER]} userRole={user?.role}>
-            <div>Page de gestion des employés</div>
-          </ProtectedRoute>
-        } />
-
-        <Route path="/reports" element={
-          <ProtectedRoute allowedRoles={[ROLES.MANAGER]} userRole={user?.role}>
-            <div>Page des rapports</div>
-          </ProtectedRoute>
-        } />
-
-        {/* Route par défaut */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Fallback pour les routes non trouvées */}
+        <Route path="*" element={<Navigate to={getDefaultRoute()} replace />} />
       </Routes>
     </>
   );

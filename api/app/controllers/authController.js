@@ -1,4 +1,4 @@
-import { User } from "../models/index.js";
+import { User, Role } from "../models/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -15,67 +15,70 @@ export async function login(req, res) {
       return res.status(400).json({ message: "Email et mot de passe requis" });
     }
 
-    const user = await User.findOne({ where: { email } });
-    console.log("Utilisateur trouvé:", user);
+    // Récupérer l'utilisateur avec son rôle
+    const user = await User.findOne({
+      where: { email },
+      include: [{
+        model: Role,
+        as: 'role'
+      }],
+      attributes: ['id', 'email', 'password', 'firstname', 'lastname']
+    });
+
+    console.log("Utilisateur trouvé:", user?.toJSON());
 
     if (!user) {
       console.log("Utilisateur non trouvé pour l'email :", email);
       return res.status(401).json({ message: "Utilisateur non trouvé" });
     }
 
-    console.log("Mot de passe reçu :", password);
-    console.log("Mot de passe stocké (haché) :", user.password);
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(
-      "Résultat de la comparaison des mots de passe :",
-      isPasswordValid
-    );
+    console.log("Résultat de la comparaison des mots de passe :", isPasswordValid);
 
     if (!isPasswordValid) {
       console.log("Mot de passe incorrect");
       return res.status(401).json({ message: "Mot de passe incorrect" });
     }
 
-    // Génération du token
-    const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    // Convertir le rôle en format attendu par le frontend
+    const roleName = user.role?.name?.toUpperCase() || 'WORKER';
+    const normalizedRole = roleName === 'MANAGER' ? 'MANAGER' : 'WORKER';
+
+    // Préparer les données utilisateur pour le token
+    const userData = {
+      id: user.id,
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      role: normalizedRole
+    };
+
+    // Générer le token avec les données utilisateur
+    const token = jwt.sign(
+      userData,
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    console.log("Token généré avec données utilisateur:", {
+      ...userData,
+      token: token.substring(0, 20) + '...' // Log partiel du token pour la sécurité
     });
 
-    console.log("Token généré:", token);
+    // Renvoyer le token et les données utilisateur
+    return res.status(200).json({
+      token,
+      user: userData
+    });
 
-    return res.status(200).json({ token });
   } catch (err) {
     console.error("Erreur dans /api/auth/login:", err);
-    return res
-      .status(500)
-      .json({ message: "Erreur serveur, veuillez réessayer plus tard" });
+    return res.status(500).json({ 
+      message: "Erreur serveur, veuillez réessayer plus tard",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 }
-
-// // Test de la fonction login
-// const test = {
-//   email: "admin@tiki.com",
-//   password: "Admin1234!",
-// };
-
-// // Simuler une requête et une réponse
-// const mockReq = {
-//   body: test, // Simule le body de la requête
-// };
-
-// const mockRes = {
-//   status: function (code) {
-//     this.statusCode = code;
-//     return this;
-//   },
-//   json: function (data) {
-//     console.log("Réponse JSON :", data);
-//     return data;
-//   },
-// };
-
-// login(mockReq, mockRes);
 
 // Fonction d'inscription
 export async function register(req, res) {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../auth/authContext';
 import { validateEmail } from '../../utils/validators';
+import { Login as loginApi } from '../../api/userApi';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -21,25 +22,11 @@ const LoginPage = () => {
     }
 
     try {
-      // Appel à votre API d'authentification
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        login(data);
-        navigate('/dashboard');
-      } else {
-        setError(data.message || 'Erreur de connexion');
-      }
+      const data = await loginApi({ email, password });
+      login(data);
+      navigate('/dashboard');
     } catch (err) {
-      setError('Erreur de connexion au serveur');
+      setError(err.message || 'Erreur de connexion au serveur');
     }
   };
 

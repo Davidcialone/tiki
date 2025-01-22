@@ -48,9 +48,13 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    setIsAuthenticated(true);
+  const login = async (userData) => {
+    if (userData.token && userData.user) {
+      setIsAuthenticated(true);
+      setUser(userData.user);
+    } else {
+      throw new Error("Données d'authentification invalides");
+    }
   };
 
   const logout = () => {

@@ -14,14 +14,9 @@ export const TABLE_ZONES = {
   GRAVEL: 'GRAVEL'
 };
 
-export const USER_ROLES = {
-  ADMIN: 'ADMIN',
+export const ROLES = {
   MANAGER: 'MANAGER',
   WORKER: 'WORKER'
 };
 
-export const ROLES = {
-  ADMIN: 'ADMIN',
-  MANAGER: 'MANAGER',
-  EMPLOYEE: 'EMPLOYEE'
-};
+export const USER_ROLES = ROLES; // Pour la compatibilité

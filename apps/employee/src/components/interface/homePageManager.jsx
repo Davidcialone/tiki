@@ -27,7 +27,7 @@ export function HomePageManager() {
     <div className="bg-gray-300 min-h-screen mt-16 p-4"> {/* Ajout d'un padding-top pour déplacer le contenu sous la navbar */}
       {/* Header : Bienvenue et résumé */}
       <header className="text-center animate-fadeIn"> {/* Animation pour le titre */}
-        <h1 className="text-3xl font-bold text-gray-800">Bonjour, Employé !</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Bonjour, Manager!</h1>
         <p className="mt-2 text-gray-500">Voici un résumé de votre journée de travail.</p>
       </header>
       

@@ -1,4 +1,8 @@
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import Cookies from 'js-cookie';
+import {jwtDecode} from 'jwt-decode';
+import { ROLES } from '../utils/constants';
+
+const apiBaseUrl = "https://tiki-ew5j.onrender.com";
 
 // Utility function for validation
 const validateEmail = (email) => {
@@ -130,16 +134,13 @@ export async function Login({ email, password }) {
       }),
     });
 
-    // Log de la réponse brute
-    const responseText = await response.text();
-    // console.log("Réponse brute du serveur:", responseText);
-
     let data;
     try {
+      const responseText = await response.text();
       data = JSON.parse(responseText);
-      // console.log("Données parsées:", data);
+      console.log("Parsed response:", data);
     } catch (e) {
-      // console.error("Erreur parsing JSON:", e);
+      console.error("Erreur parsing response:", e);
       throw new Error("Format de réponse invalide");
     }
 
@@ -150,11 +151,33 @@ export async function Login({ email, password }) {
       );
     }
 
+    // Vérifier que nous avons un token
     if (!data.token) {
       throw new Error("Token manquant dans la réponse");
     }
 
-    return data;
+    // Stocker le token
+    Cookies.set("token", data.token);
+
+    // Décoder le token pour obtenir les informations utilisateur
+    const decodedToken = jwtDecode(data.token);
+    console.log("Decoded token:", decodedToken);
+
+    // Construire l'objet utilisateur à partir du token décodé
+    const user = {
+      id: decodedToken.id,
+      email: decodedToken.email,
+      role: decodedToken.role || ROLES.WORKER,
+      firstname: decodedToken.firstname || decodedToken.name,
+      lastname: decodedToken.lastname
+    };
+
+    console.log("Constructed user object:", user);
+
+    return {
+      token: data.token,
+      user: user
+    };
   } catch (error) {
     console.error("Erreur Login:", error);
     throw error;
@@ -163,7 +186,7 @@ export async function Login({ email, password }) {
 
 export async function fetchUserDetails(userId) {
   try {
-    const token = Cookies ? Cookies.get("token") : null;
+    const token = Cookies.get("token");
 
     if (!token) {
       throw new ApiError("Token d'authentification manquant", 401);

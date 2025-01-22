@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { AuthContext } from "../auth/authContext";
 import { Login } from "../api/userApi";
 import { Link } from "react-router-dom";
+import { ROLES } from '../utils/constants';
 
 export function LoginPage() {
   const { login } = useContext(AuthContext);
@@ -17,7 +18,7 @@ export function LoginPage() {
   const location = useLocation();
 
   useEffect(() => {
-    return () => setLoading(false); // Reset loading state on component unmount
+    return () => setLoading(false);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -26,30 +27,27 @@ export function LoginPage() {
     setLoading(true);
   
     try {
-      const response = await Login({ email, password });
-      console.log("Réponse complète:", response); // Ajout de ce log
-  
-      if (!response) {
-        throw new Error("Aucune réponse du serveur");
+      const loginData = await Login({ email, password });
+      console.log("Login data:", loginData); // Debug
+      
+      if (!loginData || !loginData.token || !loginData.user) {
+        throw new Error("Erreur d'authentification");
       }
-  
-      // Vérification explicite du token
-      if (!response.token) {
-        console.error("Réponse sans token:", response);
-        throw new Error("Token manquant dans la réponse");
+      
+      await login(loginData);
+      
+      // Rediriger en fonction du rôle
+      console.log("User role:", loginData.user.role); // Debug
+      
+      if (loginData.user.role === ROLES.MANAGER) {
+        navigate('/manager/dashboard');
+      } else if (loginData.user.role === ROLES.WORKER) {
+        navigate('/worker/dashboard');
+      } else {
+        console.error("Rôle inconnu:", loginData.user.role);
+        throw new Error("Rôle utilisateur non reconnu");
       }
-  
-      const token = response.token;
-      try {
-        const user = jwtDecode(token);
-        // console.log("User décodé:", user); // Ajout de ce log
-        login(token, user);
-        Cookies.set("token", token, { expires: 7 });
-        navigate(location.state?.from || "/");
-      } catch (decodeError) {
-        // console.error("Erreur décodage token:", decodeError);
-        throw new Error("Token invalide");
-      }
+      
     } catch (error) {
       console.error("Erreur complète:", error);
       setError(error.message || "Erreur lors de la connexion");
