@@ -12,7 +12,7 @@ import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 // Composants dashboard
-import { ClientSearch } from '../components/dashBoard/clients/clientSearch';
+import { ClientSearch } from '../components/dashboard/clients/clientSearch';
 import { CustomerFile } from '../components/dashboard/clients/customerFile';
 import { ReservationsDashboard } from '../components/dashBoard/reservationsDashboard';
 import { PlanningPage } from '../components/dashBoard/worker/planningPage';
