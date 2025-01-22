@@ -10,10 +10,12 @@ import LoginPage from '../pages/auth/LoginPage';
 import { RegisterPage } from '../auth/registerPage';
 import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
-import { ClientSearch } from '../components/dashboard/clients/clientSearch';
+
+// Composants dashboard
+import { ClientSearch } from '../components/dashBoard/clients/clientSearch';
 import { CustomerFile } from '../components/dashboard/clients/customerFile';
-import { ReservationsDashboard } from '../components/dashboard/reservationsDashboard';
-import { PlanningPage } from '../components/dashBoard/worker/plannigPage';
+import { ReservationsDashboard } from '../components/dashBoard/reservationsDashboard';
+import { PlanningPage } from '../components/dashBoard/worker/planningPage';
 
 const AppRoutes = () => {
   const { user, isAuthenticated } = useAuth();

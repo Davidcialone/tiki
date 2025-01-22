@@ -3,14 +3,21 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
   },
+  resolve: {
+    preserveSymlinks: true,
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
   server: {
-    port: 5174, // Force port to 5174
+    port: 5174,
     proxy: {
       '/api': {
         target: 'https://tiki-ew5j.onrender.com',
