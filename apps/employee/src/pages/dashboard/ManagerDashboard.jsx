@@ -44,6 +44,51 @@ const ManagerDashboard = () => {
               </button>
             </div>
           </div>
+      
+         {/* Réservations ko */}
+           <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations ko</h2>
+            <div className="space-y-4">
+              <button 
+                onClick={() => navigate('/reservations')}
+                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+              >
+                Effectuer une réservation
+              </button>
+              <button 
+                onClick={() => navigate('/reservations/management')}
+                className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+              >
+                Gestion des réservations
+              </button>
+              
+              <button 
+                onClick={() => navigate('/reservations/settings')}
+                className="w-full bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors"
+              >
+                Paramètres réservation ko
+              </button>
+            </div>
+          </div>
+
+          {/* Gestion des clients ko */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Clients ko</h2>
+            <div className="space-y-4">
+              <button 
+                onClick={() => navigate('/clients')}
+                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+              >
+                Rechercher un client
+              </button>
+              <button 
+                onClick={() => navigate('/clients/new')}
+                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+              >
+                Ajouter un client
+              </button>
+            </div>
+          </div>
 
           {/* Menu et carte */}
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -95,30 +140,7 @@ const ManagerDashboard = () => {
             </div>
           </div>
 
-          {/* Réservations ko */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations ko</h2>
-            <div className="space-y-4">
-              <button 
-                onClick={() => navigate('/reservations')}
-                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
-              >
-                Effectuer une réservation
-              </button>
-              <button 
-                onClick={() => navigate('/reservations/management')}
-                className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
-              >
-                Gestion des réservations
-              </button>
-              <button 
-                onClick={() => navigate('/reservations/settings')}
-                className="w-full bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors"
-              >
-                Paramètres réservation ko
-              </button>
-            </div>
-          </div>
+         
 
           {/* Personnel */}
           <div className="bg-white p-6 rounded-lg shadow-md">
