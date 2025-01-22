@@ -8,8 +8,6 @@ import ProtectedRoute from '../auth/protectedRoute';
 // Pages
 import LoginPage from '../pages/auth/LoginPage';
 import { RegisterPage } from '../auth/registerPage';
-import HomePageEmployee from '../pages/home/HomePageEmployee';
-import HomePageManager from '../pages/home/HomePageManager';
 import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 import { ClientSearch } from '../components/dashboard/clients/clientSearch';

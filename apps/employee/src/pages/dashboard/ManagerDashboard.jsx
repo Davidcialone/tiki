@@ -1,103 +1,134 @@
 import React from 'react';
 import { useAuth } from '../../auth/authContext';
+import { useNavigate } from 'react-router-dom';
+import { DashboardStats } from '../../features/dashboard/components/DashboardStats';
 
 const ManagerDashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">
-          Dashboard Manager - {user?.firstname} {user?.lastname}
+          Dashboard Restaurant - {user?.firstname} {user?.lastname}
         </h1>
 
+        {/* Statistiques */}
+        <div className="mb-8">
+          <DashboardStats />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Statistiques globales */}
+          {/* Gestion du service */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Vue d'ensemble</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Service en cours</h2>
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Employés actifs</span>
-                <span className="text-lg font-semibold text-blue-600">12</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Réservations aujourd'hui</span>
-                <span className="text-lg font-semibold text-green-600">25</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Chiffre du jour</span>
-                <span className="text-lg font-semibold text-purple-600">1,250€</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Gestion des employés */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Gestion des employés</h2>
-            <div className="space-y-4">
-              <button className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-                Voir tous les employés
+              <button 
+                onClick={() => navigate('/service/tables')}
+                className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+              >
+                Plan des tables
               </button>
-              <button className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors">
-                Ajouter un employé
+              <button 
+                onClick={() => navigate('/service/orders')}
+                className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+              >
+                Commandes en cours
               </button>
-              <button className="w-full bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors">
-                Planning des équipes
+              <button 
+                onClick={() => navigate('/service/staff')}
+                className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+              >
+                Personnel en service
               </button>
             </div>
           </div>
 
-          {/* Rapports et analyses */}
+          {/* Menu et carte */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Rapports</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Menu & Carte</h2>
             <div className="space-y-4">
-              <button className="w-full bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition-colors">
-                Rapport des ventes
+              <button 
+                onClick={() => navigate('/menu/edit')}
+                className="w-full bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors"
+              >
+                Modifier la carte
               </button>
-              <button className="w-full bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors">
-                Performance des employés
+              <button 
+                onClick={() => navigate('/menu/specials')}
+                className="w-full bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition-colors"
+              >
+                Plats du jour
               </button>
-              <button className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors">
-                Statistiques clients
+              <button 
+                onClick={() => navigate('/menu/prices')}
+                className="w-full bg-violet-500 text-white px-4 py-2 rounded hover:bg-violet-600 transition-colors"
+              >
+                Tarification
               </button>
             </div>
           </div>
 
-          {/* Gestion des réservations */}
+          {/* Gestion des stocks */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Stocks</h2>
+            <div className="space-y-4">
+              <button 
+                onClick={() => navigate('/stock/inventory')}
+                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition-colors"
+              >
+                Inventaire
+              </button>
+              <button 
+                onClick={() => navigate('/stock/orders')}
+                className="w-full bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors"
+              >
+                Commandes fournisseurs
+              </button>
+              <button 
+                onClick={() => navigate('/stock/waste')}
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+              >
+                Gestion des pertes
+              </button>
+            </div>
+          </div>
+
+          {/* Réservations */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations</h2>
             <div className="space-y-4">
-              <button className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition-colors">
+              <button 
+                onClick={() => navigate('/reservations/all')}
+                className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+              >
                 Toutes les réservations
               </button>
-              <button className="w-full bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
-                Gérer les créneaux
+              <button 
+                onClick={() => navigate('/reservations/settings')}
+                className="w-full bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors"
+              >
+                Paramètres réservation
               </button>
             </div>
           </div>
 
-          {/* Gestion des services */}
+          {/* Personnel */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Services</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Personnel</h2>
             <div className="space-y-4">
-              <button className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors">
-                Liste des services
+              <button 
+                onClick={() => navigate('/staff/planning')}
+                className="w-full bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+              >
+                Planning équipe
               </button>
-              <button className="w-full bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors">
-                Ajouter un service
-              </button>
-            </div>
-          </div>
-
-          {/* Paramètres */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Paramètres</h2>
-            <div className="space-y-4">
-              <button className="w-full bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors">
-                Paramètres généraux
-              </button>
-              <button className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
-                Maintenance
+              <button 
+                onClick={() => navigate('/staff/management')}
+                className="w-full bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors"
+              >
+                Gestion du personnel
               </button>
             </div>
           </div>

@@ -49,8 +49,15 @@ export function LoginPage() {
       }
       
     } catch (error) {
-      console.error("Erreur complète:", error);
-      setError(error.message || "Erreur lors de la connexion");
+      console.error("Erreur lors de la connexion:", error);
+      setError(
+        error.message || 
+        "Une erreur est survenue lors de la connexion. Veuillez réessayer."
+      );
+      // Si c'est une erreur 503, ajoutez un message supplémentaire
+      if (error.status === 503) {
+        setError(prev => `${prev} Le serveur est peut-être en cours de démarrage, veuillez patienter quelques minutes.`);
+      }
     } finally {
       setLoading(false);
     }

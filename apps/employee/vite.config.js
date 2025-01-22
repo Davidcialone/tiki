@@ -9,6 +9,17 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
   },
+  server: {
+    port: 5174, // Force port to 5174
+    proxy: {
+      '/api': {
+        target: 'https://tiki-ew5j.onrender.com',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
+      }
+    }
+  },
   define: {
     "process.env.VITE_API_BASE_URL": JSON.stringify(
       "https://tiki-ermployee.vercel.app"

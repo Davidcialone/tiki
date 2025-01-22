@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import {jwtDecode} from 'jwt-decode';
 import { ROLES } from '../utils/constants';
 
-const apiBaseUrl = "https://tiki-ew5j.onrender.com";
+const apiBaseUrl = ""; // Vide car on utilise le proxy Vite
 
 // Utility function for validation
 const validateEmail = (email) => {
@@ -134,53 +134,83 @@ export async function Login({ email, password }) {
       }),
     });
 
+    // Si le serveur est indisponible (503)
+    if (response.status === 503) {
+      throw new ApiError(
+        "Le serveur est temporairement indisponible. Veuillez réessayer dans quelques instants.",
+        503
+      );
+    }
+
     let data;
     try {
       const responseText = await response.text();
+      if (!responseText) {
+        throw new Error("Réponse vide du serveur");
+      }
+      console.log("Response text:", responseText); // Debug
       data = JSON.parse(responseText);
       console.log("Parsed response:", data);
     } catch (e) {
       console.error("Erreur parsing response:", e);
-      throw new Error("Format de réponse invalide");
+      if (e instanceof SyntaxError) {
+        throw new ApiError(
+          "Le serveur a retourné une réponse invalide. Veuillez réessayer.",
+          500
+        );
+      }
+      throw e;
     }
 
     if (!response.ok) {
       throw new ApiError(
         data?.message || getDefaultErrorMessage(response.status),
-        response.status
+        response.status,
+        data
       );
     }
 
     // Vérifier que nous avons un token
     if (!data.token) {
-      throw new Error("Token manquant dans la réponse");
+      throw new ApiError("Token manquant dans la réponse", 500);
     }
 
     // Stocker le token
     Cookies.set("token", data.token);
 
     // Décoder le token pour obtenir les informations utilisateur
-    const decodedToken = jwtDecode(data.token);
-    console.log("Decoded token:", decodedToken);
+    try {
+      const decodedToken = jwtDecode(data.token);
+      console.log("Decoded token:", decodedToken);
 
-    // Construire l'objet utilisateur à partir du token décodé
-    const user = {
-      id: decodedToken.id,
-      email: decodedToken.email,
-      role: decodedToken.role || ROLES.WORKER,
-      firstname: decodedToken.firstname || decodedToken.name,
-      lastname: decodedToken.lastname
-    };
+      // Construire l'objet utilisateur à partir du token décodé
+      const user = {
+        id: decodedToken.id,
+        email: decodedToken.email,
+        role: decodedToken.role || ROLES.WORKER,
+        firstname: decodedToken.firstname || decodedToken.name,
+        lastname: decodedToken.lastname
+      };
 
-    console.log("Constructed user object:", user);
+      console.log("Constructed user object:", user);
 
-    return {
-      token: data.token,
-      user: user
-    };
+      return {
+        token: data.token,
+        user: user
+      };
+    } catch (e) {
+      console.error("Erreur décodage token:", e);
+      throw new ApiError("Token invalide", 500);
+    }
   } catch (error) {
     console.error("Erreur Login:", error);
-    throw error;
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(
+      error.message || "Une erreur est survenue lors de la connexion",
+      500
+    );
   }
 }
 
