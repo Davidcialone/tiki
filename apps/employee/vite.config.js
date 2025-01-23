@@ -41,5 +41,6 @@ export default defineConfig({
         "/src/components/dashboard/clients/clientSearch",
       ],
     },
+    minify: true,
   },
 });
