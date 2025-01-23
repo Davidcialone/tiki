@@ -8,15 +8,15 @@
           "value": "application/javascript"
         }
       ]
-    }
-  ],
-  "rewrites": [
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
   "build": {
-    "config": "./vite.config.js"
+    "env": {
+      "NODE_ENV": "production"
+    }
   }
 }
