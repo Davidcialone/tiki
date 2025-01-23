@@ -11,9 +11,6 @@ export default defineConfig({
   },
   resolve: {
     preserveSymlinks: true,
-    alias: {
-      "@components": path.resolve(__dirname, "./src/components"),
-    },
   },
   server: {
     port: 5174,
