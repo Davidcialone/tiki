@@ -17,8 +17,8 @@ import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 // Dashboard Components
-import {ClientSearch} from '@/components/dashboard/clients/clientSearch';
-import {CustomerFile} from '@/components/dashboard/clients/customerFile';
+import {ClientSearch} from '@/components/dashboard/clients/clientSearch.jsx';
+import {CustomerFile} from '@/components/dashboard/clients/customerFile.jsx';
 import {ReservationPageWorker} from '@/components/dashboard/reservations/reservationPageWorker';
 import {PlanningPage} from '@/components/dashboard/worker/planningPage';
 import {ReservationsViews} from '@/components/dashboard/reservations/reservationsViews';
