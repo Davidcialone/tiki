@@ -17,7 +17,7 @@ import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 // Dashboard Components
-import ClientSearch from '@/components/dashBoard/clients/ClientSearch.jsx'
+import ClientSearch from '@/components/dashboard/clients/ClientSearch.jsx'
 console.log('ClientSearch:', ClientSearch);
 
 import {CustomerFile} from '@/components/dashboard/clients/customerFile';
