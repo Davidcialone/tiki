@@ -23,7 +23,7 @@ console.log('ClientSearch:', ClientSearch);
 import {CustomerFile} from '../components/dashboard/clients/customerFile';
 console.log('CustomerFile:', CustomerFile);
 
-import {ReservationPageWorker} from '../components/dashboard/reservations/reservationPageWorker';
+import {ReservationPageWorker} from '@/components/dashboard/reservations/reservationPageWorker';
 console.log('ReservationPageWorker:', ReservationPageWorker);
 
 import {PlanningPage} from '../components/dashboard/worker/planningPage';
