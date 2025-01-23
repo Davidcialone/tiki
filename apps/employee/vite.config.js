@@ -1,8 +1,9 @@
+// filepath: /c:/Users/cialo/Desktop/David/exo dev/tiki/apps/employee/vite.config.js
+import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
-import path from "path";
 
 export default defineConfig({
   plugins: [react()],
@@ -11,6 +12,9 @@ export default defineConfig({
   },
   resolve: {
     preserveSymlinks: true,
+    alias: {
+      "@components": path.resolve(__dirname, "./src/components"),
+    },
   },
   server: {
     port: 5174,
