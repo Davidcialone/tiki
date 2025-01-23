@@ -47,7 +47,7 @@ const ManagerDashboard = () => {
       
          {/* Réservations ko */}
            <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations ko</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations </h2>
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/reservations')}
