@@ -2,6 +2,8 @@ import React from 'react';
 import { useAuth } from '../../auth/authContext';
 import { useNavigate } from 'react-router-dom';
 import { DashboardStats } from '../../features/dashboard/components/DashboardStats';
+import { useState, useEffect  } from 'react';
+
 
 const WorkerDashboard = () => {
   const { user } = useAuth();
