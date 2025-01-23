@@ -17,19 +17,19 @@ import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
 import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 // Dashboard Components
-import ClientSearch from '../components/dashboard/clients/clientSearch';
+import {ClientSearch} from '../components/dashboard/clients/clientSearch';
 console.log('ClientSearch:', ClientSearch);
 
-import CustomerFile from '../components/dashboard/clients/customerFile';
+import {CustomerFile} from '../components/dashboard/clients/customerFile';
 console.log('CustomerFile:', CustomerFile);
 
-import ReservationPageWorker from '../components/dashboard/reservations/reservationPageWorker';
+import {ReservationPageWorker} from '../components/dashboard/reservations/reservationPageWorker';
 console.log('ReservationPageWorker:', ReservationPageWorker);
 
-import PlanningPage from '../components/dashboard/worker/planningPage';
+import {PlanningPage} from '../components/dashboard/worker/planningPage';
 console.log('PlanningPage:', PlanningPage);
 
-import ReservationsViews from '../components/dashboard/reservations/reservationsViews';
+import {ReservationsViews} from '../components/dashboard/reservations/reservationsViews';
 console.log('ReservationsViews:', ReservationsViews);
 
 const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
