@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
@@ -12,9 +11,6 @@ export default defineConfig({
   },
   resolve: {
     preserveSymlinks: true,
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
   },
   server: {
     port: 5174,
@@ -39,7 +35,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ["react", "react-dom"], // Exclure React si nécessaire
+      external: ["react", "react-dom"],
     },
   },
 });
