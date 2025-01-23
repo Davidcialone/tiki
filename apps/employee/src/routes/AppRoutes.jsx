@@ -18,7 +18,7 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
 
 // Dashboard Components
-import { ClientSearch } from '../components/dashboard/clients/ClientSearch';
+import { ClientSearch } from '../components/dashBoard/clients/ClientSearch.jsx';
 console.log('ClientSearch:', ClientSearch);
 
 import { CustomerFile } from '../components/dashboard/clients/CustomerFile';
