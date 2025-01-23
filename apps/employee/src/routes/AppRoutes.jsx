@@ -19,6 +19,8 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 // Dashboard Components
 import {ClientSearch} from '../components/dashboard/clients/clientSearch.jsx';
 console.log('ClientSearch:', ClientSearch);
+console.log('Resolved path:', require.resolve('../components/dashboard/clients/clientSearch.jsx'));
+
 
 import {CustomerFile} from '../components/dashboard/clients/customerFile.jsx';
 console.log('CustomerFile:', CustomerFile);
