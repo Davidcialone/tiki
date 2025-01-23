@@ -11,6 +11,9 @@ export default defineConfig({
   },
   resolve: {
     preserveSymlinks: true,
+    alias: {
+      "@components": path.resolve(__dirname, "./src/components"),
+    },
   },
   server: {
     port: 5174,
@@ -35,12 +38,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: [
-        "react",
-        "react-dom",
-        "/src/components/dashboard/clients/clientSearch",
-      ],
+      external: ["react", "react-dom"],
     },
-    minify: true,
   },
 });
