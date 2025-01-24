@@ -44,44 +44,44 @@ const WorkerDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Gestion des tables */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Mes tables</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Mes tables ko</h2>
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/tables')}
                 className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
               >
-                Voir mes tables
+                Voir mes tables ko
               </button>
               <button 
                 onClick={() => navigate('/tables/orders')}
                 className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
               >
-                Prendre une commande
+                Prendre une commande ko
               </button>
               <button 
                 onClick={() => navigate('/tables/payments')}
                 className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
               >
-                Encaisser une table
+                Encaisser une table   ko
               </button>
             </div>
           </div>
 
           {/* Menu du jour */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Menu du jour</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Menu du jour ko</h2>
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/menu/today')}
                 className="w-full bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors"
               >
-                Voir le menu
+                Voir le menu ko
               </button>
               <button 
                 onClick={() => navigate('/menu/specials')}
                 className="w-full bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition-colors"
               >
-                Plats du jour
+                Plats du jour ko
               </button>
             </div>
           </div>
@@ -90,39 +90,22 @@ const WorkerDashboard = () => {
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations</h2>
             <div className="space-y-4">
-              <button 
+            <button 
                 onClick={() => navigate('/reservations')}
-                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition-colors"
+                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
               >
-                Liste des réservations
+                Effectuer une réservation
               </button>
               <button 
-                onClick={() => navigate('/reservations/new')}
-                className="w-full bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors"
+                onClick={() => navigate('/reservations/management')}
+                className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
               >
-                Nouvelle réservation
+                Gestion des réservations
               </button>
             </div>
           </div>
 
-          {/* Stock et cuisine */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Stock & Cuisine</h2>
-            <div className="space-y-4">
-              <button 
-                onClick={() => navigate('/kitchen/orders')}
-                className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
-              >
-                Commandes cuisine
-              </button>
-              <button 
-                onClick={() => navigate('/stock/alerts')}
-                className="w-full bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors"
-              >
-                Alertes stock
-              </button>
-            </div>
-          </div>
+        
 
           {/* Planning */}
           <div className="bg-white p-6 rounded-lg shadow-md">

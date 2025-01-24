@@ -47,7 +47,7 @@ const ManagerDashboard = () => {
       
          {/* Réservations ko */}
            <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations </h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Réservations ko</h2>
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/reservations')}
@@ -85,7 +85,7 @@ const ManagerDashboard = () => {
                 onClick={() => navigate('/clients/new')}
                 className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
               >
-                Ajouter un client
+                Ajouter un client ko
               </button>
             </div>
           </div>
