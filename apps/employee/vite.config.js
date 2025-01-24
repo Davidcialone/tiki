@@ -1,4 +1,3 @@
-// filepath: /c:/Users/cialo/Desktop/David/exo dev/tiki/apps/employee/vite.config.js
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -12,15 +11,20 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // Définit l'alias pour le chemin absolu
+      // Si vous ne souhaitez pas utiliser d'alias, vous pouvez laisser cette section vide
+      // sinon vous pouvez ajouter des alias ici, ex : '@': path.resolve(__dirname, 'src')
     },
-    preserveSymlinks: true, // Conserve les liens symboliques si vous utilisez un monorepo
+  },
+  build: {
+    rollupOptions: {
+      external: ["react", "react-dom"], // Si vous ne voulez pas inclure react et react-dom dans le bundle
+    },
   },
   server: {
     port: 5174,
     proxy: {
       "/api": {
-        target: "https://tiki-ew5j.onrender.com",
+        target: "https://tiki-ew5j.onrender.com", // Assurez-vous que ce backend est accessible
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, "/api"),
@@ -29,17 +33,12 @@ export default defineConfig({
   },
   define: {
     "process.env.VITE_API_BASE_URL": JSON.stringify(
-      "https://tiki-ermployee.vercel.app"
+      "https://tiki-ermployee.vercel.app" // URL de l'API pour l'environnement de production
     ),
   },
   css: {
     postcss: {
       plugins: [tailwindcss(), autoprefixer()],
-    },
-  },
-  build: {
-    rollupOptions: {
-      external: ["react", "react-dom"],
     },
   },
 });
