@@ -11,30 +11,31 @@ WORKDIR /app/api
 RUN npm install
 
 # Frontend - Client
-RUN mkdir -p /app/apps/client
 COPY apps/client/package*.json /app/apps/client/
 WORKDIR /app/apps/client
 RUN npm install
+RUN npm run build  # Construire l'application front-end client
 
 # Frontend - Employee
-RUN mkdir -p /app/apps/employee
 COPY apps/employee/package*.json /app/apps/employee/
 WORKDIR /app/apps/employee
 RUN npm install
+RUN npm run build  # Construire l'application front-end employee
 
+# Copie des fichiers .env dans leurs dossiers respectifs (si nécessaire)
+# COPY api/.env ./api/
+# COPY apps/client/.env ./apps/client/
+# COPY apps/employee/.env ./apps/employee/
+
+# Expose le port utilisé pour l'API
+EXPOSE 5000
+
+# Nginx - Configuration
 # Copier la configuration nginx dans le conteneur
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose le port utilisé pour le backend API
-EXPOSE 5000
-
 # Expose les ports pour les frontends
-EXPOSE 3000
-EXPOSE 3001
+EXPOSE 80
 
-# Script pour lancer backend, client et employee
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
-
-# Commande pour démarrer le backend API et lancer les frontends
-CMD ["sh", "/app/start.sh"]
+# Lancer Nginx pour servir les fichiers
+CMD ["nginx", "-g", "daemon off;"]
