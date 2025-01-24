@@ -1,4 +1,3 @@
-import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
@@ -9,36 +8,19 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
   },
-  resolve: {
-    alias: {
-      // Si vous ne souhaitez pas utiliser d'alias, vous pouvez laisser cette section vide
-      "@": path.resolve(__dirname, "./src"), // Utilisez "@" comme alias pour le dossier src
-    },
-  },
-  build: {
-    rollupOptions: {
-      external: ["react", "react-dom"], // Si vous ne voulez pas inclure react et react-dom dans le bundle
-    },
-  },
-  server: {
-    port: 5174,
-    proxy: {
-      "/api": {
-        target: "https://tiki-ew5j.onrender.com", // Assurez-vous que ce backend est accessible
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, "/api"),
-      },
-    },
-  },
   define: {
     "process.env.VITE_API_BASE_URL": JSON.stringify(
-      "https://tiki-ermployee.vercel.app" // URL de l'API pour l'environnement de production
+      process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}/api`
+        : "http://localhost:5000/api"
     ),
   },
   css: {
     postcss: {
       plugins: [tailwindcss(), autoprefixer()],
     },
+  },
+  build: {
+    base: "/employee/",
   },
 });
