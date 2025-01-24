@@ -11,12 +11,10 @@ export default defineConfig({
     exclude: ["sequelize", "pg-hstore"],
   },
   resolve: {
-    preserveSymlinks: true,
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
+    alias: {
+      "@": path.resolve(__dirname, "./src"), // Définit l'alias pour le chemin absolu
     },
+    preserveSymlinks: true, // Conserve les liens symboliques si vous utilisez un monorepo
   },
   server: {
     port: 5174,
