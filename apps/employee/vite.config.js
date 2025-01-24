@@ -1,5 +1,5 @@
 export default defineConfig({
-  base: "/apps/employee/",
+  base: "./",
   plugins: [react()],
   optimizeDeps: {
     exclude: ["sequelize", "pg-hstore"],
