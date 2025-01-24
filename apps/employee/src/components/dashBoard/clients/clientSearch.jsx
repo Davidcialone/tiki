@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { searchInClientsDB } from "../../../api/clientApi";
 import { AiOutlineSearch, AiOutlineReload } from "react-icons/ai";
 
-export const ClientSearch = () => {
+export function ClientSearch() {
   const [searchQuery, setSearchQuery] = useState(""); // Valeur du champ de recherche
   const [clients, setClients] = useState([]); // Clients trouvés
   const [loading, setLoading] = useState(false);
