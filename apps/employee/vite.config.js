@@ -12,7 +12,7 @@ export default defineConfig({
   resolve: {
     alias: {
       // Si vous ne souhaitez pas utiliser d'alias, vous pouvez laisser cette section vide
-      // sinon vous pouvez ajouter des alias ici, ex : '@': path.resolve(__dirname, 'src')
+      "@": path.resolve(__dirname, "./src"), // Utilisez "@" comme alias pour le dossier src
     },
   },
   build: {
