@@ -27,7 +27,7 @@ console.log('CustomerFile:', CustomerFile);
 import {ReservationPageWorker} from '@/components/dashboard/reservations/reservationPageWorker.jsx';
 console.log('ReservationPageWorker:', ReservationPageWorker);
 
-import {PlanningPage} from '../components/dashboard/worker/planningPage.jsx';
+import {PlanningPage} from '@/components/dashboard/worker/planningPage.jsx';
 console.log('PlanningPage:', PlanningPage);
 
 import {ReservationsViews} from '../components/dashboard/reservations/reservationsViews.jsx';
