@@ -1,14 +1,19 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "builds": [
+  "headers": [
     {
-      "src": "apps/employee/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "apps/employee/dist" 
-      }
+      "source": "/(.*)\\.js",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
