@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
@@ -10,17 +11,12 @@ export default defineConfig({
   },
   define: {
     "process.env.VITE_API_BASE_URL": JSON.stringify(
-      process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}/api`
-        : "http://localhost:5000/api"
+      "https://tiki-ermployee.vercel.app"
     ),
   },
   css: {
     postcss: {
       plugins: [tailwindcss(), autoprefixer()],
     },
-  },
-  build: {
-    base: "/client/",
   },
 });
