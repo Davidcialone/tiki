@@ -19,18 +19,18 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 // Dashboard Components
 // In AppRoutes.jsx
 import { ClientSearch } from '@/components/dashboard/clients/clientSearch.jsx';
-console.log('ClientSearch:', ClientSearch);
+onsole.log('ClientSearch:', ClientSearch);
 
-import {CustomerFile} from '@/components/dashboard/clients/customerFile.jsx';
+import {CustomerFile} from '../components/dashboard/clients/customerFile.jsx';
 console.log('CustomerFile:', CustomerFile);
 
 import {ReservationPageWorker} from '@/components/dashboard/reservations/reservationPageWorker.jsx';
 console.log('ReservationPageWorker:', ReservationPageWorker);
 
-import {PlanningPage} from '@/components/dashboard/worker/planningPage.jsx';
+import {PlanningPage} from '../components/dashboard/worker/planningPage.jsx';
 console.log('PlanningPage:', PlanningPage);
 
-import {ReservationsViews} from '@/components/dashboard/reservations/reservationsViews.jsx';
+import {ReservationsViews} from '../components/dashboard/reservations/reservationsViews.jsx';
 console.log('ReservationsViews:', ReservationsViews);
 
 
