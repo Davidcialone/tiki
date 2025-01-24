@@ -22,10 +22,10 @@ COPY apps/employee/package*.json /app/apps/employee/
 WORKDIR /app/apps/employee
 RUN npm install
 
-# Copie des fichiers .env dans leurs dossiers respectifs
-COPY api/.env ./api/
-COPY apps/client/.env ./apps/client/
-COPY apps/employee/.env ./apps/employee/
+# # Copie des fichiers .env dans leurs dossiers respectifs
+# COPY api/.env ./api/
+# COPY apps/client/.env ./apps/client/
+# COPY apps/employee/.env ./apps/employee/
 
 # Expose le port utilisé pour le backend API
 EXPOSE 5000
