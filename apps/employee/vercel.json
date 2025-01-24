@@ -4,7 +4,7 @@
       "source": "/(.*)\\.js",
       "headers": [
         {
-          "key": "Content-Type",
+          "key": "Content-Type", 
           "value": "application/javascript"
         }
       ]
@@ -12,13 +12,14 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/(.*)", 
       "destination": "/index.html"
-    },
+    }
+  ],
+  "builds": [
     {
-      "buildCommand": "npm run build:employee",
-      "outputDirectory": "apps/employee/dist",
-      "framework": "vite"
+      "src": "apps/employee/package.json",
+      "use": "@vercel/node"
     }
   ]
 }
