@@ -30,7 +30,7 @@ console.log('ReservationPageWorker:', ReservationPageWorker);
 import {PlanningPage} from '@/components/dashboard/worker/planningPage.jsx';
 console.log('PlanningPage:', PlanningPage);
 
-import {ReservationsViews} from '../components/dashboard/reservations/reservationsViews.jsx';
+import {ReservationsViews} from '@/components/dashboard/reservations/reservationsViews.jsx';
 console.log('ReservationsViews:', ReservationsViews);
 
 
