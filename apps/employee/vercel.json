@@ -4,7 +4,7 @@
       "source": "/(.*)\\.js",
       "headers": [
         {
-          "key": "Content-Type", 
+          "key": "Content-Type",
           "value": "application/javascript"
         }
       ]
@@ -12,14 +12,17 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)", 
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
   "builds": [
     {
       "src": "apps/employee/package.json",
-      "use": "@vercel/node"
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ]
 }
