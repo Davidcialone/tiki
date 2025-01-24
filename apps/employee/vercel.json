@@ -1,28 +1,17 @@
 {
-  "headers": [
-    {
-      "source": "/(.*)\\.js",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        }
-      ]
-    }
-  ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "builds": [
     {
       "src": "apps/employee/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
-      }
+        "distDir": "apps/employee/dist"
     }
-  ]
+  }
+  ],
+  "scripts": {
+    "build": "npm run build --prefix apps/employee"
+  }
 }
