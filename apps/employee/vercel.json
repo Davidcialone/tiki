@@ -7,11 +7,8 @@
       "src": "apps/employee/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "apps/employee/dist"
+        "distDir": "apps/employee/dist" 
+      }
     }
-  }
-  ],
-  "scripts": {
-    "build": "npm run build --prefix apps/employee"
-  }
+  ]
 }
