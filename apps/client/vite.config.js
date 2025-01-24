@@ -1,4 +1,8 @@
-// vite.config.js
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
+
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
@@ -17,7 +21,6 @@ export default defineConfig({
     },
   },
   build: {
-    // Si ton site est servi dans un sous-dossier comme /client/
-    base: "/client/", // Met à jour ce chemin selon ta configuration Nginx
+    base: "/client/",
   },
 });
