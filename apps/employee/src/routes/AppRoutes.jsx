@@ -19,7 +19,7 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 // Dashboard Components
 // In AppRoutes.jsx
 import { ClientSearch } from '@/components/dashboard/clients/clientSearch.jsx';
-onsole.log('ClientSearch:', ClientSearch);
+console.log('ClientSearch:', ClientSearch);
 
 import {CustomerFile} from '@/components/dashboard/clients/customerFile.jsx';
 console.log('CustomerFile:', CustomerFile);

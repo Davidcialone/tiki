@@ -22,10 +22,8 @@ COPY apps/employee/package*.json /app/apps/employee/
 WORKDIR /app/apps/employee
 RUN npm install
 
-# # Copie des fichiers .env dans leurs dossiers respectifs
-# COPY api/.env ./api/
-# COPY apps/client/.env ./apps/client/
-# COPY apps/employee/.env ./apps/employee/
+# Copier la configuration nginx dans le conteneur
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose le port utilisé pour le backend API
 EXPOSE 5000
