@@ -21,7 +21,7 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 import { ClientSearch } from '@/components/dashboard/clients/clientSearch.jsx';
 onsole.log('ClientSearch:', ClientSearch);
 
-import {CustomerFile} from '../components/dashboard/clients/customerFile.jsx';
+import {CustomerFile} from '@/components/dashboard/clients/customerFile.jsx';
 console.log('CustomerFile:', CustomerFile);
 
 import {ReservationPageWorker} from '@/components/dashboard/reservations/reservationPageWorker.jsx';
