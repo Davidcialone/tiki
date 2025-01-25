@@ -3,23 +3,23 @@ import { ChevronLeft, ChevronRight, Clock, Users, Table, Edit, Trash2 } from 'lu
 import { getReservations, updateReservation, deleteReservation } from "../../../api/reservationApi";
 import { ReservationModal } from "../../modales/reservationModal";
 
-export function ReservationsViews () {
+export function ReservationsViews() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState(new Date()); // Par défaut, aujourd'hui
   const [reservations, setReservations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
 
   useEffect(() => {
     const fetchReservations = async () => {
-      const allReservations = await getReservations(); // Récupération de toutes les réservations
-      const confirmedReservations = allReservations.filter(reservation => reservation.status === 'confirmed' || reservation.status === 'present'); // Filtrage des confirmed et present
-      setReservations(confirmedReservations);  // Mise à jour avec les réservations filtrées
+      const allReservations = await getReservations();
+      const confirmedReservations = allReservations.filter(
+        (reservation) => reservation.status === 'confirmed' || reservation.status === 'present'
+      );
+      setReservations(confirmedReservations);
     };
     fetchReservations();
   }, []);
-  
-  
 
   const getDaysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
@@ -27,7 +27,17 @@ export function ReservationsViews () {
     const newDate = new Date(currentMonth);
     newDate.setMonth(currentMonth.getMonth() + (direction === 'next' ? 1 : -1));
     setCurrentMonth(newDate);
-    setSelectedDay(new Date(newDate.getFullYear(), newDate.getMonth(), 1)); // Réinitialise au premier jour
+
+    // Réinitialisation au jour actuel du mois si disponible, sinon au premier jour du mois
+    const today = new Date();
+    if (
+      newDate.getFullYear() === today.getFullYear() &&
+      newDate.getMonth() === today.getMonth()
+    ) {
+      setSelectedDay(today);
+    } else {
+      setSelectedDay(new Date(newDate.getFullYear(), newDate.getMonth(), 1));
+    }
   };
 
   const generateDays = () => Array.from({ length: getDaysInMonth(currentMonth) }, (_, i) => i + 1);
@@ -60,30 +70,22 @@ export function ReservationsViews () {
     try {
       const reservation = reservations.find((res) => res.id === reservationId);
       if (!reservation) return;
-  
-      // Déterminer le nouveau statut
+
       const newStatus = reservation.status === 'present' ? 'confirmed' : 'present';
-  
-      // Préparer les données à envoyer
-      const dataToUpdate = {
-        status: newStatus,
-      };
-  
+
+      const dataToUpdate = { status: newStatus };
+
       const updatedReservation = await updateReservation(reservationId, dataToUpdate);
-  
-      // Fusionner les données existantes avec la mise à jour
+
       setReservations((prev) =>
         prev.map((res) =>
-          res.id === reservationId
-            ? { ...res, ...updatedReservation } // Garde les données existantes et ajoute/remplace avec les nouvelles
-            : res
+          res.id === reservationId ? { ...res, ...updatedReservation } : res
         )
       );
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
     }
   };
-  
 
   const handleDeleteReservation = async (reservationId) => {
     if (!reservationId) {
@@ -95,9 +97,7 @@ export function ReservationsViews () {
       "Voulez-vous vraiment supprimer cette réservation ?"
     );
 
-    if (!confirmDelete) {
-      return;
-    }
+    if (!confirmDelete) return;
 
     const previousReservations = [...reservations];
     setReservations((prev) => prev.filter((res) => res.id !== reservationId));
@@ -112,14 +112,13 @@ export function ReservationsViews () {
     }
   };
 
-   // Fonction pour initialiser le formulaire
-   const initializeFormData = (reservation = null) => {
+  const initializeFormData = (reservation = null) => {
     if (reservation) {
       return {
         number_of_people: reservation.number_of_people,
         reservation_time: reservation.reservation_time,
-        phone: reservation.user?.phone || '',  // Vérification utilisateur
-        email: reservation.user?.email || '',  // Vérification utilisateur
+        phone: reservation.user?.phone || '',
+        email: reservation.user?.email || '',
       };
     } else {
       return {
@@ -131,26 +130,23 @@ export function ReservationsViews () {
     }
   };
 
-    // Fonction appelée au moment de l'ouverture de la modal
-    const handleOpenModal = (reservationId = null) => {
-      let data = {};
-  
-      if (reservationId) {
-        // On préremplit les données pour modification
-        const reservation = reservations.find((res) => res.id === reservationId);
-        if (reservation) {
-          data = initializeFormData(reservation);  // Remplit les données existantes
-        } else {
-          console.error("Réservation introuvable.");
-        }
+  const handleOpenModal = (reservationId = null) => {
+    let data = {};
+
+    if (reservationId) {
+      const reservation = reservations.find((res) => res.id === reservationId);
+      if (reservation) {
+        data = initializeFormData(reservation);
       } else {
-        // On initialise les données pour création
-        data = initializeFormData();
+        console.error("Réservation introuvable.");
       }
-  
-      setFormData(data);
-      setIsModalOpen(true);
-    };
+    } else {
+      data = initializeFormData();
+    }
+
+    setFormData(data);
+    setIsModalOpen(true);
+  };
 
   const handleUpdateReservation = async (reservationId, updatedFormData) => {
     const updatedReservation = reservations.find((res) => res.id === reservationId);
@@ -165,8 +161,8 @@ export function ReservationsViews () {
       number_of_people: updatedFormData.number_of_people || updatedReservation.number_of_people,
       reservation_time: updatedFormData.reservation_time || updatedReservation.reservation_time,
       phone: updatedFormData.phone || updatedReservation.user.phone,
-      email: updatedFormData.email || updatedReservation.user.email,  // Assurez-vous que l'email est inclus
-          };
+      email: updatedFormData.email || updatedReservation.user.email,
+    };
 
     try {
       const updatedResponse = await updateReservation(reservationId, updatedData);
@@ -218,7 +214,7 @@ export function ReservationsViews () {
             <ChevronRight className="w-5 h-5 bg-black text-white" />
           </button>
         </div>
-  
+
         <div className="flex overflow-x-auto space-x-2 px-4 py-3 border-b">
           {generateDays().map((day) => {
             const hasReservations = getReservationsForDay(day).length > 0;
@@ -248,7 +244,7 @@ export function ReservationsViews () {
             );
           })}
         </div>
-  
+
         <div className="px-4 py-2">
           {getReservationsForDay(selectedDay.getDate()).length > 0 ? (
             <div className="space-y-2">
@@ -270,7 +266,7 @@ export function ReservationsViews () {
                   <div className="flex items-center justify-center">
                     <span className="text-sm text-gray-600">
                       <Clock className="w-4 h-4 inline mr-1" />
-                      {reservation.reservation_time || 'Heure non spécifiée'}  {/* Message alternatif si aucune heure */}
+                      {reservation.reservation_time || 'Heure non spécifiée'}
                     </span>
                   </div>
                   <div className="flex items-center justify-center">
@@ -280,7 +276,7 @@ export function ReservationsViews () {
                   <div className="flex items-center justify-center">
                     <span className="text-sm text-gray-600">
                       <Users className="w-4 h-4 inline mr-1" />
-                      {reservation.number_of_people || 'Nombre de personnes non spécifié'}  {/* Message alternatif si aucune valeur */}
+                      {reservation.number_of_people || 'Nombre de personnes non spécifié'}
                     </span>
                   </div>
                   <div className="flex items-center justify-center">
@@ -324,5 +320,4 @@ export function ReservationsViews () {
       </div>
     </div>
   );
-  
-};
+}

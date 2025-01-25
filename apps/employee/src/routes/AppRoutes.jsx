@@ -19,21 +19,13 @@ import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 // Dashboard Components
 // In AppRoutes.jsx
 import { ClientSearch } from '../components/dashboard/clients/clientSearch';
-console.log('ClientSearch:', ClientSearch);
-
 import {CustomerFile} from '../components/dashboard/clients/customerFile.jsx';
-console.log('CustomerFile:', CustomerFile);
-
 import {ReservationPageWorker} from '../components/dashboard/reservations/reservationPageWorker.jsx';
-console.log('ReservationPageWorker:', ReservationPageWorker);
-
 import {PlanningPage} from '../components/dashboard/worker/planningPage.jsx';
-console.log('PlanningPage:', PlanningPage);
-
 import {ReservationsViews} from '../components/dashboard/reservations/reservationsViews.jsx';
-console.log('ReservationsViews:', ReservationsViews);
-
-
+import { ClientDashboard } from '../components/dashboard/clients/clientDashboard.jsx';
+import { EmployeeDashboard } from '../components/dashboard/employees/employeeDashboard.jsx';
+import {ReportDashboard } from '../components/dashboard/reports/reportDashboard.jsx';
 
 const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
 
@@ -87,9 +79,27 @@ const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
           </ProtectedRoute>
         } />
 
+          <Route path="/clients" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+            <ClientDashboard />
+          </ProtectedRoute>
+        } />
+
+          <Route path="/employees" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+            <EmployeeDashboard />
+          </ProtectedRoute>
+        } />
+
          <Route path="/reservations/management" element={
           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
             <ReservationsViews/>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/reports" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+            <ReportDashboard/>
           </ProtectedRoute>
         } />
 

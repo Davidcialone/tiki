@@ -13,7 +13,13 @@ export function DashboardStats() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+       <div className="bg-white p-6 rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold text-gray-700">Date</h3>
+        <p className="text-2xl font-bold text-blue-600">
+          {loading ? "..." : new Date().toLocaleDateString()}
+        </p>
+      </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h3 className="text-lg font-semibold text-gray-700">Réservations du jour</h3>
         <p className="text-2xl font-bold text-blue-600">
