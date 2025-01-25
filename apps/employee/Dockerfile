@@ -2,26 +2,29 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy employee package files
-COPY apps/employee/package*.json ./
+# Copy entire monorepo
+COPY . .
 
 # Install dependencies
 RUN npm install
 
-# Copy employee source files
-COPY apps/employee/ ./
+# Set working directory to client
+WORKDIR /app/apps/employee
 
-# Build the employee app
+# Install client dependencies
+RUN npm install
+
+# Build the client
 RUN npm run build
 
 # Install Nginx
 RUN apk add --no-cache nginx
 
 # Copy Nginx configuration
-COPY apps/employee/nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port
 EXPOSE 80
 
-# Start Nginx with built files
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
