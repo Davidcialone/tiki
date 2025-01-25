@@ -7,7 +7,7 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ["sequelize", "pg-hstore"],
+    exclude: [],
   },
   resolve: {
     preserveSymlinks: true,
