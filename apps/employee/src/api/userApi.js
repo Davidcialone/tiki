@@ -1,8 +1,8 @@
-import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode';
-import { ROLES } from '../utils/constants';
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { ROLES } from "../utils/constants";
 
-const apiBaseUrl = ""; // Vide car on utilise le proxy Vite
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 // Utility function for validation
 const validateEmail = (email) => {
@@ -189,14 +189,14 @@ export async function Login({ email, password }) {
         email: decodedToken.email,
         role: decodedToken.role || ROLES.WORKER,
         firstname: decodedToken.firstname || decodedToken.name,
-        lastname: decodedToken.lastname
+        lastname: decodedToken.lastname,
       };
 
       console.log("Constructed user object:", user);
 
       return {
         token: data.token,
-        user: user
+        user: user,
       };
     } catch (e) {
       console.error("Erreur décodage token:", e);
