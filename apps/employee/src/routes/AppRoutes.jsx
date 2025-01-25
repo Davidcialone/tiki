@@ -1,111 +1,111 @@
-// Core imports
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+// // Core imports
+// import React from 'react';
+// import { Routes, Route, Navigate } from 'react-router-dom';
 
-// Context and Utils
-import { useAuth } from "../auth/authContext.jsx";
-import { ROLES } from '../utils/constants';
+// // Context and Utils
+// import { useAuth } from "../auth/authContext.jsx";
+// import { ROLES } from '../utils/constants';
 
-// Layout Components
-import Navigation from '../components/common/Navigation';
-import ProtectedRoute from '../auth/protectedRoute';
+// // Layout Components
+// import Navigation from '../components/common/Navigation';
+// import ProtectedRoute from '../auth/protectedRoute';
 
-// Pages
-import LoginPage from '../pages/auth/LoginPage';
-import { RegisterPage } from '../auth/registerPage';
-import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
-import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
+// // Pages
+// import LoginPage from '../pages/auth/LoginPage';
+// import { RegisterPage } from '../auth/registerPage';
+// import WorkerDashboard from '../pages/dashboard/WorkerDashboard';
+// import ManagerDashboard from '../pages/dashboard/ManagerDashboard';
 
-// Dashboard Components
-// In AppRoutes.jsx
-import { ClientSearch } from '../components/dashboard/clients/clientSearch';
-console.log('ClientSearch:', ClientSearch);
+// // Dashboard Components
+// // In AppRoutes.jsx
+// import { ClientSearch } from '../components/dashboard/clients/clientSearch';
+// console.log('ClientSearch:', ClientSearch);
 
-import {CustomerFile} from '../components/dashboard/clients/customerFile';
-console.log('CustomerFile:', CustomerFile);
+// import {CustomerFile} from '../components/dashboard/clients/customerFile';
+// console.log('CustomerFile:', CustomerFile);
 
-import {ReservationPageWorker} from '../components/dashboard/reservations/reservationPageWorker';
-console.log('ReservationPageWorker:', ReservationPageWorker);
+// import {ReservationPageWorker} from '../components/dashboard/reservations/reservationPageWorker';
+// console.log('ReservationPageWorker:', ReservationPageWorker);
 
-import {PlanningPage} from '../components/dashboard/worker/planningPage';
-console.log('PlanningPage:', PlanningPage);
+// import {PlanningPage} from '../components/dashboard/worker/planningPage';
+// console.log('PlanningPage:', PlanningPage);
 
-import {ReservationsViews} from '../components/dashboard/reservations/reservationsViews';
-console.log('ReservationsViews:', ReservationsViews);
+// import {ReservationsViews} from '../components/dashboard/reservations/reservationsViews';
+// console.log('ReservationsViews:', ReservationsViews);
 
 
 
-const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
+// const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
 
-  // Redirection basée sur le rôle si l'utilisateur est authentifié
-  const getDefaultRoute = () => {
-    if (!isAuthenticated) return '/login';
-    return user?.role === ROLES.MANAGER ? '/manager/dashboard' : '/worker/dashboard';
-  };
+//   // Redirection basée sur le rôle si l'utilisateur est authentifié
+//   const getDefaultRoute = () => {
+//     if (!isAuthenticated) return '/login';
+//     return user?.role === ROLES.MANAGER ? '/manager/dashboard' : '/worker/dashboard';
+//   };
 
-  return (
-    <>
-      {isAuthenticated && <Navigation />}
-      <Routes>
-        {/* Routes publiques */}
-        <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={getDefaultRoute()} replace />} />
-        <Route path="/register" element={!isAuthenticated ? <RegisterPage /> : <Navigate to={getDefaultRoute()} replace />} />
+//   return (
+//     <>
+//       {isAuthenticated && <Navigation />}
+//       <Routes>
+//         {/* Routes publiques */}
+//         <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={getDefaultRoute()} replace />} />
+//         <Route path="/register" element={!isAuthenticated ? <RegisterPage /> : <Navigate to={getDefaultRoute()} replace />} />
         
-        {/* Route racine avec redirection */}
-        <Route path="/" element={<Navigate to={getDefaultRoute()} replace />} />
+//         {/* Route racine avec redirection */}
+//         <Route path="/" element={<Navigate to={getDefaultRoute()} replace />} />
 
-        {/* Routes du Manager */}
-        <Route path="/manager/dashboard" element={
-          <ProtectedRoute allowedRoles={[ROLES.MANAGER]} userRole={user?.role}>
-            <ManagerDashboard />
-          </ProtectedRoute>
-        } />
+//         {/* Routes du Manager */}
+//         <Route path="/manager/dashboard" element={
+//           <ProtectedRoute allowedRoles={[ROLES.MANAGER]} userRole={user?.role}>
+//             <ManagerDashboard />
+//           </ProtectedRoute>
+//         } />
 
-        {/* Routes du Worker */}
-        <Route path="/worker/dashboard" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER]} userRole={user?.role}>
-            <WorkerDashboard />
-          </ProtectedRoute>
-        } />
+//         {/* Routes du Worker */}
+//         <Route path="/worker/dashboard" element={
+//           <ProtectedRoute allowedRoles={[ROLES.WORKER]} userRole={user?.role}>
+//             <WorkerDashboard />
+//           </ProtectedRoute>
+//         } />
 
-        {/* Autres routes protégées */}
-        <Route path="/clients/search" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            <ClientSearch />
-          </ProtectedRoute>
-        } />
+//         {/* Autres routes protégées */}
+//         <Route path="/clients/search" element={
+//           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+//             <ClientSearch />
+//           </ProtectedRoute>
+//         } />
 
-        <Route path="/clients/:clientId" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            <CustomerFile />
-          </ProtectedRoute>
-        } />
+//         <Route path="/clients/:clientId" element={
+//           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+//             <CustomerFile />
+//           </ProtectedRoute>
+//         } />
 
-        <Route path="/reservations" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            <ReservationPageWorker />
-          </ProtectedRoute>
-        } />
+//         <Route path="/reservations" element={
+//           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+//             <ReservationPageWorker />
+//           </ProtectedRoute>
+//         } />
 
-         <Route path="/reservations/management" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
-            <ReservationsViews/>
-          </ProtectedRoute>
-        } />
+//          <Route path="/reservations/management" element={
+//           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+//             <ReservationsViews/>
+//           </ProtectedRoute>
+//         } />
 
 
 
-        <Route path="/planning" element={
-          <ProtectedRoute allowedRoles={[ROLES.WORKER]} userRole={user?.role}>
-            <PlanningPage />
-          </ProtectedRoute>
-        } />
+//         <Route path="/planning" element={
+//           <ProtectedRoute allowedRoles={[ROLES.WORKER]} userRole={user?.role}>
+//             <PlanningPage />
+//           </ProtectedRoute>
+//         } />
 
-        {/* Fallback pour les routes non trouvées */}
-        <Route path="*" element={<Navigate to={getDefaultRoute()} replace />} />
-      </Routes>
-    </>
-  );
-};
+//         {/* Fallback pour les routes non trouvées */}
+//         <Route path="*" element={<Navigate to={getDefaultRoute()} replace />} />
+//       </Routes>
+//     </>
+//   );
+// };
 
-export default AppRoutes;
+// export default AppRoutes;
