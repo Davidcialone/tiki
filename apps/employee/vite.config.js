@@ -7,7 +7,7 @@ import autoprefixer from "autoprefixer";
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ["sequelize", "pg-hstore"],
+    exclude: [],
   },
   define: {
     "process.env.VITE_API_BASE_URL": JSON.stringify(
