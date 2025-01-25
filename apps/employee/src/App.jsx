@@ -11,7 +11,7 @@ import { RegisterPage } from './auth/registerPage';
 import WorkerDashboard from './pages/dashboard/WorkerDashboard';
 import ManagerDashboard from './pages/dashboard/ManagerDashboard';
 
-import { ClientSearch } from './components/dashboard/clients/clientSearch';
+import ClientSearch from './apps/employee/src/components/dashBoard/clients/clientSearch';
 import { CustomerFile } from './components/dashboard/clients/customerFile';
 import { ReservationPageWorker } from './components/dashboard/reservations/reservationPageWorker';
 import { PlanningPage } from './components/dashboard/worker/planningPage';
