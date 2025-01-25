@@ -7,6 +7,7 @@ import autoprefixer from "autoprefixer";
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
+    include: ["react", "react-dom"],
     exclude: [],
   },
   define: {
