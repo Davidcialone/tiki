@@ -11,12 +11,12 @@ import { RegisterPage } from './auth/registerPage';
 import WorkerDashboard from './pages/dashboard/WorkerDashboard';
 import ManagerDashboard from './pages/dashboard/ManagerDashboard';
 
-import ClientSearch from './components/dash/clients/clientSearch';
+import {ClientSearch} from './components/dashboard/clients/clientSearch';
 console.log('ClientSearch:', ClientSearch);
-import { CustomerFile } from './components/dash/clients/customerFile';
-import { ReservationPageWorker } from './components/dash/reservations/reservationPageWorker';
-import { PlanningPage } from './components/dash/worker/planningPage';
-import { ReservationsViews } from './components/dash/reservations/reservationsViews';
+import { CustomerFile } from './components/dashboard/clients/customerFile';
+import { ReservationPageWorker } from './components/dashboard/reservations/reservationPageWorker';
+import { PlanningPage } from './components/dashboard/worker/planningPage';
+import { ReservationsViews } from './components/dashboard/reservations/reservationsViews';
 
 import './App.css';
 
