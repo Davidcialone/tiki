@@ -13,7 +13,7 @@ export function MenuDisplay() {
         { id: 8, name: "Tartare de saumon", description: "Saumon frais avec avocat et citron.", price: "11.50", category: "Entrées", image_url: "https://images.unsplash.com/photo-1713561058967-905087ad8e5b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRhcnRhcmUlMjBkZSUyMHNhdW1vbnxlbnwwfHwwfHx8MA%3D%3D" },
         { id: 9, name: "Oeuf mayonnaise", description: "Simple et délicieux, servi avec salade.", price: "4.50", category: "Entrées", image_url: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7" },
         { id: 10, name: "Gaspacho", description: "Soupe froide espagnole aux tomates et concombres.", price: "6.50", category: "Entrées", image_url: "https://images.unsplash.com/photo-1589187154184-995b8a4e740a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGdhenBhY2hvfGVufDB8fDB8fHww" },
-    
+   
         // Plats
         { id: 11, name: "Filet de bœuf", description: "Servi avec une sauce au poivre.", price: "20.00", category: "Plats", image_url: "https://images.unsplash.com/photo-1625937329935-287441889bce?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZmlsZXQlMjBkZSUyMGJvZXVmfGVufDB8fDB8fHww"},
         { id: 12, name: "Risotto aux champignons", description: "Crémeux et savoureux.", price: "16.00", category: "Plats", image_url: "https://plus.unsplash.com/premium_photo-1695030934648-5b98c05a688d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cmlzb3R0byUyMGF1eCUyMGNoYW1waWdub25zfGVufDB8fDB8fHww" },
@@ -25,7 +25,7 @@ export function MenuDisplay() {
         { id: 18, name: "Curry de légumes", description: "Plat végétarien épicé et délicieux.", price: "15.00", category: "Plats", image_url: "https://images.unsplash.com/photo-1596797038530-2c107229654b" },
         { id: 19, name: "Magret de canard", description: "Avec une sauce au miel et orange.", price: "22.00", category: "Plats", image_url: "https://images.unsplash.com/photo-1582391123232-6130296f1fcd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFncmFpJTIwZGUlMjBjYW5hcmR8ZW58MHx8MHx8fDA%3D" },
         { id: 20, name: "Lasagnes", description: "Servies avec une salade verte.", price: "12.50", category: "Plats", image_url: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3" },
-    
+   
         // Desserts
         { id: 21, name: "Tarte Tatin", description: "Une délicieuse tarte aux pommes renversée.", price: "7.00", category: "Desserts", image_url: "https://images.unsplash.com/photo-1722195073835-1b48530cfdbf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRhcnRlJTIwdGF0aW58ZW58MHx8MHx8fDA%3D" },
         { id: 22, name: "Fondant au chocolat", description: "Un gâteau au chocolat au cœur fondant.", price: "6.50", category: "Desserts", image_url: "https://images.unsplash.com/photo-1600326145308-d7d5a04f4ce6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvbmRhbnQlMjBhdSUyMGNob2NvbGF0fGVufDB8fDB8fHww" },
@@ -37,7 +37,7 @@ export function MenuDisplay() {
         { id: 28, name: "Profiteroles", description: "Choux garnis de glace avec chocolat.", price: "7.50", category: "Desserts", image_url: "https://images.unsplash.com/photo-1606163050754-05a6a7530815?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZml0ZXJvbGVzfGVufDB8fDB8fHww" },
         { id: 29, name: "tarte aux fraise", description: "Une tarte aux fraises fraîches et crème pâtissière.", price: "9.00", category: "Desserts", image_url: "https://plus.unsplash.com/premium_photo-1716892887684-2d722f73a206?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHBhcnQlMjBkZSUyMHRhcnRlJTIwYXV4JTIwZnJhaXNlc3xlbnwwfHwwfHx8MA%3D%3D" },
         { id: 30, name: "Sorbet", description: "2 boules au choix.", price: "4.50", category: "Desserts", image_url: "https://images.unsplash.com/photo-1579954115567-dff2eeb6fdeb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2xhY2UlMjBzb3JiZXR8ZW58MHx8MHx8fDA%3D" },
-    
+   
         // Boissons
         { id: 31, name: "Coca-Cola", description: "Boisson rafraîchissante.", price: "3.00", category: "Boissons", image_url: "https://plus.unsplash.com/premium_photo-1725075086083-89117890371d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dmVycmUlMjBkZSUyMGNvY2F8ZW58MHx8MHx8fDA%3D" },
         { id: 32, name: "spritz", description: "Cocktail italien pétillant.", price: "8.00", category: "Boissons", image_url: "https://images.unsplash.com/photo-1596977652341-2e1fe2ba5dcd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dmVycmUlMjBzcHJpdHp8ZW58MHx8MHx8fDA%3D" },
@@ -49,7 +49,7 @@ export function MenuDisplay() {
         { id: 38, name: "Mojito sans alcool", description: "Cocktail rafraîchissant à la menthe.", price: "6.00", category: "Boissons", image_url: "https://images.unsplash.com/photo-1546171753-97d7676e4602" },
         { id: 39, name: "Smoothie", description: "Fruits frais mixés.", price: "4.00", category: "Boissons", image_url: "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c21vb3RoaWV8ZW58MHx8MHx8fDA%3D" },
         { id: 40, name: "Bière artisanale", description: "Blonde ou ambrée.", price: "4.50", category: "Boissons", image_url: "https://images.unsplash.com/photo-1566633806327-68e152aaf26d" },
-    
+   
         // Vins
         { id: 41, name: "Château Margaux", description: "Grand cru classé de Bordeaux.", price: "150.00", category: "Vins", image_url: "https://plus.unsplash.com/premium_photo-1682097091093-dd18b37764a5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dmluJTIwcm91Z2V8ZW58MHx8MHx8fDA%3D" },
         { id: 42, name: "Champagne", description: "Bulles festives pour célébrer.", price: "60.00", category: "Vins", image_url: "https://plus.unsplash.com/premium_photo-1661344235865-7d203ccabebd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y2hhbXBhZ25lfGVufDB8fDB8fHww" },
@@ -62,7 +62,7 @@ export function MenuDisplay() {
         { id: 49, name: "Sancerre", description: "Vin blanc minéral et frais.", price: "35.00", category: "Vins", image_url: "https://images.unsplash.com/photo-1606767208159-1a5fb0a87841?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dmluJTIwYmxhbmN8ZW58MHx8MHx8fDA%3D" },
         { id: 50, name: "Côtes du Rhône", description: "Vin rouge fruité et équilibré.", price: "30.00", category: "Vins", image_url: "https://images.unsplash.com/photo-1547595628-c61a29f496f0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dmluJTIwY290ZSUyMGR1JTIwcmhvbmV8ZW58MHx8MHx8fDA%3D" }
     ];
-    
+   
 
     // Ajout des menus composés
     const setMenus = [
@@ -104,175 +104,86 @@ export function MenuDisplay() {
         }
     ];
 
-    const categoryImages = {
-        Entrées: "entree.png",
-        Plats: "plat.png",
-        Desserts: "dessert.png",
-        Menus: "menu.webp",
-        Boissons: "boissons.png",
-        Vins: "vins.png",
-    };
 
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [selectedMenu, setSelectedMenu] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
 
-    // Logique de filtrage modifiée
-    const filteredItems = selectedCategory === "Menus" 
-        ? setMenus 
-        : selectedCategory 
-            ? menuItems.filter((item) => item.category === selectedCategory)
-            : [];
-
-    const renderMenuItem = (item) => (
+    const renderListItem = (item) => (
         <div
             key={item.id}
-            className="group bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+            className="flex justify-between items-center py-3 border-b border-gray-300 cursor-pointer hover:bg-gray-100 transition"
+            onClick={() => setSelectedItem(item)}
         >
-            <div className="overflow-hidden">
-                <img
-                    src={item.image_url}
-                    alt={item.name}
-                    className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
-                />
+            <div>
+                <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+                <p className="text-sm text-gray-700">{item.description}</p>
             </div>
-            <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    {item.name}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4">{item.description}</p>
-                <p className="text-lg font-bold text-gray-800">
-                    {item.price} €
-                </p>
-            </div>
+            <p className="text-gray-800 font-semibold">{item.price} €</p>
         </div>
     );
 
-    const renderSetMenu = (menu) => (
+  const renderModal = (item) => (
+    <div
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        onClick={() => setSelectedItem(null)} // Ferme la modale si on clique en dehors
+    >
         <div
-            key={menu.id}
-            className="group bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
-            onClick={() => setSelectedMenu(menu)}
+            className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative overflow-y-auto"
+            onClick={(e) => e.stopPropagation()} // Empêche la fermeture si on clique dans la modale
+            style={{ maxHeight: "calc(100vh - 60px)" }} // Limite la hauteur pour tenir compte de la navbar
         >
-            <div className="overflow-hidden">
-                <img
-                    src={menu.image_url}
-                    alt={menu.name}
-                    className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-            </div>
-            <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    {menu.name}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4">{menu.description}</p>
-                <p className="text-lg font-bold text-gray-800">
-                    {menu.price} €
-                </p>
-            </div>
-        </div>
-    );
-
-    const renderMenuDetail = (menu) => (
-        <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">{menu.name}</h2>
-            <div className="space-y-6">
-                <div>
-                    <h3 className="text-xl font-semibold mb-3 text-gray-700">Entrées au choix</h3>
-                    <ul className="list-disc list-inside text-gray-600">
-                        {menu.includes.entree.map((item, index) => (
-                            <li key={index}>{item}</li>
-                        ))}
-                    </ul>
-                </div>
-                <div>
-                    <h3 className="text-xl font-semibold mb-3 text-gray-700">Plats au choix</h3>
-                    <ul className="list-disc list-inside text-gray-600">
-                        {menu.includes.plat.map((item, index) => (
-                            <li key={index}>{item}</li>
-                        ))}
-                    </ul>
-                </div>
-                <div>
-                    <h3 className="text-xl font-semibold mb-3 text-gray-700">Desserts au choix</h3>
-                    <ul className="list-disc list-inside text-gray-600">
-                        {menu.includes.dessert.map((item, index) => (
-                            <li key={index}>{item}</li>
-                        ))}
-                    </ul>
-                </div>
-                <div className="text-center mt-6">
-                    <p className="text-2xl font-bold text-gray-800">{menu.price} €</p>
-                </div>
-            </div>
             <button
-                onClick={() => setSelectedMenu(null)}
-                className="mt-6 mb-6 w-full bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-700 transition duration-300"
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                onClick={() => setSelectedItem(null)}
             >
-                Retour aux menus
+                &times;
+            </button>
+            <img
+                src={item.image_url}
+                alt={item.name}
+                className="w-full h-56 object-cover rounded-lg mb-4"
+            />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{item.name}</h2>
+            <p className="text-gray-800 mb-4">{item.description}</p>
+            <p className="text-lg font-bold text-gray-900 mb-6">{item.price} €</p>
+            {item.includes && (
+                <div className="space-y-4">
+                    {Object.entries(item.includes).map(([key, values]) => (
+                        <div key={key}>
+                            <h3 className="text-lg font-semibold text-gray-800 capitalize">{key}</h3>
+                            <ul className="list-disc list-inside text-gray-700">
+                                {values.map((val, index) => (
+                                    <li key={index}>{val}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+            )}
+            <button
+                onClick={() => setSelectedItem(null)}
+                className="w-full mt-6 bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 transition"
+            >
+                Fermer
             </button>
         </div>
-    );
+    </div>
+);
+
 
     return (
-        <>
-            <div className="mt-16"></div>
-            <div className="font-sans p-6 mt-10">
-                <h1 className="text-4xl font-extrabold mb-8 text-center text-white">
-                    Explorez nos menus
-                </h1>
+        <div className="p-6">
+            <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+                Explorez nos menus
+            </h1>
+            <div className="max-w-3xl mx-auto">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Menus composés</h2>
+                {setMenus.map(renderListItem)}
 
-                {!selectedCategory ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {Object.keys(categoryImages).map((category) => (
-                            <div
-                                key={category}
-                                className="group bg-white shadow-lg rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-xl"
-                                onClick={() => setSelectedCategory(category)}
-                            >
-                                <div className="overflow-hidden rounded-t-lg">
-                                    <img
-                                        src={categoryImages[category]}
-                                        alt={category}
-                                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                                    />
-                                </div>
-                                <div className="p-4">
-                                    <h2 className="text-lg font-semibold text-gray-700 text-center">
-                                        {category}
-                                    </h2>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div>
-                        <h2 className="text-3xl font-bold mb-6 text-center text-white">
-                            {selectedCategory}
-                        </h2>
-                        {selectedCategory === "Menus" && !selectedMenu ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {setMenus.map(menu => renderSetMenu(menu))}
-                            </div>
-                        ) : selectedMenu ? (
-                            renderMenuDetail(selectedMenu)
-                        ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {filteredItems.map(item => renderMenuItem(item))}
-                            </div>
-                        )}
-                        <button
-                            onClick={() => {
-                                setSelectedCategory(null);
-                                setSelectedMenu(null);
-                            }}
-                            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 px-8 py-3 bg-gray-800 text-white text-sm font-semibold rounded-full shadow-lg hover:bg-gray-700 transition duration-300"
-                        >
-                            Retour aux catégories
-                        </button>
-                    </div>
-                )}
+                <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">À la carte</h2>
+                {menuItems.map(renderListItem)}
             </div>
-        </>
+            {selectedItem && renderModal(selectedItem)}
+        </div>
     );
 }
 
