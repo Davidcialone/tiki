@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { X} from 'lucide-react';
 
 export function MenuDisplay() {
     const menuItems = [
@@ -110,18 +111,26 @@ export function MenuDisplay() {
     const renderListItem = (item) => (
         <div
             key={item.id}
-            className="grid grid-cols-12 items-center gap-4 py-3 border-b border-gray-300 cursor-pointer hover:bg-gray-100 transition"
+            className="group p-4 hover:bg-gray-50 transition-colors duration-200 cursor-pointer border-b border-gray-100 last:border-none"
             onClick={() => setSelectedItem(item)}
         >
-            {/* Contenu principal : Nom et Description */}
-            <div className="col-span-8 sm:col-span-9">
-                <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                <p className="text-sm text-gray-700 truncate">{item.description}</p>
-            </div>
+            <div className="flex items-start justify-between gap-6">
+                {/* Nom et Description */}
+                <div className="flex-1">
+                    <h3 className="text-lg font-medium text-gray-900 mb-1">
+                        {item.name}
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                        {item.description}
+                    </p>
+                </div>
     
-            {/* Prix : Toujours aligné à droite */}
-            <div className="col-span-4 sm:col-span-3 text-right">
-                <p className="text-gray-800 font-semibold">{item.price} €</p>
+                {/* Prix */}
+                <div className="text-right shrink-0">
+                    <p className="text-lg font-semibold text-gray-900">
+                        {item.price} €
+                    </p>
+                </div>
             </div>
         </div>
     );
@@ -129,68 +138,87 @@ export function MenuDisplay() {
 
     const renderModal = (item) => (
         <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-            onClick={() => setSelectedItem(null)} // Ferme la modale si on clique en dehors
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-in fade-in duration-200"
+            onClick={() => setSelectedItem(null)}
         >
             <div
-                className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl relative overflow-y-auto"
-                onClick={(e) => e.stopPropagation()} // Empêche la fermeture si on clique dans la modale
-                style={{ maxHeight: "calc(100vh - 60px)" }} // Limite la hauteur pour tenir compte de la navbar
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+                style={{ maxHeight: "calc(100vh - 40px)" }}
             >
-                {/* Bouton de fermeture */}
-                <button
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                    onClick={() => setSelectedItem(null)}
-                >
-                    &times;
-                </button>
+                {/* Header avec image en arrière-plan */}
+                <div className="relative h-64 overflow-hidden">
+                    <div 
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{
+                            backgroundImage: `url(${item.image_url})`,
+                            filter: 'blur(2px)',
+                            transform: 'scale(1.1)'
+                        }}
+                    />
+                    <div className="absolute inset-0 bg-black/40" />
+                    
+                    {/* Bouton de fermeture */}
+                    <button
+                        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors duration-200"
+                        onClick={() => setSelectedItem(null)}
+                    >
+                        <X className="w-5 h-5 text-white" />
+                    </button>
+    
+                    {/* Titre et prix superposés sur l'image */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                        <h2 className="text-3xl font-bold text-white mb-2">{item.name}</h2>
+                        <p className="text-xl text-white/90">{item.price} €</p>
+                    </div>
+                </div>
     
                 {/* Contenu principal */}
-                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-                    {/* Image */}
-                    <div className="w-full">
-                        <img
-                            src={item.image_url}
-                            alt={item.name}
-                            className="w-full h-56 object-cover rounded-lg"
-                        />
+                <div className="p-6 space-y-6 overflow-y-auto" style={{ maxHeight: "calc(100vh - 336px)" }}>
+                    {/* Description */}
+                    <div className="border-l-4 border-gray-800 pl-4">
+                        <p className="text-gray-700 text-lg italic">{item.description}</p>
                     </div>
     
-                    {/* Détails du menu */}
-                    <div className="justify-center" >
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">{item.name}</h2>
-                        <p className="text-gray-800 mb-4">{item.description}</p>
-                        <p className="text-lg font-bold text-gray-900 mb-6">{item.price} €</p>
-                       </div>
-                    <div>
-                        {/* Contenu dynamique des inclusions */}
-                        {item.includes && (
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 justify-center justify-items-center">
+                    {/* Contenu des menus */}
+                    {item.includes && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {Object.entries(item.includes).map(([key, values]) => (
-                                <div key={key} className="space-y-4 text-center">
-                                    <h3 className="text-lg font-semibold text-gray-800 capitalize">{key}</h3>
-                                    <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                                <div 
+                                    key={key}
+                                    className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+                                >
+                                    <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 capitalize">
+                                        {key}
+                                    </h3>
+                                    <ul className="space-y-3">
                                         {values.map((val, index) => (
-                                            <li key={index} className="flex items-center justify-center">
-                                                <span className="inline-block w-2 h-2 bg-gray-700 rounded-full mr-3"></span>
-                                                {val}
+                                            <li 
+                                                key={index}
+                                                className="flex items-center text-gray-700 group"
+                                            >
+                                                <span className="w-2 h-2 rounded-full bg-gray-300 mr-3 group-hover:bg-gray-800 transition-colors duration-200" />
+                                                <span className="group-hover:text-gray-900 transition-colors duration-200">
+                                                    {val}
+                                                </span>
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
                             ))}
                         </div>
-                        )}
-                    </div>
+                    )}
                 </div>
     
-                {/* Bouton de fermeture */}
-                <button
-                    onClick={() => setSelectedItem(null)}
-                    className="w-full mt-6 bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 transition"
-                >
-                    Fermer
-                </button>
+                {/* Footer avec bouton */}
+                <div className="p-6 bg-gray-50 border-t border-gray-100">
+                    <button
+                        onClick={() => setSelectedItem(null)}
+                        className="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center space-x-2"
+                    >
+                        <span>Fermer le menu</span>
+                    </button>
+                </div>
             </div>
         </div>
     );
