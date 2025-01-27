@@ -26,3 +26,6 @@ router.get(
   "/:reservationId/status",
   reservationsController.handleReservationStatus
 );
+
+// GET /reservations/new
+router.get("/new", reservationsController.getNewReservations);

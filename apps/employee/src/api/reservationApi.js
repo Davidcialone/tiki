@@ -258,3 +258,36 @@ export async function statusReservation(reservationId, token) {
 }
 
 // return await fetchWithErrorHandling(url, options);
+
+export async function newReservationsNotification(lastCheck) {
+  console.log("=== Récupération des nouvelles réservations ===");
+
+  const url = `${apiBaseUrl}/reservations/new?lastCheck=${lastCheck}`;
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // Assurez-vous que les cookies sont envoyés
+  };
+
+  try {
+    const response = await fetch(url, options);
+
+    // Vérifier que la réponse est correcte
+    if (!response.ok) {
+      throw new Error("Erreur serveur: " + response.status);
+    }
+
+    const contentType = response.headers.get("Content-Type");
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json(); // Retourner les données sous forme de JSON
+    } else {
+      console.error("La réponse n'est pas au format JSON");
+      throw new Error("Réponse invalide");
+    }
+  } catch (error) {
+    console.error("Erreur de récupération des nouvelles réservations:", error);
+    throw error; // Propager l'erreur
+  }
+}

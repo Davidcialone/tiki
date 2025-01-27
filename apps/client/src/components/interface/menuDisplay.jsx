@@ -64,107 +64,216 @@ export function MenuDisplay() {
     ];
     
 
+    // Ajout des menus composés
+    const setMenus = [
+        {
+            id: "menu1",
+            name: "Menu Découverte",
+            description: "Une sélection parfaite pour découvrir notre cuisine",
+            price: "32.00",
+            includes: {
+                entree: ["Salade César", "Soupe à l'oignon", "Bruschetta"],
+                plat: ["Filet de bœuf", "Risotto aux champignons", "Saumon grillé"],
+                dessert: ["Crème brûlée", "Tiramisu", "Mousse au chocolat"]
+            },
+            image_url: "https://images.unsplash.com/photo-1514326640560-7d063ef2aed5"
+        },
+        {
+            id: "menu2",
+            name: "Menu Gastronomique",
+            description: "Notre sélection gastronomique pour les fins gourmets",
+            price: "45.00",
+            includes: {
+                entree: ["Carpaccio de bœuf", "Tartare de saumon", "Foie gras"],
+                plat: ["Magret de canard", "Côtelettes d'agneau", "Risotto aux champignons"],
+                dessert: ["Tarte Tatin", "Fondant au chocolat", "Profiteroles"]
+            },
+            image_url: "https://images.unsplash.com/photo-1592861956120-e524fc739696"
+        },
+        {
+            id: "menu3",
+            name: "Menu du Jour",
+            description: "Notre formule du jour à prix doux",
+            price: "25.00",
+            includes: {
+                entree: ["Soupe du jour", "Salade verte", "Œuf mayonnaise"],
+                plat: ["Plat du jour", "Pâtes Carbonara", "Poulet rôti"],
+                dessert: ["Dessert du jour", "Sorbet", "Mousse au chocolat"]
+            },
+            image_url: "https://images.unsplash.com/photo-1559847844-5315695dadae"
+        }
+    ];
+
     const categoryImages = {
         Entrées: "entree.png",
         Plats: "plat.png",
         Desserts: "dessert.png",
+        Menus: "menu.webp",
         Boissons: "boissons.png",
-        Vins: "vins.png"
+        Vins: "vins.png",
     };
 
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedMenu, setSelectedMenu] = useState(null);
 
-    // Logique de filtrage
-    const filteredItems = selectedCategory
-        ? menuItems.filter((item) => item.category === selectedCategory)
-        : [];
+    // Logique de filtrage modifiée
+    const filteredItems = selectedCategory === "Menus" 
+        ? setMenus 
+        : selectedCategory 
+            ? menuItems.filter((item) => item.category === selectedCategory)
+            : [];
 
-        return (
-            <>
-                {/* Espace sous la navbar */}
-                <div className="mt-16"></div>
-                <div className="font-sans p-6 mt-10">
-                    <h1 className="text-4xl font-extrabold mb-8 text-center text-white">
-                        Explorez nos menus
-                    </h1>
-        
-                    {!selectedCategory ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-5 lg:grid-cols-5 gap-6">
-                            {Object.keys(categoryImages).map((category) => (
-                                <div
-                                    key={category}
-                                    className="group bg-white shadow-lg rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-xl"
-                                    onClick={() => {
-                                        console.log(`Category clicked: ${category}`);
-                                        setSelectedCategory(category);
-                                    }}
-                                >
-                                    {/* Conteneur pour gérer le zoom de l'image */}
-                                    <div className="overflow-hidden rounded-t-lg">
-                                        <img
-                                            src={categoryImages[category]}
-                                            alt={category}
-                                            className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                                        />
-                                    </div>
-                                    <div className="p-4">
-                                        <h2 className="text-lg font-semibold text-gray-700 text-center">
-                                            {category}
-                                        </h2>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div>
-                            <h2 className="text-3xl font-bold mb-6 text-center text-white">
-                                {selectedCategory}
-                            </h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {filteredItems.map((item) => (
-                                    <div
-                                        key={item.id}
-                                        className="group bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg"
-                                    >
-                                        {/* Conteneur pour gérer le zoom de l'image */}
-                                        <div className="overflow-hidden">
-                                            <img
-                                                src={item.image_url}
-                                                alt={item.name}
-                                                className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
-                                            />
-                                        </div>
-                                        <div className="p-4">
-                                            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                                                {item.name}
-                                            </h3>
-                                            <p className="text-gray-600 text-sm mb-4">{item.description}</p>
-                                            <p className="text-lg font-bold text-gray-800">
-                                                {item.price} €
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <button
-                                onClick={() => {
-                                    console.log("Retour à la liste des catégories");
-                                    setSelectedCategory(null);
-                                }}
-                                className="fixed bottom-6 left-1/2 transform -translate-x-1/2 px-8 py-3 bg-gray-800 text-white text-sm font-semibold rounded-full shadow-lg hover:bg-gray-700 transition duration-300"
-                            >
-                                Retour aux catégories
-                            </button>
-                        </div>
-                    )}
+    const renderMenuItem = (item) => (
+        <div
+            key={item.id}
+            className="group bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+        >
+            <div className="overflow-hidden">
+                <img
+                    src={item.image_url}
+                    alt={item.name}
+                    className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+            </div>
+            <div className="p-4">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    {item.name}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">{item.description}</p>
+                <p className="text-lg font-bold text-gray-800">
+                    {item.price} €
+                </p>
+            </div>
+        </div>
+    );
+
+    const renderSetMenu = (menu) => (
+        <div
+            key={menu.id}
+            className="group bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+            onClick={() => setSelectedMenu(menu)}
+        >
+            <div className="overflow-hidden">
+                <img
+                    src={menu.image_url}
+                    alt={menu.name}
+                    className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+            </div>
+            <div className="p-4">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    {menu.name}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">{menu.description}</p>
+                <p className="text-lg font-bold text-gray-800">
+                    {menu.price} €
+                </p>
+            </div>
+        </div>
+    );
+
+    const renderMenuDetail = (menu) => (
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800">{menu.name}</h2>
+            <div className="space-y-6">
+                <div>
+                    <h3 className="text-xl font-semibold mb-3 text-gray-700">Entrées au choix</h3>
+                    <ul className="list-disc list-inside text-gray-600">
+                        {menu.includes.entree.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
                 </div>
-            </>
-        );
-        
-        
-        
-        
-        
+                <div>
+                    <h3 className="text-xl font-semibold mb-3 text-gray-700">Plats au choix</h3>
+                    <ul className="list-disc list-inside text-gray-600">
+                        {menu.includes.plat.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="text-xl font-semibold mb-3 text-gray-700">Desserts au choix</h3>
+                    <ul className="list-disc list-inside text-gray-600">
+                        {menu.includes.dessert.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="text-center mt-6">
+                    <p className="text-2xl font-bold text-gray-800">{menu.price} €</p>
+                </div>
+            </div>
+            <button
+                onClick={() => setSelectedMenu(null)}
+                className="mt-6 mb-6 w-full bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-700 transition duration-300"
+            >
+                Retour aux menus
+            </button>
+        </div>
+    );
+
+    return (
+        <>
+            <div className="mt-16"></div>
+            <div className="font-sans p-6 mt-10">
+                <h1 className="text-4xl font-extrabold mb-8 text-center text-white">
+                    Explorez nos menus
+                </h1>
+
+                {!selectedCategory ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Object.keys(categoryImages).map((category) => (
+                            <div
+                                key={category}
+                                className="group bg-white shadow-lg rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+                                onClick={() => setSelectedCategory(category)}
+                            >
+                                <div className="overflow-hidden rounded-t-lg">
+                                    <img
+                                        src={categoryImages[category]}
+                                        alt={category}
+                                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                                    />
+                                </div>
+                                <div className="p-4">
+                                    <h2 className="text-lg font-semibold text-gray-700 text-center">
+                                        {category}
+                                    </h2>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div>
+                        <h2 className="text-3xl font-bold mb-6 text-center text-white">
+                            {selectedCategory}
+                        </h2>
+                        {selectedCategory === "Menus" && !selectedMenu ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {setMenus.map(menu => renderSetMenu(menu))}
+                            </div>
+                        ) : selectedMenu ? (
+                            renderMenuDetail(selectedMenu)
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {filteredItems.map(item => renderMenuItem(item))}
+                            </div>
+                        )}
+                        <button
+                            onClick={() => {
+                                setSelectedCategory(null);
+                                setSelectedMenu(null);
+                            }}
+                            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 px-8 py-3 bg-gray-800 text-white text-sm font-semibold rounded-full shadow-lg hover:bg-gray-700 transition duration-300"
+                        >
+                            Retour aux catégories
+                        </button>
+                    </div>
+                )}
+            </div>
+        </>
+    );
 }
 
- 
+export default MenuDisplay;

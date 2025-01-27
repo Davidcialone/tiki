@@ -35,8 +35,8 @@ export const CoversStatistics = () => {
   useEffect(() => {
     switch (period) {
       case 'semaine':
-        setSelectedStartDate(startOfWeek(new Date(), { locale: fr }));
-        setSelectedEndDate(endOfWeek(new Date(), { locale: fr }));
+        setSelectedStartDate(startOfWeek(new Date(), { locale: fr, weekStartsOn: 1 }));
+        setSelectedEndDate(endOfWeek(new Date(), { locale: fr, weekStartsOn: 1 }));
         break;
       case 'mois':
         setSelectedStartDate(startOfMonth(new Date()));
@@ -84,11 +84,19 @@ export const CoversStatistics = () => {
   // Données pour le graphique
   const chartData = useMemo(() => {
     return {
-      labels: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+      labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'], // Lundi comme premier jour
       datasets: [
         {
           label: 'Couverts',
-          data: coversByDayOfWeek,
+          data: [
+            coversByDayOfWeek[1], // Lundi
+            coversByDayOfWeek[2], // Mardi
+            coversByDayOfWeek[3], // Mercredi
+            coversByDayOfWeek[4], // Jeudi
+            coversByDayOfWeek[5], // Vendredi
+            coversByDayOfWeek[6], // Samedi
+            coversByDayOfWeek[0], // Dimanche
+          ],
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
           borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1,
@@ -96,6 +104,7 @@ export const CoversStatistics = () => {
       ],
     };
   }, [coversByDayOfWeek]);
+  
 
   const chartOptions = useMemo(() => {
     return {
@@ -224,27 +233,26 @@ export const CoversStatistics = () => {
 
         {/* Détails par jour - Colonne plus large */}
         <div className="w-4/5 p-4 bg-gray-50 rounded-lg shadow-lg text-sm">
-  <h3 className="font-semibold text-gray-800 mb-4 text-xl">Détails par jour</h3>
-  <div className="grid grid-cols-1 sm:grid-cols-7 lg:grid-cols-7 gap-2">
-    {['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'].map((day, index) => (
-      <div
-        key={index}
-        className={`flex flex-col items-center p-2 rounded-lg shadow-md ${
-          coversByDayOfWeek[index] > 50
-            ? 'bg-green-100 text-green-800'
-            : coversByDayOfWeek[index] > 30
-            ? 'bg-yellow-100 text-yellow-800'
-            : 'bg-red-100 text-red-800'
-        } transition-all duration-300`}
-      >
-        {/* Nom du jour */}
-        <span className="font-medium text-lg mb-1">{day}</span>
-        {/* Nombre de couverts */}
-        <span className="font-semibold text-sm">{coversByDayOfWeek[index]} couverts</span>
+        <h3 className="font-semibold text-gray-800 mb-4 text-xl">Détails par jour</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-7 lg:grid-cols-7 gap-2">
+        {['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].map((day, index) => (
+        <div
+          key={index}
+          className={`flex flex-col items-center p-2 rounded-lg shadow-md ${
+            coversByDayOfWeek[(index + 1) % 7] > 50
+              ? 'bg-green-100 text-green-800'
+              : coversByDayOfWeek[(index + 1) % 7] > 30
+              ? 'bg-yellow-100 text-yellow-800'
+              : 'bg-red-100 text-red-800'
+          } transition-all duration-300`}
+        >
+          <span className="font-medium text-lg mb-1">{day}</span>
+          <span className="font-semibold text-sm">{coversByDayOfWeek[(index + 1) % 7]} couverts</span>
+        </div>
+      ))}
+
+        </div>
       </div>
-    ))}
-  </div>
-</div>
 
       </div>
     </div>

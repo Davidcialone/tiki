@@ -426,3 +426,21 @@ export const handleReservationStatus = async (req, res) => {
     });
   }
 };
+
+export const getNewReservations = async (req, res) => {
+  try {
+    const lastCheck = req.cookies?.userPreferences
+      ? JSON.parse(req.cookies.userPreferences).lastCheck
+      : null;
+
+    const newReservations = await Reservation.find({
+      status: "confirmed",
+      ...(lastCheck && { updatedAt: { $gt: new Date(lastCheck) } }),
+    });
+
+    res.status(200).json(newReservations);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des réservations:", error);
+    res.status(500).send("Erreur serveur");
+  }
+};
