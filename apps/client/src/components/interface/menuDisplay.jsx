@@ -110,69 +110,96 @@ export function MenuDisplay() {
     const renderListItem = (item) => (
         <div
             key={item.id}
-            className="flex justify-between items-center py-3 border-b border-gray-300 cursor-pointer hover:bg-gray-100 transition"
+            className="grid grid-cols-12 items-center gap-4 py-3 border-b border-gray-300 cursor-pointer hover:bg-gray-100 transition"
             onClick={() => setSelectedItem(item)}
         >
-            <div>
+            {/* Contenu principal : Nom et Description */}
+            <div className="col-span-8 sm:col-span-9">
                 <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                <p className="text-sm text-gray-700">{item.description}</p>
+                <p className="text-sm text-gray-700 truncate">{item.description}</p>
             </div>
-            <p className="text-gray-800 font-semibold">{item.price} €</p>
+    
+            {/* Prix : Toujours aligné à droite */}
+            <div className="col-span-4 sm:col-span-3 text-right">
+                <p className="text-gray-800 font-semibold">{item.price} €</p>
+            </div>
         </div>
     );
+    
 
-  const renderModal = (item) => (
-    <div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-        onClick={() => setSelectedItem(null)} // Ferme la modale si on clique en dehors
-    >
+    const renderModal = (item) => (
         <div
-            className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative overflow-y-auto"
-            onClick={(e) => e.stopPropagation()} // Empêche la fermeture si on clique dans la modale
-            style={{ maxHeight: "calc(100vh - 60px)" }} // Limite la hauteur pour tenir compte de la navbar
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            onClick={() => setSelectedItem(null)} // Ferme la modale si on clique en dehors
         >
-            <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                onClick={() => setSelectedItem(null)}
+            <div
+                className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl relative overflow-y-auto"
+                onClick={(e) => e.stopPropagation()} // Empêche la fermeture si on clique dans la modale
+                style={{ maxHeight: "calc(100vh - 60px)" }} // Limite la hauteur pour tenir compte de la navbar
             >
-                &times;
-            </button>
-            <img
-                src={item.image_url}
-                alt={item.name}
-                className="w-full h-56 object-cover rounded-lg mb-4"
-            />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{item.name}</h2>
-            <p className="text-gray-800 mb-4">{item.description}</p>
-            <p className="text-lg font-bold text-gray-900 mb-6">{item.price} €</p>
-            {item.includes && (
-                <div className="space-y-4">
-                    {Object.entries(item.includes).map(([key, values]) => (
-                        <div key={key}>
-                            <h3 className="text-lg font-semibold text-gray-800 capitalize">{key}</h3>
-                            <ul className="list-disc list-inside text-gray-700">
-                                {values.map((val, index) => (
-                                    <li key={index}>{val}</li>
-                                ))}
-                            </ul>
+                {/* Bouton de fermeture */}
+                <button
+                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                    onClick={() => setSelectedItem(null)}
+                >
+                    &times;
+                </button>
+    
+                {/* Contenu principal */}
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+                    {/* Image */}
+                    <div className="w-full">
+                        <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="w-full h-56 object-cover rounded-lg"
+                        />
+                    </div>
+    
+                    {/* Détails du menu */}
+                    <div className="justify-center" >
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">{item.name}</h2>
+                        <p className="text-gray-800 mb-4">{item.description}</p>
+                        <p className="text-lg font-bold text-gray-900 mb-6">{item.price} €</p>
+                       </div>
+                    <div>
+                        {/* Contenu dynamique des inclusions */}
+                        {item.includes && (
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 justify-center justify-items-center">
+                            {Object.entries(item.includes).map(([key, values]) => (
+                                <div key={key} className="space-y-4 text-center">
+                                    <h3 className="text-lg font-semibold text-gray-800 capitalize">{key}</h3>
+                                    <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                                        {values.map((val, index) => (
+                                            <li key={index} className="flex items-center justify-center">
+                                                <span className="inline-block w-2 h-2 bg-gray-700 rounded-full mr-3"></span>
+                                                {val}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                        )}
+                    </div>
                 </div>
-            )}
-            <button
-                onClick={() => setSelectedItem(null)}
-                className="w-full mt-6 bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 transition"
-            >
-                Fermer
-            </button>
+    
+                {/* Bouton de fermeture */}
+                <button
+                    onClick={() => setSelectedItem(null)}
+                    className="w-full mt-6 bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 transition"
+                >
+                    Fermer
+                </button>
+            </div>
         </div>
-    </div>
-);
-
+    );
+    
+    
 
     return (
-        <div className="p-6">
-            <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
+        <div className="p-6 mt-12 ">
+            <h1 className="text-4xl  font-extrabold text-center text-gray-900 mb-8">
                 Explorez nos menus
             </h1>
             <div className="max-w-3xl mx-auto">
