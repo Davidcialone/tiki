@@ -441,7 +441,7 @@ export const getNewReservations = async (req, res) => {
     const newReservations = await Reservation.findAll({
       where: {
         status: "confirmed",
-        ...(lastCheck && { updatedAt: { [Op.gt]: lastCheck } }), // Utilisez Op.gt pour la comparaison
+        ...(lastCheck && { updated_at: { [Op.gt]: lastCheck } }), // Utilisez Op.gt pour la comparaison
       },
     });
 
