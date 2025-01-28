@@ -31,7 +31,7 @@ export function MenuDisplay() {
         { id: 21, name: "Tarte Tatin", description: "Une délicieuse tarte aux pommes renversée.", price: "7.00", category: "Desserts", image_url: "https://images.unsplash.com/photo-1722195073835-1b48530cfdbf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRhcnRlJTIwdGF0aW58ZW58MHx8MHx8fDA%3D" },
         { id: 22, name: "Fondant au chocolat", description: "Un gâteau au chocolat au cœur fondant.", price: "6.50", category: "Desserts", image_url: "https://images.unsplash.com/photo-1600326145308-d7d5a04f4ce6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZvbmRhbnQlMjBhdSUyMGNob2NvbGF0fGVufDB8fDB8fHww" },
         { id: 23, name: "Crème brûlée", description: "Un classique français avec caramel craquant.", price: "5.50", category: "Desserts", image_url: "https://images.unsplash.com/photo-1676300184943-09b2a08319a3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNyJUMzJUE4bWUlMjBicnVsJUMzJUE5ZXxlbnwwfHwwfHx8MA%3D%3D" },
-        { id: 24 , anme: "tarte citron meringuée", description: "Une tarte acidulée et sucrée.", price: "8.00", category: "Desserts", image_url: "https://images.unsplash.com/photo-1618591646018-7fa30c56fab1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dGFydGUlMjBjaXRyb24lMjBtZXJpbmd1JUMzJUE5ZXxlbnwwfHwwfHx8MA%3D%3D" },
+        { id: 24 ,name: "tarte citron meringuée", description: "Une tarte acidulée et sucrée.", price: "8.00", category: "Desserts", image_url: "https://images.unsplash.com/photo-1618591646018-7fa30c56fab1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dGFydGUlMjBjaXRyb24lMjBtZXJpbmd1JUMzJUE5ZXxlbnwwfHwwfHx8MA%3D%3D" },
         { id: 25, name: "Mousse au chocolat", description: "Légère et chocolatée.", price: "5.00", category: "Desserts", image_url: "https://images.unsplash.com/photo-1621792907526-e69888069079?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bW91c3NlJTIwYXUlMjBjaG9jb2xhdHxlbnwwfHwwfHx8MA%3D%3D" },
         { id: 26, name: "Tiramisu", description: "Un dessert italien classique.", price: "6.50", category: "Desserts", image_url: "https://images.unsplash.com/photo-1712262582493-01aa9ec5c7f8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dGlyYW1pc3V8ZW58MHx8MHx8fDA%3D" },
         { id: 27, name: "Macarons", description: "Assortiment de saveurs colorées.", price: "8.00", category: "Desserts", image_url: "https://images.unsplash.com/photo-1569864358642-9d1684040f43" },
@@ -142,12 +142,12 @@ export function MenuDisplay() {
             onClick={() => setSelectedItem(null)}
         >
             <div
-                className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl relative overflow-hidden"
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col relative"
                 onClick={(e) => e.stopPropagation()}
                 style={{ maxHeight: "calc(100vh - 40px)" }}
             >
-                {/* Header avec image en arrière-plan */}
-                <div className="relative h-64 overflow-hidden">
+                {/* Header avec image en arrière-plan - hauteur fixe */}
+                <div className="h-64 shrink-0 relative overflow-hidden">
                     <div 
                         className="absolute inset-0 bg-cover bg-center"
                         style={{
@@ -160,10 +160,10 @@ export function MenuDisplay() {
                     
                     {/* Bouton de fermeture */}
                     <button
-                        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors duration-200"
+                        className="absolute top-4 right-4 p-2 rounded-full bg-gray-900 hover:bg-gray-800 transition-colors duration-200 shadow-lg"
                         onClick={() => setSelectedItem(null)}
                     >
-                        <X className="w-5 h-5 text-white" />
+                        <X className="w-6 h-6 text-white" />
                     </button>
     
                     {/* Titre et prix superposés sur l'image */}
@@ -173,48 +173,50 @@ export function MenuDisplay() {
                     </div>
                 </div>
     
-                {/* Contenu principal */}
-                <div className="p-6 space-y-6 overflow-y-auto" style={{ maxHeight: "calc(100vh - 336px)" }}>
-                    {/* Description */}
-                    <div className="border-l-4 border-gray-800 pl-4">
-                        <p className="text-gray-700 text-lg italic">{item.description}</p>
-                    </div>
-    
-                    {/* Contenu des menus */}
-                    {item.includes && (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {Object.entries(item.includes).map(([key, values]) => (
-                                <div 
-                                    key={key}
-                                    className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
-                                >
-                                    <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 capitalize">
-                                        {key}
-                                    </h3>
-                                    <ul className="space-y-3">
-                                        {values.map((val, index) => (
-                                            <li 
-                                                key={index}
-                                                className="flex items-center text-gray-700 group"
-                                            >
-                                                <span className="w-2 h-2 rounded-full bg-gray-300 mr-3 group-hover:bg-gray-800 transition-colors duration-200" />
-                                                <span className="group-hover:text-gray-900 transition-colors duration-200">
-                                                    {val}
-                                                </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
+                {/* Contenu principal - scrollable */}
+                <div className="flex-1 overflow-y-auto">
+                    <div className="p-6 space-y-6">
+                        {/* Description */}
+                        <div className="border-l-4 border-gray-800 pl-4">
+                            <p className="text-gray-700 text-lg italic">{item.description}</p>
                         </div>
-                    )}
+    
+                        {/* Contenu des menus */}
+                        {item.includes && (
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {Object.entries(item.includes).map(([key, values]) => (
+                                    <div 
+                                        key={key}
+                                        className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+                                    >
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200 capitalize">
+                                            {key}
+                                        </h3>
+                                        <ul className="space-y-3">
+                                            {values.map((val, index) => (
+                                                <li 
+                                                    key={index}
+                                                    className="flex items-center text-gray-700 group"
+                                                >
+                                                    <span className="w-2 h-2 rounded-full bg-gray-300 mr-3 group-hover:bg-gray-800 transition-colors duration-200" />
+                                                    <span className="group-hover:text-gray-900 transition-colors duration-200">
+                                                        {val}
+                                                    </span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
     
-                {/* Footer avec bouton */}
-                <div className="p-6 bg-gray-50 border-t border-gray-100">
+                {/* Footer avec bouton - hauteur fixe */}
+                <div className="p-6 bg-white border-t border-gray-100 shrink-0">
                     <button
                         onClick={() => setSelectedItem(null)}
-                        className="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center space-x-2"
+                        className="w-full bg-gray-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm"
                     >
                         <span>Fermer le menu</span>
                     </button>
