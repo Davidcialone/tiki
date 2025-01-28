@@ -3,14 +3,25 @@ import * as reservationsController from "../controllers/reservationsController.j
 
 export const router = Router();
 
+// Routes spécifiques
+// GET /reservations?date=YYYY-MM-DD
+router.get("/by-date", reservationsController.getReservationsByDate);
+
+// GET /reservations/new
+router.get("/new", reservationsController.getNewReservations);
+
+// GET /reservations/status
+router.get(
+  "/:reservationId/status",
+  reservationsController.handleReservationStatus
+);
+
+// Routes générales
 // // GET /reservations
 router.get("/", reservationsController.getReservations);
 
 // POST /reservations
 router.post("/", reservationsController.createReservation);
-
-// GET /reservations?date=YYYY-MM-DD
-router.get("/by-date", reservationsController.getReservationsByDate);
 
 // GET /reservations/:reservationId
 router.get("/:reservationId", reservationsController.getReservationById);
@@ -26,6 +37,3 @@ router.get(
   "/:reservationId/status",
   reservationsController.handleReservationStatus
 );
-
-// GET /reservations/new
-router.get("/new", reservationsController.getNewReservations);
