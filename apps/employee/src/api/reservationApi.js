@@ -262,7 +262,7 @@ export async function statusReservation(reservationId, token) {
 export async function newReservationsNotification(lastCheck) {
   console.log("=== Récupération des nouvelles réservations ===");
 
-  const url = `${apiBaseUrl}/reservations/new?lastCheck=${lastCheck}`;
+  const url = `${apiBaseUrl}/api/reservations/new?lastCheck=${lastCheck}`;
   const options = {
     method: "GET",
     headers: {

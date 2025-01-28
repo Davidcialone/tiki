@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/authContext';
 import { useNavigate } from 'react-router-dom';
 import { DashboardStats } from '../../features/dashboard/components/DashboardStats';
-import { saveToCookie, getFromCookie } from '../../utils/cookies'; // Importation des fonctions depuis utils/cookies
-import { newReservationsNotification } from '../../api/reservationApi'; // Assurez-vous que le chemin vers votre fonction est correct
+import { saveToCookie, getFromCookie } from '../../utils/cookies';
+import { newReservationsNotification } from '../../api/reservationApi';
 
 const ManagerDashboard = () => {
   const { user } = useAuth();
@@ -11,31 +11,90 @@ const ManagerDashboard = () => {
 
   const [newReservations, setNewReservations] = useState([]);
   const [lastCheck, setLastCheck] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Utilisation de useEffect pour récupérer les nouvelles réservations
   useEffect(() => {
-    const lastCheck = getFromCookie('lastCheck') || new Date().toISOString(); // On récupère 'lastCheck' depuis le cookie ou on met une date par défaut
-    setLastCheck(lastCheck);
+    const initialLastCheck = getFromCookie('lastCheck') || new Date().toISOString();
+    setLastCheck(initialLastCheck);
 
     const fetchReservations = async () => {
+      setIsLoading(true);
+      setError(null);
+      
       try {
-        const newReservations = await newReservationsNotification(lastCheck);  // Appel à la fonction
-        setNewReservations(newReservations);  // Mettre à jour les réservations
+        const newReservations = await newReservationsNotification(initialLastCheck);
+        setNewReservations(newReservations);
       } catch (error) {
+        setError('Erreur lors de la récupération des notifications');
         console.error('Erreur de récupération des nouvelles réservations:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchReservations();
-  }, [lastCheck]); // Cette dépendance garantit que l'effet sera déclenché si 'lastCheck' change
 
-  const markAsSeen = () => {
-    const now = new Date().toISOString();
-    saveToCookie('lastCheck', now); // Met à jour 'lastCheck' dans les cookies
-    setLastCheck(now); // Mise à jour du state
-    setNewReservations([]); // Réinitialiser les nouvelles réservations après consultation
+    // Mise en place d'une vérification périodique toutes les 2 minutes
+    const pollInterval = setInterval(fetchReservations, 2 * 60 * 1000);
+
+    // Nettoyage à la destruction du composant
+    return () => clearInterval(pollInterval);
+  }, []); // Suppression de la dépendance lastCheck pour éviter les appels en boucle
+
+  const markAsSeen = async () => {
+    try {
+      const now = new Date().toISOString();
+      saveToCookie('lastCheck', now);
+      setLastCheck(now);
+      setNewReservations([]);
+      
+      // Vous pourriez ajouter ici un appel API pour marquer les notifications comme lues côté serveur
+      // await markNotificationsAsRead(newReservations.map(r => r.id));
+      
+    } catch (error) {
+      console.error('Erreur lors du marquage des notifications:', error);
+      setError('Erreur lors du marquage des notifications comme vues');
+    }
   };
 
+  // Composant pour les notifications
+  const NotificationsSection = () => (
+    <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">Nouvelles Réservations</h2>
+      
+      {isLoading ? (
+        <p className="text-gray-500">Chargement des notifications...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : newReservations.length > 0 ? (
+        <div>
+          <p className="text-green-600 mb-4">
+            Vous avez {newReservations.length} nouvelle(s) réservation(s) depuis votre dernière consultation.
+          </p>
+          <div className="mb-4 max-h-40 overflow-y-auto">
+            {newReservations.map((reservation) => (
+              <div key={reservation.id} className="p-2 border-b border-gray-200">
+                <p className="text-sm text-gray-600">
+                  Réservation pour {reservation.clientName} - {new Date(reservation.date).toLocaleDateString()}
+                </p>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={markAsSeen}
+            className="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition-colors"
+          >
+            Marquer comme vues
+          </button>
+        </div>
+      ) : (
+        <p className="text-gray-500">Aucune nouvelle réservation.</p>
+      )}
+    </div>
+  );
+
+  // Le reste de votre JSX reste identique, mais on remplace la section des notifications
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
@@ -43,30 +102,11 @@ const ManagerDashboard = () => {
           Dashboard Restaurant - {user?.firstname} {user?.lastname}
         </h1>
 
-        {/* Section des statistiques */}
         <div className="mb-8">
           <DashboardStats />
         </div>
 
-        {/* Notifications de nouvelles réservations */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Nouvelles Réservations</h2>
-          {newReservations.length > 0 ? (
-            <div>
-              <p className="text-green-600 mb-4">
-                Vous avez {newReservations.length} nouvelle(s) réservation(s) depuis votre dernière consultation.
-              </p>
-              <button
-                onClick={markAsSeen}
-                className="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition-colors"
-              >
-                Marquer comme vues
-              </button>
-            </div>
-          ) : (
-            <p className="text-gray-500">Aucune nouvelle réservation.</p>
-          )}
-        </div>
+        <NotificationsSection />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Gestion du service */}
