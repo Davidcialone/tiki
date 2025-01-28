@@ -87,23 +87,26 @@ export async function getReservations() {
  * Récupération d'une réservation par ID
  * @param {number} id - ID de la réservation
  */
-export async function getReservationById(id) {
-  if (!id) {
-    throw new Error("L'ID de la réservation est requis.");
+// Exemple dans le contrôleur de réservation
+export const getReservationById = async (req, res) => {
+  const { reservationId } = req.params;
+
+  try {
+    const reservation = await Reservation.findByPk(reservationId); // ou findOne si nécessaire
+
+    if (!reservation) {
+      // Si aucune réservation n'est trouvée, on renvoie une réponse 200 OK avec un message
+      return res
+        .status(200)
+        .json({ message: "Aucune réservation trouvée pour cet ID." });
+    }
+
+    res.status(200).json(reservation);
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la réservation:", error);
+    res.status(500).send("Erreur serveur");
   }
-
-  console.log(`=== Récupération de la réservation avec l'ID : ${id} ===`);
-
-  const url = `${apiBaseUrl}/api/reservations/${encodeURIComponent(id)}`;
-  const options = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  return await fetchWithErrorHandling(url, options);
-}
+};
 
 /**
  * Récupération des réservations par date

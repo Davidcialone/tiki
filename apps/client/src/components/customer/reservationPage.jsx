@@ -72,45 +72,57 @@ export function ReservationPage() {
   
   
   
-  return (
-    <>
-      <div className="mt-40"></div>
-      <div>
-        <h2>Vous pouvez effectuer votre réservation</h2>
+return (
+  <>
+    <div 
+      className="min-h-screen bg-cover bg-center bg-fixed"
+      style={{
+        backgroundImage: "url(/restaurant2.png)",
+      }}
+    >
+      {/* Section de contenu principal */}
+      <div className="flex justify-center items-center min-h-screen bg-opacity-60 bg-black">
+        <div className="text-center text-white px-4 py-8 bg-white bg-opacity-70 rounded-lg shadow-xl w-full md:w-2/3 lg:w-1/2">
+          <h2 className="text-3xl font-bold mb-6">Vous pouvez effectuer votre réservation</h2>
 
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="inline-block bg-white text-black px-6 py-2 m-3 rounded-lg text-lg font-medium border border-[var(--primary-color)] hover:bg-black hover:text-white hover:border-white transition duration-200 z-50 relative"
-        >
-          Réserver
-        </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-block bg-primary-color text-white px-8 py-3 m-3 rounded-lg text-xl font-medium border border-transparent hover:bg-white hover:text-black hover:border-[var(--primary-color)] transition duration-300 ease-in-out transform hover:scale-105 z-50 relative"
+          >
+            Réserver
+          </button>
 
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          {errorMessage && (
+            <p className="text-red-600 mt-4">{errorMessage}</p>
+          )}
 
-        {!reservationDetails ? (
-          <p style={{ marginTop: "20px" }}>Aucune réservation n'a encore été effectuée.</p>
-        ) : (
-          <div style={{ marginTop: "20px", padding: "10px", border: "1px solid #ddd" }}>
-            <h2>Récapitulatif de la réservation</h2>
-            <p><strong>Nom : </strong>{reservationDetails.lastName || "Non spécifié"} {reservationDetails.firstName || "Non spécifié"}</p>
-            <p><strong>Nombre de personnes : </strong>{reservationDetails.number_of_people || "Non spécifié"}</p>
-            <p><strong>Téléphone : </strong>{reservationDetails.phone || "Non spécifié"}</p>
-            <p><strong>Email : </strong>{reservationDetails.email || "Non spécifié"}</p>
-            <p><strong>Date : </strong>{reservationDetails.reservation_date ? new Date(reservationDetails.reservation_date).toLocaleDateString() : "Non spécifié"}</p>
-            <p><strong>Heure : </strong>{reservationDetails.reservation_time || "Non spécifié"}</p>
+          {!reservationDetails ? (
+            <p className="mt-6 text-lg text-black">Aucune réservation n'a encore été effectuée.</p>
+          ) : (
+            <div className="mt-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200  text-black">
+              <h3 className="text-2xl font-semibold mb-4">Récapitulatif de la réservation</h3>
+              <p><strong className="font-medium">Nom : </strong>{reservationDetails.lastName || "Non spécifié"} {reservationDetails.firstName || "Non spécifié"}</p>
+              <p><strong className="font-medium">Nombre de personnes : </strong>{reservationDetails.number_of_people || "Non spécifié"}</p>
+              <p><strong className="font-medium">Téléphone : </strong>{reservationDetails.phone || "Non spécifié"}</p>
+              <p><strong className="font-medium">Email : </strong>{reservationDetails.email || "Non spécifié"}</p>
+              <p><strong className="font-medium">Date : </strong>{reservationDetails.reservation_date ? new Date(reservationDetails.reservation_date).toLocaleDateString() : "Non spécifié"}</p>
+              <p><strong className="font-medium">Heure : </strong>{reservationDetails.reservation_time || "Non spécifié"}</p>
+            </div>
+          )}
 
-          </div>
-        )}
-
-        <ReservationModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={handleModalSubmit}
-          zones={openZones}
-          availableDates={availableDates}
-          availableTimes={availableTimes}
-        />
+          {/* Modal de réservation */}
+          <ReservationModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={handleModalSubmit}
+            zones={openZones}
+            availableDates={availableDates}
+            availableTimes={availableTimes}
+          />
+        </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
+
 }

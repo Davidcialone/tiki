@@ -105,7 +105,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 dateFormat="dd/MM/yyyy"
                 locale={fr}
                 minDate={today}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -140,7 +140,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="number_of_people" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="number_of_people" className="block  text-sm font-medium text-gray-700 mb-1">
                 Nombre de personnes
               </label>
               <select
@@ -148,7 +148,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 name="number_of_people"
                 value={formData.number_of_people}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300  text-black  shadow-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 {[...Array(10).keys()].map((num) => (
                   <option key={num + 1} value={num + 1}>

@@ -76,10 +76,11 @@ const ManagerDashboard = () => {
             {newReservations.map((reservation) => (
               <div key={reservation.id} className="p-2 border-b border-gray-200">
                 <p className="text-sm text-gray-600">
-                  Réservation pour {reservation.clientName} - {new Date(reservation.date).toLocaleDateString()}
+                  Réservation pour le {new Date(reservation.reservation_date).toLocaleDateString()} pour {reservation.number_of_people} personnes
                 </p>
-              </div>
+               </div>
             ))}
+          
           </div>
           <button
             onClick={markAsSeen}
@@ -115,19 +116,19 @@ const ManagerDashboard = () => {
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/service/tables')}
-                className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
               >
                 Plan des tables
               </button>
               <button 
                 onClick={() => navigate('/service/orders')}
-                className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
               >
                 Commandes en cours
               </button>
               <button 
                 onClick={() => navigate('/service/staff')}
-                className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
               >
                 Personnel en service
               </button>
@@ -140,7 +141,7 @@ const ManagerDashboard = () => {
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/reservations')}
-                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+                className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
               >
                 Effectuer une réservation
               </button>
@@ -165,13 +166,13 @@ const ManagerDashboard = () => {
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/clients/search')}
-                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+                className="w-full bg-cyan-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
               >
                 Rechercher un client
               </button>
               <button 
                 onClick={() => navigate('/clients/new')}
-                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-cyan-600 transition-colors"
               >
                 Ajouter un client
               </button>
@@ -184,19 +185,19 @@ const ManagerDashboard = () => {
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/menu/edit')}
-                className="w-full bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors"
               >
                 Modifier la carte
               </button>
               <button 
                 onClick={() => navigate('/menu/specials')}
-                className="w-full bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition-colors"
               >
                 Plats du jour
               </button>
               <button 
                 onClick={() => navigate('/menu/prices')}
-                className="w-full bg-violet-500 text-white px-4 py-2 rounded hover:bg-violet-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-violet-600 transition-colors"
               >
                 Tarification
               </button>
@@ -209,13 +210,13 @@ const ManagerDashboard = () => {
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/stock/inventory')}
-                className="w-full bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition-colors"
               >
                 Inventaire
               </button>
               <button 
                 onClick={() => navigate('/stock/orders')}
-                className="w-full bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors"
               >
                 Commandes fournisseurs
               </button>
@@ -234,13 +235,13 @@ const ManagerDashboard = () => {
             <div className="space-y-4">
               <button 
                 onClick={() => navigate('/staff/planning')}
-                className="w-full bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
               >
                 Planning équipe
               </button>
               <button 
                 onClick={() => navigate('/staff/management')}
-                className="w-full bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors"
               >
                 Gestion du personnel
               </button>
