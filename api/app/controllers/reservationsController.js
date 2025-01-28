@@ -2,6 +2,7 @@ import { Reservation, User } from "../models/index.js";
 import { generateRandomPassword } from "../services/userService.js";
 import logger from "../../logger.js";
 import jwt from "jsonwebtoken";
+import { Op } from "sequelize"; // Assurez-vous que Op est bien importé
 
 // Créer une réservation
 export const createReservation = async (req, res) => {
@@ -440,23 +441,19 @@ export const getNewReservations = async (req, res) => {
     const newReservations = await Reservation.findAll({
       where: {
         status: "confirmed",
-        ...(lastCheck && { updatedAt: { $gt: lastCheck } }),
+        ...(lastCheck && { updatedAt: { [Op.gt]: lastCheck } }), // Utilisez Op.gt pour la comparaison
       },
     });
 
-    const reservationsData = newReservations.map((reservation) =>
-      reservation.get()
-    );
+    console.log("Réservations récupérées:", newReservations); // Afficher les réservations récupérées
 
-    console.log("Réservations récupérées:", reservationsData); // Afficher les réservations récupérées
-    res.status(200).json(reservationsData);
+    res.status(200).json(newReservations);
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des nouvelles réservations:",
       error.message
     );
-    console.error("Stack trace:", error.stack); // Affiche la stack trace complète
-
+    console.error("Stack trace:", error.stack);
     res.status(500).send("Erreur serveur");
   }
 };
