@@ -11,7 +11,7 @@ export function Location() {
   };
 
   return (
-    <div className="min-h-screen mt-6 bg-gray-50">
+    <div className="min-h-screen mt-10 bg-gray-50">
       {/* Hero Section */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">

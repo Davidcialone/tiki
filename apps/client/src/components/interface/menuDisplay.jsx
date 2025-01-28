@@ -137,6 +137,8 @@ export function MenuDisplay() {
     
 
     const renderModal = (item) => (
+        <div className="relative font-sans text-gray-800 min-h-screen">
+      <div className="relative w-full h-screen bg-[url('/restaurant2.png')] bg-center bg-cover bg-no-repeat z-0"></div>
         <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-in fade-in duration-200"
             onClick={() => setSelectedItem(null)}
@@ -223,22 +225,57 @@ export function MenuDisplay() {
                 </div>
             </div>
         </div>
+    </div>
     );
     
     
 
     return (
-        <div className="p-6 mt-12 ">
-            <h1 className="text-4xl  font-extrabold text-center text-gray-900 mb-8">
-                Explorez nos menus
-            </h1>
-            <div className="max-w-3xl mx-auto">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Menus composés</h2>
-                {setMenus.map(renderListItem)}
-
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">À la carte</h2>
-                {menuItems.map(renderListItem)}
+        <div 
+            className="min-h-screen bg-cover bg-center bg-fixed "
+            style={{
+                backgroundImage: "url(/restaurant2.png)",
+            }}
+        >
+            {/* Overlay pour assurer la lisibilité */}
+            <div className="bg-white/20 min-h-screen">
+                <div className="p-6 mt-20 container mx-auto">
+                    {/* En-tête décoratif */}
+                    <div className="text-center mb-12">
+                        <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
+                            Explorez nos menus
+                        </h1>
+                        <div className="w-24 h-1 bg-gray-900 mx-auto"></div>
+                    </div>
+    
+                    {/* Contenu des menus */}
+                    <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+                        {/* Menus composés */}
+                        <div className="mb-8">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                <span className="w-2 h-8 bg-gray-900 mr-4 rounded-full"></span>
+                                Menus composés
+                            </h2>
+                            <div className="space-y-2">
+                                {setMenus.map(renderListItem)}
+                            </div>
+                        </div>
+    
+                        {/* À la carte */}
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                <span className="w-2 h-8 bg-gray-900 mr-4 rounded-full"></span>
+                                À la carte
+                            </h2>
+                            <div className="space-y-2">
+                                {menuItems.map(renderListItem)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+    
+            {/* Modal */}
             {selectedItem && renderModal(selectedItem)}
         </div>
     );

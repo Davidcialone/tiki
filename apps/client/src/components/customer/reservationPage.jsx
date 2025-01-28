@@ -74,7 +74,7 @@ export function ReservationPage() {
   
   return (
     <>
-      <div className="mt-20"></div>
+      <div className="mt-40"></div>
       <div>
         <h2>Vous pouvez effectuer votre réservation</h2>
 

@@ -37,7 +37,7 @@ export function Contact() {
   return (
     <>
       {/* Espace sous la navbar */}
-      <div className="mt-16"></div>
+      <div className="mt-20"></div>
 
       <div className="p-6 font-sans">
         <h1 className="text-2xl font-bold">Contactez-nous</h1>

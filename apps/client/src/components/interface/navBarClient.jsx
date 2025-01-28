@@ -3,45 +3,43 @@ import { Link } from "react-router-dom";
 
 export function NavBarClient() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true); // Gérer la visibilité de la navbar
-  const [lastScrollY, setLastScrollY] = useState(0); // Position précédente du défilement
-  const [navbarOpacity, setNavbarOpacity] = useState(0); // Opacité de la navbar (commence transparent)
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [navbarBackground, setNavbarBackground] = useState('rgba(0, 0, 0, 0.8)'); // Opacité de base
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-  
-      // Calcul de l'opacité
-      const opacity = Math.min(scrollPosition / 300, 0.7);
-      setNavbarOpacity(opacity);
-  
-      // Si on est tout en haut, afficher toujours la navbar
-      if (scrollPosition === 0) {
-        setIsVisible(true);
-        return;
-      }
-  
+      
       // Gérer la visibilité lors du défilement
-      if (scrollPosition > lastScrollY && !mobileMenuOpen) {
-        setIsVisible(false);
-      } else {
+      if (scrollPosition === 0) {
+        // Au top de la page
+        setNavbarBackground('rgba(0, 0, 0, 0.8)'); // Opacité fixe en haut
         setIsVisible(true);
+      } else {
+        // Pendant le scroll
+        setNavbarBackground('rgba(0, 0, 0, 0.9)'); // Opacité plus forte pendant le scroll
+        
+        if (scrollPosition > lastScrollY && !mobileMenuOpen) {
+          setIsVisible(false); // Cache la navbar quand on scroll vers le bas
+        } else {
+          setIsVisible(true); // Montre la navbar quand on scroll vers le haut
+        }
       }
-  
+
       setLastScrollY(scrollPosition);
-  
+
       // Fermer le menu mobile si l'utilisateur fait défiler
       if (mobileMenuOpen) {
         setMobileMenuOpen(false);
       }
     };
-  
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollY, mobileMenuOpen]);
-  
 
   const toggleMenu = () => {
     setMobileMenuOpen((prev) => !prev);
@@ -53,7 +51,9 @@ export function NavBarClient() {
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
       style={{
-        backgroundColor: `rgba(0, 0, 0, ${navbarOpacity})`, // Opacité dynamique
+        backgroundColor: navbarBackground,
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)', // Pour Safari
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
