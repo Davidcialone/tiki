@@ -429,18 +429,34 @@ export const handleReservationStatus = async (req, res) => {
 
 export const getNewReservations = async (req, res) => {
   try {
-    const lastCheck = req.cookies?.userPreferences
-      ? JSON.parse(req.cookies.userPreferences).lastCheck
+    console.log("lastCheck:", req.query.lastCheck); // Afficher lastCheck
+    const lastCheck = req.query.lastCheck
+      ? new Date(req.query.lastCheck)
       : null;
 
-    const newReservations = await Reservation.find({
-      status: "confirmed",
-      ...(lastCheck && { updatedAt: { $gt: new Date(lastCheck) } }),
+    // Ajoutez un log pour vérifier si la requête à la base de données se fait correctement
+    console.log("Vérification des réservations depuis:", lastCheck);
+
+    const newReservations = await Reservation.findAll({
+      where: {
+        status: "confirmed",
+        ...(lastCheck && { updatedAt: { $gt: lastCheck } }),
+      },
     });
 
-    res.status(200).json(newReservations);
+    const reservationsData = newReservations.map((reservation) =>
+      reservation.get()
+    );
+
+    console.log("Réservations récupérées:", reservationsData); // Afficher les réservations récupérées
+    res.status(200).json(reservationsData);
   } catch (error) {
-    console.error("Erreur lors de la récupération des réservations:", error);
+    console.error(
+      "Erreur lors de la récupération des nouvelles réservations:",
+      error.message
+    );
+    console.error("Stack trace:", error.stack); // Affiche la stack trace complète
+
     res.status(500).send("Erreur serveur");
   }
 };
