@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
 import PropTypes from "prop-types";
-
+import { format } from 'date-fns';
 
 const lunchTimes = [
   "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30",
@@ -33,22 +33,51 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const isTimeSlotPassed = (time) => {
+    // Si la date sélectionnée n'est pas aujourd'hui, le créneau est toujours valide
+    if (format(formData.reservation_date, 'yyyy-MM-dd') !== format(new Date(), 'yyyy-MM-dd')) {
+      return false;
+    }
+  
+    const [hours, minutes] = time.split(':').map(Number);
+    const now = new Date();
+    const currentHours = now.getHours();
+    const currentMinutes = now.getMinutes();
+  
+    // Compare l'heure actuelle avec l'horaire du créneau
+    return (currentHours > hours) || (currentHours === hours && currentMinutes > minutes);
+  };
+
   const handleDateChange = (date) => {
-    setFormData((prev) => ({ ...prev, reservation_date: date }));
+    setFormData(prev => {
+      const newData = { ...prev, reservation_date: date };
+      // Si l'heure sélectionnée est dépassée, on la réinitialise
+      if (newData.reservation_time && isTimeSlotPassed(newData.reservation_time)) {
+        const availableTimes = newData.isLunch ? lunchTimes : dinnerTimes;
+        // Trouve le premier horaire disponible
+        const firstValidTime = availableTimes.find(time => !isTimeSlotPassed(time));
+        newData.reservation_time = firstValidTime || availableTimes[0];
+      }
+      return newData;
+    });
   };
 
   const handleTimeClick = (time) => {
     const formattedTime = time.length === 5 ? time : time.substring(0,5); // Assurez-vous que c'est toujours HH:mm
     setFormData((prev) => ({ ...prev, reservation_time: formattedTime }));
   };
-  
 
   const toggleTimePeriod = () => {
-    setFormData((prev) => ({
-      ...prev,
-      isLunch: !prev.isLunch,
-      reservation_time: !prev.isLunch ? lunchTimes[0] : dinnerTimes[0],
-    }));
+    setFormData((prev) => {
+      const newIsLunch = !prev.isLunch;
+      const availableTimes = newIsLunch ? lunchTimes : dinnerTimes;
+      const firstValidTime = availableTimes.find(time => !isTimeSlotPassed(time));
+      return {
+        ...prev,
+        isLunch: newIsLunch,
+        reservation_time: firstValidTime || availableTimes[0],
+      };
+    });
   };
 
   const handleNextStep = () => {
@@ -93,7 +122,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
 
         {step === 1 && (
           <div>
-            {/* Étape 1 : Choix de la date et de l’heure */}
+            {/* Étape 1 : Choix de la date et de l'heure */}
             <div className="mb-4">
               <label htmlFor="reservation_date" className="block text-sm font-medium text-gray-700 mb-1">
                 Date
@@ -105,7 +134,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 dateFormat="dd/MM/yyyy"
                 locale={fr}
                 minDate={today}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -123,19 +152,25 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 Horaire
               </label>
               <div id="time_selector" className="grid grid-cols-4 gap-2">
-                {(formData.isLunch ? lunchTimes : dinnerTimes).map((time) => (
-                  <button
-                    key={time}
-                    onClick={() => handleTimeClick(time)}
-                    className={`px-2 py-1 rounded-md text-sm font-medium ${
-                      formData.reservation_time === time
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 text-gray-700"
-                    } hover:bg-blue-400 hover:text-white transition`}
-                  >
-                    {time}
-                  </button>
-                ))}
+                {(formData.isLunch ? lunchTimes : dinnerTimes).map((time) => {
+                  const isPassed = isTimeSlotPassed(time);
+                  return (
+                    <button
+                      key={time}
+                      onClick={() => handleTimeClick(time)}
+                      disabled={isPassed}
+                      className={`px-2 py-1 rounded-md text-sm font-medium ${
+                        formData.reservation_time === time
+                          ? "bg-blue-500 text-white"
+                          : isPassed 
+                            ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                            : "bg-gray-200 text-gray-700 hover:bg-blue-400 hover:text-white"
+                      } transition`}
+                    >
+                      {time}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -148,7 +183,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
                 name="number_of_people"
                 value={formData.number_of_people}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 text-black shadow-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 {[...Array(10).keys()].map((num) => (
                   <option key={num + 1} value={num + 1}>
@@ -239,7 +274,7 @@ export function ReservationModal({ isOpen, onClose, onSubmit }) {
               <button
                 type="button"
                 onClick={handleBackStep}
-                className="                px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition"
+                className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition"
               >
                 Retour
               </button>
@@ -262,4 +297,3 @@ ReservationModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
-

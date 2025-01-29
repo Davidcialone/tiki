@@ -105,6 +105,8 @@ export function MenuDisplay() {
         }
     ];
 
+    const categories = ["Entrées", "Plats", "Desserts", "Boissons", "Vins", "Menus"];
+
 
     const [selectedItem, setSelectedItem] = useState(null);
 
@@ -134,6 +136,7 @@ export function MenuDisplay() {
             </div>
         </div>
     );
+    
     
 
     const renderModal = (item) => (
@@ -227,7 +230,22 @@ export function MenuDisplay() {
         </div>
     </div>
     );
+
+    const renderCategory = (category) => (
+        <div key={category} className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <span className="w-2 h-8 bg-gray-900 mr-4 rounded-full"></span>
+                {category}
+            </h2>
+            <div className="space-y-2">
+                {menuItems
+                    .filter((item) => item.category === category)
+                    .map(renderListItem)}
+            </div>
+        </div>
+    );
     
+
     
 
     return (
@@ -267,6 +285,10 @@ export function MenuDisplay() {
                                 <span className="w-2 h-8 bg-gray-900 mr-4 rounded-full"></span>
                                 À la carte
                             </h2>
+                            <div className="space-y-2">
+                                {categories.map(renderCategory)}
+                            </div>
+
                             <div className="space-y-2">
                                 {menuItems.map(renderListItem)}
                             </div>
