@@ -152,10 +152,10 @@ const ManagerDashboard = () => {
                 Gestion des réservations
               </button>
               <button 
-                onClick={() => navigate('/reservations/settings')}
+                onClick={() => navigate('/reservations/plan')}
                 className="w-full bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors"
               >
-                Paramètres réservation
+                Plan du restaurant
               </button>
             </div>
           </div>
@@ -244,6 +244,25 @@ const ManagerDashboard = () => {
                 className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors"
               >
                 Gestion du personnel
+              </button>
+            </div>
+          </div>
+
+            {/* Paramètre */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Paramètres</h2>
+            <div className="space-y-4">
+              <button 
+                onClick={() => navigate('/settings/restaurant')}
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+              >
+                Paramètres du restaurant
+              </button>
+              <button 
+                onClick={() => navigate('/settings/staff')}
+                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition-colors"
+              >
+                Paramètres du personnel 
               </button>
             </div>
           </div>

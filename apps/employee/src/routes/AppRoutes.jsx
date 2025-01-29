@@ -26,6 +26,7 @@ import {ReservationsViews} from '../components/dashboard/reservations/reservatio
 import { ClientDashboard } from '../components/dashboard/clients/clientDashboard.jsx';
 import { EmployeeDashboard } from '../components/dashboard/employees/employeeDashboard.jsx';
 import {ReportDashboard } from '../components/dashboard/reports/reportDashboard.jsx';
+import {RestaurantPlan} from '../components/layout/restaurantPlan.jsx';
 
 const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
 
@@ -96,6 +97,13 @@ const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
             <ReservationsViews/>
           </ProtectedRoute>
         } />
+
+          <Route path="/reservations/plan" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+            <RestaurantPlan/>
+          </ProtectedRoute>
+        } />
+
 
         <Route path="/reports" element={
           <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>

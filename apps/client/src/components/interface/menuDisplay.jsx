@@ -267,10 +267,10 @@ export function MenuDisplay() {
                     </div>
     
                     {/* Contenu des menus */}
-                    <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+                    <div className="max-w-3xl mx-auto bg-white/90 rounded-2xl shadow-lg p-8">
                         {/* Menus composés */}
                         <div className="mb-8">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                            <h2 className="text-2xl font-bold text-gray-900  mb-6 flex items-center">
                                 <span className="w-2 h-8 bg-gray-900 mr-4 rounded-full"></span>
                                 Menus composés
                             </h2>
