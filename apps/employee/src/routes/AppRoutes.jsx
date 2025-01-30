@@ -27,6 +27,8 @@ import { ClientDashboard } from '../components/dashboard/clients/clientDashboard
 import { EmployeeDashboard } from '../components/dashboard/employees/employeeDashboard.jsx';
 import {ReportDashboard } from '../components/dashboard/reports/reportDashboard.jsx';
 import {RestaurantPlan} from '../components/layout/restaurantPlan.jsx';
+import {RestaurantScheduler} from '../components/layout/restaurantScheduler.jsx';
+
 
 const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
 
@@ -118,6 +120,13 @@ const AppRoutes = () => {  const { user, isAuthenticated } = useAuth();
             <PlanningPage />
           </ProtectedRoute>
         } />
+
+          <Route path="/settings/restaurant" element={
+          <ProtectedRoute allowedRoles={[ROLES.WORKER, ROLES.MANAGER]} userRole={user?.role}>
+            <RestaurantScheduler />
+          </ProtectedRoute>
+        } />
+
 
         {/* Fallback pour les routes non trouvées */}
         <Route path="*" element={<Navigate to={getDefaultRoute()} replace />} />

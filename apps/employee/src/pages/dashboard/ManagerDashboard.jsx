@@ -204,30 +204,7 @@ const ManagerDashboard = () => {
             </div>
           </div>
 
-          {/* Stocks */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Stocks</h2>
-            <div className="space-y-4">
-              <button 
-                onClick={() => navigate('/stock/inventory')}
-                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition-colors"
-              >
-                Inventaire
-              </button>
-              <button 
-                onClick={() => navigate('/stock/orders')}
-                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors"
-              >
-                Commandes fournisseurs
-              </button>
-              <button 
-                onClick={() => navigate('/stock/waste')}
-                className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-              >
-                Gestion des pertes
-              </button>
-            </div>
-          </div>
+
 
           {/* Personnel */}
           <div className="bg-white p-6 rounded-lg shadow-md">

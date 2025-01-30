@@ -5,6 +5,8 @@ import './App.css'
 
 // Context
 import { AuthProvider } from "./auth/authContext";
+import { ZonesProvider } from "./contexts/zonesContext";
+
 
 // Components
 import AppRoutes from './routes/AppRoutes'; // Import des routes
@@ -12,10 +14,12 @@ import AppRoutes from './routes/AppRoutes'; // Import des routes
 const App = () => {
   return (
     <AuthProvider>
+      <ZonesProvider>
       {/* Le composant Router permet de gérer les routes dans l'application */}
-      <Router>
-        <AppRoutes />
-      </Router>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </ZonesProvider>
     </AuthProvider>
   );
 };
